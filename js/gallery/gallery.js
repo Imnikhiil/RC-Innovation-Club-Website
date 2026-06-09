@@ -14,9 +14,13 @@ window.RC_GALLERY = {
       eventDate: item.eventDate || '',
       description: item.description || '',
       category: item.category || 'Club Activity',
-      src: item.mediaId ? '' : legacyImage,
+      src: item.mediaUrl || (item.mediaId ? '' : legacyImage),
       mediaId: item.mediaId || null,
+      mediaUrl: item.mediaUrl || null,
+      mediaPath: item.mediaPath || null,
       thumbnailId: item.thumbnailId || null,
+      thumbnailUrl: item.thumbnailUrl || null,
+      thumbnailPath: item.thumbnailPath || null,
       uploadedAt: item.uploadedAt || new Date().toISOString(),
       order: typeof item.order === 'number' ? item.order : index
     };
@@ -37,8 +41,7 @@ window.RC_GALLERY = {
   saveItems(items) {
     const content = window.RC_CMS.getContent();
     content.gallery = items.map((item, i) => ({ ...item, order: i }));
-    window.RC_CMS.saveContent(content);
-    return content.gallery;
+    return window.RC_CMS.saveContent(content).then(() => content.gallery);
   },
 
   formatDate(dateStr) {
@@ -74,6 +77,7 @@ window.RC_GALLERY = {
 
   async resolveMediaUrl(item) {
     if (!item) return '';
+    if (item.mediaUrl) return item.mediaUrl;
     if (item.mediaId && window.RC_GALLERY_MEDIA) {
       return RC_GALLERY_MEDIA.getObjectUrl(item.mediaId);
     }
@@ -83,9 +87,11 @@ window.RC_GALLERY = {
   async resolveThumbnailUrl(item) {
     if (!item) return '';
     if (item.type === 'video') {
+      if (item.thumbnailUrl) return item.thumbnailUrl;
       if (item.thumbnailId && window.RC_GALLERY_MEDIA) {
-        return RC_GALLERY_MEDIA.getObjectUrl(item.thumbnailId);
+        return RC_GALLERY_MEDIA.getObjectUrl(item.thumbnailId, item.thumbnailUrl);
       }
+      if (item.mediaUrl) return item.mediaUrl;
       if (item.mediaId && window.RC_GALLERY_MEDIA) {
         return RC_GALLERY_MEDIA.getObjectUrl(item.mediaId);
       }
@@ -126,7 +132,7 @@ window.RC_GALLERY = {
       return `
         <article class="gallery-card gallery-card--video glass card-hover" ${dataAttrs} role="button" tabindex="0" aria-label="Play video: ${this.escapeHtml(item.title)}">
           <div class="gallery-card__media">
-            <img class="gallery-card__thumb" src="${this.escapeHtml(thumbSrc)}" alt="" ${lazyAttr} data-media-id="${this.escapeHtml(item.thumbnailId || item.mediaId || '')}" />
+            <img class="gallery-card__thumb" src="${this.escapeHtml(item.thumbnailUrl || thumbSrc)}" alt="" ${lazyAttr} data-media-id="${this.escapeHtml(item.thumbnailId || item.mediaId || '')}" data-media-url="${this.escapeHtml(item.thumbnailUrl || item.mediaUrl || '')}" />
             <div class="gallery-card__play"><i class="fas fa-play"></i></div>
           </div>
           <div class="gallery-card__body">
@@ -140,7 +146,7 @@ window.RC_GALLERY = {
     return `
       <article class="gallery-card gallery-card--image glass card-hover" ${dataAttrs} role="button" tabindex="0" aria-label="View photo: ${this.escapeHtml(item.title)}">
         <div class="gallery-card__media">
-          <img class="gallery-card__thumb" src="${this.escapeHtml(mediaSrc)}" alt="${this.escapeHtml(item.title)}" ${lazyAttr} data-media-id="${this.escapeHtml(item.mediaId || '')}" />
+          <img class="gallery-card__thumb" src="${this.escapeHtml(item.mediaUrl || mediaSrc)}" alt="${this.escapeHtml(item.title)}" ${lazyAttr} data-media-id="${this.escapeHtml(item.mediaId || '')}" data-media-url="${this.escapeHtml(item.mediaUrl || '')}" />
         </div>
         <div class="gallery-card__overlay">
           <h3 class="gallery-card__title">${this.escapeHtml(item.title)}</h3>
@@ -154,8 +160,9 @@ window.RC_GALLERY = {
     const imgs = root.querySelectorAll('img[data-media-id]');
     await Promise.all([...imgs].map(async (img) => {
       const mediaId = img.dataset.mediaId;
-      if (!mediaId) return;
-      const url = await RC_GALLERY_MEDIA.getObjectUrl(mediaId);
+      const mediaUrl = img.dataset.mediaUrl;
+      if (!mediaId && !mediaUrl) return;
+      const url = await RC_GALLERY_MEDIA.getObjectUrl(mediaId, mediaUrl);
       if (url) img.src = url;
     }));
   }

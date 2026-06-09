@@ -7,6 +7,7 @@ const PANEL_TITLES = {
   stats: 'Stats',
   about: 'About',
   events: 'Events',
+  faculty: 'Faculty In-Charge',
   core: 'Core Team',
   ambassadors: 'Ambassadors',
   members: 'Members',
@@ -41,20 +42,28 @@ function canAction(action) {
   return RC_CMS.canPerformAction(action);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await RC_CMS.init();
+
   if (RC_CMS.isLoggedIn()) {
-    showAdmin();
+    await showAdmin();
   } else {
     showLogin();
   }
 
-  document.getElementById('login-form')?.addEventListener('submit', (e) => {
+  document.getElementById('login-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('admin-id').value.trim();
     const pass = document.getElementById('admin-pass').value;
-    if (RC_CMS.login(id, pass)) {
+    const loginBtn = e.target.querySelector('button[type="submit"]');
+    if (loginBtn) loginBtn.disabled = true;
+
+    const ok = await RC_CMS.login(id, pass);
+    if (loginBtn) loginBtn.disabled = false;
+
+    if (ok) {
       document.getElementById('login-error')?.classList.remove('show');
-      showAdmin();
+      await showAdmin();
     } else {
       document.getElementById('login-error')?.classList.add('show');
     }
@@ -81,9 +90,18 @@ function showLogin() {
   if (badge) badge.hidden = true;
 }
 
-function showAdmin() {
+async function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-app').style.display = 'flex';
+
+  await Promise.all([
+    RC_CMS.ensureReady(),
+    RC_MEMBERSHIP?.ensureReady?.(),
+    RC_CONTACT?.ensureReady?.(),
+    RC_NEWSLETTER?.ensureReady?.(),
+    RC_CERTIFICATES?.ensureReady?.()
+  ].filter(Boolean));
+
   content = RC_CMS.getContent();
   applyRoleUI();
   renderAllPanels();
@@ -131,14 +149,18 @@ function toast(msg) {
   setTimeout(() => el.classList.remove('show'), 2800);
 }
 
-function saveAll() {
+async function saveAll() {
   if (!canAction('save')) {
     toast('You do not have permission to save changes.');
     return;
   }
   collectAllForms();
-  RC_CMS.saveContent(content);
-  toast('Changes saved! Refresh the main website to see updates.');
+  try {
+    await RC_CMS.saveContent(content);
+    toast('Changes saved! Refresh the main website to see updates.');
+  } catch {
+    toast('Save failed. Check your connection and try again.');
+  }
 }
 
 function field(label, id, value = '', type = 'text', rows) {
@@ -197,6 +219,13 @@ function collectAllForms() {
       subtitle: val('events-subtitle'),
       upcomingTitle: val('events-upcoming-title'),
       pastTitle: val('events-past-title')
+    };
+  }
+  if (document.getElementById('faculty-eyebrow')) {
+    content.facultySection = {
+      eyebrow: val('faculty-eyebrow'),
+      title: val('faculty-title'),
+      subtitle: val('faculty-subtitle')
     };
   }
   if (document.getElementById('core-eyebrow')) {
@@ -423,6 +452,7 @@ function renderAllPanels() {
   if (canPanel('stats')) renderStatsPanel();
   if (canPanel('about')) renderAboutPanel();
   if (canPanel('events')) renderEventsPanel();
+  if (canPanel('faculty')) renderFacultyPanel();
   if (canPanel('core')) renderCorePanel();
   if (canPanel('ambassadors')) renderAmbassadorsPanel();
   if (canPanel('members')) renderMembersPanel();
@@ -450,7 +480,7 @@ function renderDashboard() {
 
   const contentStats = canPanel('hero') ? `
     ${content.stats?.length || 0} stats · ${content.events?.length || 0} events ·
-    ${content.coreTeam?.length || 0} core members · ${content.gallery?.length || 0} gallery images ·
+    ${content.faculty?.length || 0} faculty · ${content.coreTeam?.length || 0} core members · ${content.gallery?.length || 0} gallery images ·
     ${content.testimonials?.length || 0} testimonials · ${content.partners?.length || 0} partners ·
     ${content.projects?.length || 0} projects · ${content.resources?.length || 0} resources ·
     ${content.legacy?.length || 0} legacy items` : '';
@@ -491,9 +521,9 @@ function renderDashboard() {
 
   document.getElementById('export-btn')?.addEventListener('click', () => RC_CMS.exportContent());
   document.getElementById('import-btn')?.addEventListener('click', () => document.getElementById('import-file').click());
-  document.getElementById('reset-btn')?.addEventListener('click', () => {
+  document.getElementById('reset-btn')?.addEventListener('click', async () => {
     if (confirm('Reset ALL website content to default? This cannot be undone unless you have a backup.')) {
-      content = RC_CMS.resetContent();
+      content = await RC_CMS.resetContent();
       renderAllPanels();
       toast('Content reset to default.');
     }
@@ -561,9 +591,10 @@ function renderAboutPanel() {
   `;
 }
 
-function listEditor(key, fields, itemLabel) {
+function listEditor(key, fields, itemLabel, options = {}) {
   const items = content[key] || [];
   const editIdx = editingList[key];
+  const reorderable = options.reorderable === true;
 
   let formHtml = '';
   if (editIdx !== undefined) {
@@ -583,9 +614,13 @@ function listEditor(key, fields, itemLabel) {
     <div class="admin-list-item">
       <div class="admin-list-item__info">
         <strong>${esc(item.title || item.name || item.label || `Item ${i + 1}`)}</strong>
-        <small>${esc(item.role || item.date || item.year || item.description || item.image || '').slice(0, 120)}</small>
+        <small>${esc(item.period || item.role || item.designation || item.date || item.year || item.description || item.image || '').slice(0, 120)}</small>
       </div>
       <div class="admin-list-item__actions">
+        ${reorderable ? `
+          <button type="button" class="admin-btn" data-move-up="${key}" data-idx="${i}" ${i === 0 ? 'disabled' : ''} title="Move up"><i class="fas fa-arrow-up"></i></button>
+          <button type="button" class="admin-btn" data-move-down="${key}" data-idx="${i}" ${i === items.length - 1 ? 'disabled' : ''} title="Move down"><i class="fas fa-arrow-down"></i></button>
+        ` : ''}
         <button type="button" class="admin-btn" data-edit="${key}" data-idx="${i}"><i class="fas fa-edit"></i></button>
         <button type="button" class="admin-btn admin-btn--danger" data-del="${key}" data-idx="${i}"><i class="fas fa-trash"></i></button>
       </div>
@@ -602,7 +637,18 @@ function listEditor(key, fields, itemLabel) {
     </div>`;
 }
 
-function bindListEvents(panelId, key, fields) {
+function moveListItem(key, index, direction, panelId) {
+  const items = content[key];
+  const newIndex = index + direction;
+  if (!Array.isArray(items) || newIndex < 0 || newIndex >= items.length) return;
+  [items[index], items[newIndex]] = [items[newIndex], items[index]];
+  RC_CMS.saveContent(content);
+  renderAllPanels();
+  switchPanel(panelId.replace('panel-', ''));
+  toast('Order updated.');
+}
+
+function bindListEvents(panelId, key, fields, options = {}) {
   const panel = document.getElementById(panelId);
 
   panel.querySelector(`[data-add="${key}"]`)?.addEventListener('click', () => {
@@ -658,6 +704,15 @@ function bindListEvents(panelId, key, fields) {
     renderAllPanels();
     switchPanel(panelId.replace('panel-', ''));
   });
+
+  if (options.reorderable) {
+    panel.querySelectorAll(`[data-move-up="${key}"]`).forEach((btn) => {
+      btn.addEventListener('click', () => moveListItem(key, parseInt(btn.dataset.idx, 10), -1, panelId));
+    });
+    panel.querySelectorAll(`[data-move-down="${key}"]`).forEach((btn) => {
+      btn.addEventListener('click', () => moveListItem(key, parseInt(btn.dataset.idx, 10), 1, panelId));
+    });
+  }
 }
 
 const EVENT_FIELDS = [
@@ -681,6 +736,15 @@ const CORE_FIELDS = [
   { id: 'accent', label: 'Accent' },
   { id: 'lead', label: 'Lead' },
   { id: 'department', label: 'Department: leadership, events, media, technical, finance, operations' }
+];
+
+const FACULTY_FIELDS = [
+  { id: 'name', label: 'Name' },
+  { id: 'designation', label: 'Designation (e.g. Assistant Professor)' },
+  { id: 'role', label: 'Role (e.g. Faculty In-Charge, RC Innovation Club)' },
+  { id: 'period', label: 'Tenure Period (e.g. 2021 – 2025 or 2026 – Present)' },
+  { id: 'description', label: 'Contribution Description', type: 'textarea', rows: 4 },
+  { id: 'image', label: 'Photo Path (e.g. assets/team/faculty/name.jpg)' }
 ];
 
 const AMB_FIELDS = [
@@ -770,6 +834,20 @@ function renderEventsPanel() {
     ${listEditor('events', EVENT_FIELDS, 'Events')}
   `;
   bindListEvents('panel-events', 'events', EVENT_FIELDS);
+}
+
+function renderFacultyPanel() {
+  const s = content.facultySection || {};
+  document.getElementById('panel-faculty').innerHTML = `
+    <div class="admin-card"><h3>Section Header</h3>
+      ${field('Eyebrow', 'faculty-eyebrow', s.eyebrow)}
+      ${field('Title', 'faculty-title', s.title)}
+      ${field('Subtitle', 'faculty-subtitle', s.subtitle, 'textarea', 3)}
+      <p class="admin-hint">Timeline entries appear in the order listed below. Use the arrow buttons to reorder faculty in-charges.</p>
+    </div>
+    ${listEditor('faculty', FACULTY_FIELDS, 'Faculty In-Charge', { reorderable: true })}
+  `;
+  bindListEvents('panel-faculty', 'faculty', FACULTY_FIELDS, { reorderable: true });
 }
 
 function renderCorePanel() {
@@ -1062,9 +1140,9 @@ function renderMembershipPanel() {
     </div>
   `;
 
-  document.getElementById('reg-save-btn')?.addEventListener('click', () => {
+  document.getElementById('reg-save-btn')?.addEventListener('click', async () => {
     collectAllForms();
-    RC_CMS.saveContent(content);
+    await RC_CMS.saveContent(content);
     renderMembershipPanel();
     toast('Registration settings saved.');
   });
@@ -1094,33 +1172,33 @@ function renderMembershipPanel() {
   });
 
   document.querySelectorAll('[data-approve]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_MEMBERSHIP.updateStatus(btn.dataset.approve, 'approved');
+    btn.addEventListener('click', async () => {
+      await RC_MEMBERSHIP.updateStatus(btn.dataset.approve, 'approved');
       renderMembershipPanel();
       toast('Application approved.');
     });
   });
 
   document.querySelectorAll('[data-reject]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_MEMBERSHIP.updateStatus(btn.dataset.reject, 'rejected');
+    btn.addEventListener('click', async () => {
+      await RC_MEMBERSHIP.updateStatus(btn.dataset.reject, 'rejected');
       renderMembershipPanel();
       toast('Application rejected.');
     });
   });
 
   document.querySelectorAll('[data-pending]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_MEMBERSHIP.updateStatus(btn.dataset.pending, 'pending');
+    btn.addEventListener('click', async () => {
+      await RC_MEMBERSHIP.updateStatus(btn.dataset.pending, 'pending');
       renderMembershipPanel();
       toast('Application marked as pending.');
     });
   });
 
   document.querySelectorAll('[data-delete]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Delete this application permanently?')) return;
-      RC_MEMBERSHIP.deleteApplication(btn.dataset.delete);
+      await RC_MEMBERSHIP.deleteApplication(btn.dataset.delete);
       renderMembershipPanel();
       toast('Application deleted.');
     });
@@ -1230,9 +1308,9 @@ function renderContactPanel() {
     </div>
   `;
 
-  document.getElementById('contact-settings-save')?.addEventListener('click', () => {
+  document.getElementById('contact-settings-save')?.addEventListener('click', async () => {
     collectAllForms();
-    RC_CMS.saveContent(content);
+    await RC_CMS.saveContent(content);
     toast('Contact settings saved.');
   });
 
@@ -1266,25 +1344,25 @@ function renderContactPanel() {
   });
 
   document.querySelectorAll('[data-contact-read]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_CONTACT.updateStatus(btn.dataset.contactRead, 'read');
+    btn.addEventListener('click', async () => {
+      await RC_CONTACT.updateStatus(btn.dataset.contactRead, 'read');
       renderContactPanel();
       toast('Marked as read.');
     });
   });
 
   document.querySelectorAll('[data-contact-unread]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_CONTACT.updateStatus(btn.dataset.contactUnread, 'unread');
+    btn.addEventListener('click', async () => {
+      await RC_CONTACT.updateStatus(btn.dataset.contactUnread, 'unread');
       renderContactPanel();
       toast('Marked as unread.');
     });
   });
 
   document.querySelectorAll('[data-contact-del]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Delete this message permanently?')) return;
-      RC_CONTACT.deleteMessage(btn.dataset.contactDel);
+      await RC_CONTACT.deleteMessage(btn.dataset.contactDel);
       renderContactPanel();
       toast('Message deleted.');
     });
@@ -1432,10 +1510,10 @@ function renderCertificatesPanel() {
     </div>
   `;
 
-  document.getElementById('cert-issue-btn')?.addEventListener('click', () => {
+  document.getElementById('cert-issue-btn')?.addEventListener('click', async () => {
     const errEl = document.getElementById('cert-issue-error');
     if (errEl) errEl.classList.remove('show');
-    const result = RC_CERTIFICATES.issueCertificate({
+    const result = await RC_CERTIFICATES.issueCertificate({
       recipientName: document.getElementById('cert-issue-name')?.value || '',
       type: document.getElementById('cert-issue-type')?.value || 'participation',
       eventTitle: document.getElementById('cert-issue-event')?.value || '',
@@ -1502,26 +1580,26 @@ function renderCertificatesPanel() {
   });
 
   document.querySelectorAll('[data-cert-revoke]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Revoke this certificate? It will fail public verification.')) return;
-      RC_CERTIFICATES.updateStatus(btn.dataset.certRevoke, 'revoked');
+      await RC_CERTIFICATES.updateStatus(btn.dataset.certRevoke, 'revoked');
       renderCertificatesPanel();
       toast('Certificate revoked.');
     });
   });
 
   document.querySelectorAll('[data-cert-activate]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      RC_CERTIFICATES.updateStatus(btn.dataset.certActivate, 'active');
+    btn.addEventListener('click', async () => {
+      await RC_CERTIFICATES.updateStatus(btn.dataset.certActivate, 'active');
       renderCertificatesPanel();
       toast('Certificate reactivated.');
     });
   });
 
   document.querySelectorAll('[data-cert-delete]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Delete this certificate permanently?')) return;
-      RC_CERTIFICATES.deleteCertificate(btn.dataset.certDelete);
+      await RC_CERTIFICATES.deleteCertificate(btn.dataset.certDelete);
       renderCertificatesPanel();
       toast('Certificate deleted.');
     });
@@ -1646,9 +1724,9 @@ function renderNewsletterPanel() {
     toast('Dismissals cleared.');
   });
 
-  document.getElementById('newsletter-settings-save')?.addEventListener('click', () => {
+  document.getElementById('newsletter-settings-save')?.addEventListener('click', async () => {
     collectAllForms();
-    RC_CMS.saveContent(content);
+    await RC_CMS.saveContent(content);
     toast('Newsletter settings saved.');
   });
 
@@ -1672,9 +1750,9 @@ function renderNewsletterPanel() {
   });
 
   document.querySelectorAll('[data-newsletter-del]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Remove this subscriber?')) return;
-      RC_NEWSLETTER.deleteSubscriber(btn.dataset.newsletterDel);
+      await RC_NEWSLETTER.deleteSubscriber(btn.dataset.newsletterDel);
       renderNewsletterPanel();
       toast('Subscriber removed.');
     });

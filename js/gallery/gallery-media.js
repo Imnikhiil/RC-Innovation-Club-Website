@@ -21,13 +21,31 @@ function openGalleryDb() {
   return galleryDbPromise;
 }
 
+function blobExtension(blob, fallback = 'bin') {
+  const type = blob?.type || '';
+  if (type.includes('jpeg') || type.includes('jpg')) return 'jpg';
+  if (type.includes('png')) return 'png';
+  if (type.includes('webp')) return 'webp';
+  if (type.includes('mp4')) return 'mp4';
+  if (type.includes('webm')) return 'webm';
+  return fallback;
+}
+
 window.RC_GALLERY_MEDIA = {
-  async saveBlob(id, blob) {
+  async saveBlob(id, blob, options = {}) {
+    if (window.RC_BACKEND?.isEnabled()) {
+      const itemId = options.itemId || id.split('_')[0] || id;
+      const ext = blobExtension(blob, options.type === 'video' ? 'mp4' : 'jpg');
+      const storagePath = `gallery/${itemId}/${options.kind || 'media'}.${ext}`;
+      const url = await RC_BACKEND.uploadFile(storagePath, blob, blob.type || undefined);
+      return { id, url, path: storagePath };
+    }
+
     const db = await openGalleryDb();
     return new Promise((resolve, reject) => {
       const tx = db.transaction(GALLERY_STORE, 'readwrite');
       tx.objectStore(GALLERY_STORE).put(blob, id);
-      tx.oncomplete = () => resolve(id);
+      tx.oncomplete = () => resolve({ id, url: null, path: null });
       tx.onerror = () => reject(tx.error);
     });
   },
@@ -42,7 +60,12 @@ window.RC_GALLERY_MEDIA = {
     });
   },
 
-  async deleteBlob(id) {
+  async deleteBlob(id, storagePath) {
+    if (storagePath && window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.deleteFile(storagePath);
+      return;
+    }
+
     const db = await openGalleryDb();
     return new Promise((resolve, reject) => {
       const tx = db.transaction(GALLERY_STORE, 'readwrite');
@@ -58,8 +81,10 @@ window.RC_GALLERY_MEDIA = {
     });
   },
 
-  async getObjectUrl(id) {
+  async getObjectUrl(id, directUrl) {
+    if (directUrl) return directUrl;
     if (!id) return '';
+    if (id.startsWith('http')) return id;
     if (objectUrlCache.has(id)) return objectUrlCache.get(id);
     const blob = await this.getBlob(id);
     if (!blob) return '';

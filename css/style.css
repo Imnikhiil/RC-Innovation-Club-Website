@@ -1903,6 +1903,215 @@ body.has-announce-bar .mobile-nav {
   font-size: clamp(1.1rem, 3vw, 1.5rem);
 }
 
+/* Faculty in-charge timeline */
+.faculty-timeline {
+  position: relative;
+  max-width: 52rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.faculty-timeline::before {
+  content: '';
+  position: absolute;
+  left: 1.1rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--indigo), transparent);
+}
+
+.faculty-timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.faculty-timeline-marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+}
+
+.faculty-timeline-period {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 5rem;
+}
+
+.faculty-timeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+  flex-shrink: 0;
+}
+
+.faculty-timeline-item--current .faculty-timeline-dot {
+  background: var(--indigo);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35), 0 0 12px rgba(99, 102, 241, 0.45);
+}
+
+.faculty-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .faculty-timeline::before {
+    left: 6.75rem;
+  }
+
+  .faculty-timeline-item {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .faculty-timeline-marker {
+    align-items: flex-end;
+    padding-right: 0.5rem;
+  }
+
+  .faculty-timeline-period {
+    font-size: 0.72rem;
+    max-width: 6.5rem;
+    text-align: right;
+  }
+
+  .faculty-card {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .faculty-timeline {
+    gap: 2.5rem;
+  }
+
+  .faculty-card {
+    padding: 1.75rem;
+    gap: 1.75rem;
+  }
+}
+
+.faculty-card__photo-wrap {
+  position: relative;
+  width: 6.5rem;
+  height: 6.5rem;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .faculty-card__photo-wrap {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+
+.faculty-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  border: 2px solid rgba(56, 189, 248, 0.25);
+}
+
+.faculty-card__fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  font-weight: 800;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  color: white;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+.faculty-card__photo-wrap.is-fallback .faculty-card__photo {
+  display: none;
+}
+
+.faculty-card__photo-wrap.is-fallback .faculty-card__fallback {
+  display: flex;
+}
+
+.faculty-card__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.faculty-card__badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.faculty-card__name {
+  font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.faculty-card__designation {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.faculty-card__role {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.faculty-card__desc {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.faculty-timeline-item--current .faculty-card {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
 /* Members list */
 .members-grid {
   display: grid;

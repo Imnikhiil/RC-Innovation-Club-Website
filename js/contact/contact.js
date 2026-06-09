@@ -1,15 +1,36 @@
 const CONTACT_STORAGE_KEY = 'rc_contact_messages';
 
+let messagesCache = null;
+let contactReady = false;
+
 window.RC_CONTACT = {
   SUBJECTS: ['General Inquiry', 'Collaboration', 'Sponsorship', 'Event Query', 'Feedback', 'Other'],
 
-  getConfig() {
-    const defaults = window.RC_DEFAULT_CONTENT?.contactSection || {};
-    const content = window.RC_CMS?.getContent() || {};
-    return { ...defaults, ...(content.contactSection || {}) };
+  async init() {
+    if (contactReady) return messagesCache;
+    await RC_CMS.ensureReady();
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        messagesCache = await RC_BACKEND.listCollection(RC_BACKEND.PATHS.CONTACT, 'submittedAt');
+        localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(messagesCache));
+      } catch (e) {
+        console.warn('Contact: cloud load failed, using local cache', e);
+        messagesCache = this._loadLocal();
+      }
+    } else {
+      messagesCache = this._loadLocal();
+    }
+    contactReady = true;
+    return messagesCache;
   },
 
-  getMessages() {
+  async ensureReady() {
+    if (contactReady) return messagesCache;
+    return this.init();
+  },
+
+  _loadLocal() {
     try {
       const raw = localStorage.getItem(CONTACT_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
@@ -19,7 +40,20 @@ window.RC_CONTACT = {
     return [];
   },
 
+  getConfig() {
+    const defaults = window.RC_DEFAULT_CONTENT?.contactSection || {};
+    const content = window.RC_CMS?.getContent() || {};
+    return { ...defaults, ...(content.contactSection || {}) };
+  },
+
+  getMessages() {
+    if (messagesCache) return messagesCache;
+    messagesCache = this._loadLocal();
+    return messagesCache;
+  },
+
   saveMessages(messages) {
+    messagesCache = messages;
     localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(messages));
     window.dispatchEvent(new CustomEvent('rc-contact-updated'));
     return true;
@@ -29,7 +63,7 @@ window.RC_CONTACT = {
     return `msg_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   },
 
-  submitMessage(data) {
+  async submitMessage(data) {
     const message = {
       id: this.generateId(),
       name: (data.name || '').trim(),
@@ -53,24 +87,44 @@ window.RC_CONTACT = {
       return { ok: false, error: 'Message must be at least 10 characters.' };
     }
 
-    const messages = this.getMessages();
-    messages.unshift(message);
-    this.saveMessages(messages);
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        await RC_BACKEND.addDoc(RC_BACKEND.PATHS.CONTACT, message.id, message);
+        const messages = this.getMessages();
+        messages.unshift(message);
+        this.saveMessages(messages);
+      } catch (e) {
+        console.error('Contact: submit failed', e);
+        return { ok: false, error: 'Could not send message. Please try again later.' };
+      }
+    } else {
+      const messages = this.getMessages();
+      messages.unshift(message);
+      this.saveMessages(messages);
+    }
+
     return { ok: true, message };
   },
 
-  updateStatus(id, status) {
+  async updateStatus(id, status) {
     if (!['unread', 'read'].includes(status)) return false;
     const messages = this.getMessages();
     const idx = messages.findIndex((m) => m.id === id);
     if (idx === -1) return false;
     messages[idx].status = status;
     this.saveMessages(messages);
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.updateDoc(RC_BACKEND.PATHS.CONTACT, id, { status });
+    }
     return true;
   },
 
-  deleteMessage(id) {
-    this.saveMessages(this.getMessages().filter((m) => m.id !== id));
+  async deleteMessage(id) {
+    const messages = this.getMessages().filter((m) => m.id !== id);
+    this.saveMessages(messages);
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.deleteDoc(RC_BACKEND.PATHS.CONTACT, id);
+    }
     return true;
   },
 

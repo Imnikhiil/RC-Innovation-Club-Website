@@ -1,6 +1,11 @@
 const CMS_STORAGE_KEY = 'rc_innovation_club_content';
 const CMS_SESSION_KEY = 'rc_admin_session';
 
+let contentCache = null;
+let cmsReady = false;
+let cmsInitPromise = null;
+let cmsUnsubscribe = null;
+
 const ASSET_PATH_MIGRATIONS = [
   [/^CLUB LOGO\//, 'assets/logo/'],
   [/^PAST EVENTS PICTURES\//, 'assets/events/'],
@@ -30,6 +35,9 @@ function migrateContentAssets(content) {
   if (Array.isArray(content.ambassadors)) {
     content.ambassadors = content.ambassadors.map((a) => ({ ...a, image: migrateAssetPath(a.image) }));
   }
+  if (Array.isArray(content.faculty)) {
+    content.faculty = content.faculty.map((f) => ({ ...f, image: migrateAssetPath(f.image) }));
+  }
   if (Array.isArray(content.gallery)) {
     content.gallery = content.gallery.map((g) => ({
       ...g,
@@ -40,34 +48,79 @@ function migrateContentAssets(content) {
   return content;
 }
 
+function loadLocalContent() {
+  try {
+    const saved = localStorage.getItem(CMS_STORAGE_KEY);
+    if (saved) {
+      return window.RC_CMS.mergeContent(window.RC_CMS.getDefaultContent(), JSON.parse(saved));
+    }
+  } catch (e) {
+    console.warn('CMS: could not load saved content', e);
+  }
+  return migrateContentAssets(window.RC_CMS.getDefaultContent());
+}
+
 window.RC_CMS = {
   getDefaultContent() {
     return JSON.parse(JSON.stringify(window.RC_DEFAULT_CONTENT));
   },
 
-  getContent() {
-    try {
-      const saved = localStorage.getItem(CMS_STORAGE_KEY);
-      if (saved) {
-        return this.mergeContent(this.getDefaultContent(), JSON.parse(saved));
+  async init() {
+    if (cmsInitPromise) return cmsInitPromise;
+
+    cmsInitPromise = (async () => {
+      if (window.RC_BACKEND?.isEnabled()) {
+        await RC_BACKEND.init();
+        let remote = await RC_BACKEND.getCmsContent();
+        if (!remote || !Object.keys(remote).length) {
+          await RC_BACKEND.seedFromLocalIfEmpty();
+          remote = await RC_BACKEND.getCmsContent();
+        }
+        contentCache = migrateContentAssets(
+          remote
+            ? this.mergeContent(this.getDefaultContent(), remote)
+            : loadLocalContent()
+        );
+        localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(contentCache));
+
+        if (cmsUnsubscribe) cmsUnsubscribe();
+        cmsUnsubscribe = RC_BACKEND.watchCmsContent((data) => {
+          contentCache = migrateContentAssets(this.mergeContent(this.getDefaultContent(), data));
+          localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(contentCache));
+          window.dispatchEvent(new CustomEvent('rc-content-updated'));
+        });
+      } else {
+        contentCache = loadLocalContent();
       }
-    } catch (e) {
-      console.warn('CMS: could not load saved content', e);
-    }
-    return migrateContentAssets(this.getDefaultContent());
+      cmsReady = true;
+      return contentCache;
+    })();
+
+    return cmsInitPromise;
+  },
+
+  async ensureReady() {
+    if (cmsReady) return contentCache;
+    return this.init();
+  },
+
+  getContent() {
+    if (contentCache) return contentCache;
+    contentCache = loadLocalContent();
+    return contentCache;
   },
 
   mergeContent(defaults, saved) {
     const merged = { ...defaults, ...saved };
     const arrays = [
-      'stats', 'events', 'coreTeam', 'ambassadors',
+      'stats', 'events', 'faculty', 'coreTeam', 'ambassadors',
       'membersCurrent', 'membersPrevious', 'legacy', 'testimonials', 'partners', 'projects', 'resources', 'gallery'
     ];
     arrays.forEach((key) => {
       if (Array.isArray(saved[key])) merged[key] = saved[key];
     });
     const objects = [
-      'hero', 'statsSection', 'about', 'eventsSection', 'teamHierarchySection', 'coreSection', 'ambassadorsSection',
+      'hero', 'statsSection', 'about', 'eventsSection', 'facultySection', 'teamHierarchySection', 'coreSection', 'ambassadorsSection',
       'membersSection', 'legacySection', 'testimonialsSection', 'partnersSection', 'projectsSection', 'resourcesSection', 'gallerySection', 'announcementBar', 'newsletterSection',
       'analyticsSection', 'notificationsSection', 'certificatesSection', 'contactSection', 'join', 'footer', 'social', 'registration', 'seo'
     ];
@@ -102,15 +155,27 @@ window.RC_CMS = {
   },
 
   saveContent(content) {
+    contentCache = content;
     localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(content));
     window.dispatchEvent(new CustomEvent('rc-content-updated'));
-    return true;
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      return RC_BACKEND.saveCmsContent(content).catch((e) => {
+        console.error('CMS: cloud save failed', e);
+        throw e;
+      });
+    }
+    return Promise.resolve(true);
   },
 
   resetContent() {
     localStorage.removeItem(CMS_STORAGE_KEY);
+    contentCache = migrateContentAssets(this.getDefaultContent());
     window.dispatchEvent(new CustomEvent('rc-content-updated'));
-    return this.getDefaultContent();
+    if (window.RC_BACKEND?.isEnabled()) {
+      return RC_BACKEND.saveCmsContent(contentCache).then(() => contentCache);
+    }
+    return Promise.resolve(contentCache);
   },
 
   exportContent() {
@@ -129,8 +194,10 @@ window.RC_CMS = {
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result);
-          this.saveContent(this.mergeContent(this.getDefaultContent(), data));
-          resolve(this.getContent());
+          const merged = this.mergeContent(this.getDefaultContent(), data);
+          Promise.resolve(this.saveContent(merged))
+            .then(() => resolve(this.getContent()))
+            .catch(reject);
         } catch (e) {
           reject(new Error('Invalid JSON file'));
         }
@@ -182,9 +249,29 @@ window.RC_CMS = {
     return session?.displayName || session?.user || 'Admin';
   },
 
-  login(username, password) {
+  async login(username, password) {
     const config = window.RC_ADMIN_CONFIG;
     if (!config) return false;
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        const profile = await RC_BACKEND.signIn(username, password);
+        const hours = config.sessionHours || 8;
+        const session = {
+          user: profile.username,
+          uid: profile.uid,
+          email: profile.email,
+          role: profile.role || 'super',
+          displayName: profile.displayName || profile.username,
+          expires: Date.now() + hours * 60 * 60 * 1000
+        };
+        sessionStorage.setItem(CMS_SESSION_KEY, JSON.stringify(session));
+        return true;
+      } catch (e) {
+        console.warn('CMS: cloud login failed', e);
+        return false;
+      }
+    }
 
     const user = this.getAdminUsers().find(
       (u) => u.username === username && u.password === password
@@ -204,6 +291,9 @@ window.RC_CMS = {
 
   logout() {
     sessionStorage.removeItem(CMS_SESSION_KEY);
+    if (window.RC_BACKEND?.isEnabled()) {
+      RC_BACKEND.signOut();
+    }
   },
 
   isLoggedIn() {

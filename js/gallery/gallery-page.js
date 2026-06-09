@@ -67,5 +67,8 @@ async function renderGalleryPageGrid() {
   initGalleryLightbox(filtered);
 }
 
-document.addEventListener('DOMContentLoaded', initGalleryPage);
-window.addEventListener('rc-content-updated', initGalleryPage);
+document.addEventListener('DOMContentLoaded', async () => {
+  await RC_CMS.init();
+  await initGalleryPage();
+});
+window.addEventListener('rc-content-updated', () => initGalleryPage());

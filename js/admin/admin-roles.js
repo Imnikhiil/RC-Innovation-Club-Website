@@ -4,7 +4,7 @@ window.RC_ADMIN_ROLES = {
       label: 'Super Admin',
       description: 'Full access to all website content, applications, and system settings.',
       panels: [
-        'dashboard', 'hero', 'stats', 'about', 'events', 'core', 'ambassadors', 'members',
+        'dashboard', 'hero', 'stats', 'about', 'events', 'faculty', 'core', 'ambassadors', 'members',
         'legacy', 'testimonials', 'partners', 'projects', 'resources', 'gallery', 'join',
         'membership', 'contact', 'certificates', 'newsletter', 'notifications', 'seo', 'analytics'
       ],
@@ -14,7 +14,7 @@ window.RC_ADMIN_ROLES = {
       label: 'Content Editor',
       description: 'Edit public website sections, media, and marketing content.',
       panels: [
-        'dashboard', 'hero', 'stats', 'about', 'events', 'core', 'ambassadors', 'members',
+        'dashboard', 'hero', 'stats', 'about', 'events', 'faculty', 'core', 'ambassadors', 'members',
         'legacy', 'testimonials', 'partners', 'projects', 'resources', 'gallery', 'join',
         'newsletter', 'seo'
       ],

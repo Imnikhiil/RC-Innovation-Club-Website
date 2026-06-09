@@ -69,7 +69,7 @@ function galleryAdminItemRow(item, index, total) {
     <div class="admin-gallery-item" data-id="${galleryEsc(item.id)}">
       <div class="admin-gallery-item__thumb">
         ${item.type === 'video' ? '<span class="admin-gallery-item__badge"><i class="fas fa-video"></i></span>' : ''}
-        <img src="${galleryEsc(preview)}" alt="" data-admin-thumb="${galleryEsc(item.thumbnailId || item.mediaId || '')}" />
+        <img src="${galleryEsc(item.thumbnailUrl || item.mediaUrl || preview)}" alt="" data-admin-thumb="${galleryEsc(item.thumbnailId || item.mediaId || '')}" data-admin-thumb-url="${galleryEsc(item.thumbnailUrl || item.mediaUrl || '')}" />
       </div>
       <div class="admin-gallery-item__info">
         <strong>${galleryEsc(item.title)}</strong>
@@ -189,19 +189,20 @@ function bindGalleryAdminEvents(items) {
 
   document.querySelectorAll('[data-admin-thumb]').forEach(async (img) => {
     const id = img.dataset.adminThumb;
-    if (!id) return;
-    const url = await RC_GALLERY_MEDIA.getObjectUrl(id);
-    if (url) img.src = url;
+    const url = img.dataset.adminThumbUrl;
+    if (!id && !url) return;
+    const resolved = await RC_GALLERY_MEDIA.getObjectUrl(id, url);
+    if (resolved) img.src = resolved;
   });
 }
 
-function moveGalleryItem(index, direction) {
+async function moveGalleryItem(index, direction) {
   const items = RC_GALLERY.getItems();
   const newIndex = index + direction;
   if (newIndex < 0 || newIndex >= items.length) return;
   const copy = [...items];
   [copy[index], copy[newIndex]] = [copy[newIndex], copy[index]];
-  RC_GALLERY.saveItems(copy);
+  await RC_GALLERY.saveItems(copy);
   content = RC_CMS.getContent();
   renderGalleryAdminPanel();
   switchPanel('gallery');
@@ -211,9 +212,9 @@ function moveGalleryItem(index, direction) {
 async function deleteGalleryItem(id) {
   const items = RC_GALLERY.getItems();
   const item = items.find((i) => i.id === id);
-  if (item?.mediaId) await RC_GALLERY_MEDIA.deleteBlob(item.mediaId);
-  if (item?.thumbnailId) await RC_GALLERY_MEDIA.deleteBlob(item.thumbnailId);
-  RC_GALLERY.saveItems(items.filter((i) => i.id !== id));
+  if (item?.mediaId || item?.mediaPath) await RC_GALLERY_MEDIA.deleteBlob(item.mediaId, item.mediaPath);
+  if (item?.thumbnailId || item?.thumbnailPath) await RC_GALLERY_MEDIA.deleteBlob(item.thumbnailId, item.thumbnailPath);
+  await RC_GALLERY.saveItems(items.filter((i) => i.id !== id));
   content = RC_CMS.getContent();
   galleryEditState = null;
   renderGalleryAdminPanel();
@@ -338,22 +339,42 @@ async function applyGalleryCrop() {
 async function finalizeGalleryUpload(replace) {
   if (!galleryEditState || !galleryPendingBlob) return;
 
+  const itemId = galleryEditState.id;
   const mediaId = RC_GALLERY_MEDIA.generateId('media');
-  await RC_GALLERY_MEDIA.saveBlob(mediaId, galleryPendingBlob);
+  const mediaResult = await RC_GALLERY_MEDIA.saveBlob(mediaId, galleryPendingBlob, {
+    itemId,
+    kind: 'media',
+    type: galleryEditState.type
+  });
 
   let thumbnailId = galleryEditState.thumbnailId || null;
+  let thumbnailUrl = galleryEditState.thumbnailUrl || null;
+  let thumbnailPath = galleryEditState.thumbnailPath || null;
+
   if (galleryEditState.type === 'video') {
-    if (galleryEditState.thumbnailId) await RC_GALLERY_MEDIA.deleteBlob(galleryEditState.thumbnailId);
+    if (galleryEditState.thumbnailId || galleryEditState.thumbnailPath) {
+      await RC_GALLERY_MEDIA.deleteBlob(galleryEditState.thumbnailId, galleryEditState.thumbnailPath);
+    }
     const thumbBlob = await RC_GALLERY_MEDIA.captureVideoThumbnail(galleryPendingBlob);
     thumbnailId = RC_GALLERY_MEDIA.generateId('thumb');
-    await RC_GALLERY_MEDIA.saveBlob(thumbnailId, thumbBlob);
-  } else if (replace && galleryEditState.mediaId) {
-    await RC_GALLERY_MEDIA.deleteBlob(galleryEditState.mediaId);
+    const thumbResult = await RC_GALLERY_MEDIA.saveBlob(thumbnailId, thumbBlob, {
+      itemId,
+      kind: 'thumbnail',
+      type: 'image'
+    });
+    thumbnailUrl = thumbResult.url || null;
+    thumbnailPath = thumbResult.path || null;
+  } else if (replace && (galleryEditState.mediaId || galleryEditState.mediaPath)) {
+    await RC_GALLERY_MEDIA.deleteBlob(galleryEditState.mediaId, galleryEditState.mediaPath);
   }
 
-  galleryEditState.mediaId = mediaId;
+  galleryEditState.mediaId = mediaResult.id || mediaId;
+  galleryEditState.mediaUrl = mediaResult.url || null;
+  galleryEditState.mediaPath = mediaResult.path || null;
   galleryEditState.thumbnailId = thumbnailId;
-  galleryEditState.src = '';
+  galleryEditState.thumbnailUrl = thumbnailUrl;
+  galleryEditState.thumbnailPath = thumbnailPath;
+  galleryEditState.src = mediaResult.url || '';
   galleryPendingBlob = null;
 
   if (replace) {
@@ -381,15 +402,19 @@ async function saveGalleryEditItem() {
   };
   delete updated._isNew;
 
-  if (galleryPendingBlob && !updated.mediaId) {
+  if (galleryPendingBlob && !updated.mediaId && !updated.mediaUrl) {
     galleryPendingType = updated.type;
     await finalizeGalleryUpload(false);
     updated.mediaId = galleryEditState.mediaId;
+    updated.mediaUrl = galleryEditState.mediaUrl;
+    updated.mediaPath = galleryEditState.mediaPath;
     updated.thumbnailId = galleryEditState.thumbnailId;
-    updated.src = '';
+    updated.thumbnailUrl = galleryEditState.thumbnailUrl;
+    updated.thumbnailPath = galleryEditState.thumbnailPath;
+    updated.src = galleryEditState.src || '';
   }
 
-  if (!updated.mediaId && !updated.src) {
+  if (!updated.mediaId && !updated.mediaUrl && !updated.src) {
     galleryShowError('Please upload or provide media for this item.');
     return;
   }
@@ -399,7 +424,7 @@ async function saveGalleryEditItem() {
   if (idx >= 0) items[idx] = updated;
   else items.push(updated);
 
-  RC_GALLERY.saveItems(items);
+  await RC_GALLERY.saveItems(items);
   content = RC_CMS.getContent();
   galleryEditState = null;
   galleryPendingBlob = null;

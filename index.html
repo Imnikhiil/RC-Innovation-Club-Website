@@ -68,6 +68,7 @@
     <div class="desktop-nav tracking-wide">
       <a href="#about" class="nav-link" data-section="about">About</a>
       <a href="#events" class="nav-link" data-section="events">Events</a>
+      <a href="#faculty" class="nav-link" data-section="faculty">Faculty</a>
       <a href="#core" class="nav-link" data-section="core">Core Team</a>
       <a href="#ambassadors" class="nav-link" data-section="ambassadors">Ambassadors</a>
       <a href="#members" class="nav-link" data-section="members">Members</a>
@@ -98,6 +99,7 @@
   <div class="mobile-nav xl:hidden">
     <a href="#about">About</a>
     <a href="#events">Events</a>
+    <a href="#faculty">Faculty</a>
     <a href="#core">Core Team</a>
     <a href="#ambassadors">Ambassadors</a>
     <a href="#members">Members</a>
@@ -221,6 +223,19 @@
       <p class="events-hint" aria-hidden="true">
         <i class="fas fa-hand-pointer"></i> Swipe to explore events
       </p>
+    </div>
+  </section>
+
+  <!-- FACULTY IN-CHARGE -->
+  <section id="faculty" class="section-block">
+    <div class="site-container text-center mb-10 sm:mb-14">
+      <span class="section-eyebrow" id="cms-faculty-eyebrow" data-aos="fade-up">Club Leadership & Faculty In-Charge</span>
+      <h2 class="section-title mb-3" id="cms-faculty-title" data-aos="fade-up">Guiding Our Innovation Journey</h2>
+      <p class="section-subtitle" id="cms-faculty-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container">
+      <div class="faculty-timeline" id="cms-faculty-timeline" aria-label="Faculty in-charge timeline"></div>
     </div>
   </section>
 
@@ -664,7 +679,11 @@
   </div>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config/content-default.js"></script>
+  <script src="js/config/supabase-config.js"></script>
+  <script src="js/supabase/supabase-core.js"></script>
+  <script src="js/core/backend.js"></script>
   <script src="js/core/cms.js"></script>
   <script src="js/events/events.js"></script>
   <script src="js/membership/membership.js"></script>

@@ -1,0 +1,26 @@
+# Render Blueprint — RC Innovation Club static site
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: rc-innovation-club
+    runtime: static
+    branch: main
+    buildCommand: ""
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    routes:
+      - type: rewrite
+        source: /admin
+        destination: /admin.html
+      - type: rewrite
+        source: /gallery
+        destination: /gallery.html

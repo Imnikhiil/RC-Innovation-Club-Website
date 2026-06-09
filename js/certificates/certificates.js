@@ -1,6 +1,50 @@
 const CERTIFICATES_STORAGE_KEY = 'rc_certificates_issued';
 
+let certificatesCache = null;
+let certificatesReady = false;
+
 window.RC_CERTIFICATES = {
+  async init() {
+    if (certificatesReady) return certificatesCache;
+    await RC_CMS.ensureReady();
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        certificatesCache = await RC_BACKEND.listCollection(RC_BACKEND.PATHS.CERTIFICATES, 'issuedAt');
+        if (!certificatesCache.length) {
+          certificatesCache = this.getSeedCertificates();
+          for (const cert of certificatesCache) {
+            await RC_BACKEND.addDoc(RC_BACKEND.PATHS.CERTIFICATES, cert.id, cert);
+          }
+        }
+        localStorage.setItem(CERTIFICATES_STORAGE_KEY, JSON.stringify(certificatesCache));
+      } catch (e) {
+        console.warn('Certificates: cloud load failed, using local cache', e);
+        certificatesCache = this._loadLocal();
+      }
+    } else {
+      certificatesCache = this._loadLocal();
+    }
+    certificatesReady = true;
+    return certificatesCache;
+  },
+
+  async ensureReady() {
+    if (certificatesReady) return certificatesCache;
+    return this.init();
+  },
+
+  _loadLocal() {
+    try {
+      const raw = localStorage.getItem(CERTIFICATES_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {
+      console.warn('Certificates: could not load', e);
+    }
+    const seeded = this.getSeedCertificates();
+    this.saveCertificates(seeded);
+    return seeded;
+  },
   TYPES: {
     participation: 'Event Participation',
     membership: 'Club Membership',
@@ -21,15 +65,9 @@ window.RC_CERTIFICATES = {
   },
 
   getCertificates() {
-    try {
-      const raw = localStorage.getItem(CERTIFICATES_STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) {
-      console.warn('Certificates: could not load', e);
-    }
-    const seeded = this.getSeedCertificates();
-    this.saveCertificates(seeded);
-    return seeded;
+    if (certificatesCache) return certificatesCache;
+    certificatesCache = this._loadLocal();
+    return certificatesCache;
   },
 
   getSeedCertificates() {
@@ -58,6 +96,7 @@ window.RC_CERTIFICATES = {
   },
 
   saveCertificates(list) {
+    certificatesCache = list;
     localStorage.setItem(CERTIFICATES_STORAGE_KEY, JSON.stringify(list));
     window.dispatchEvent(new CustomEvent('rc-certificates-updated'));
     return true;
@@ -82,7 +121,7 @@ window.RC_CERTIFICATES = {
     return this.getCertificates().find((c) => this.normalizeId(c.id) === norm) || null;
   },
 
-  issueCertificate(data) {
+  async issueCertificate(data) {
     const recipientName = (data.recipientName || '').trim();
     const type = this.TYPES[data.type] ? data.type : 'participation';
     const eventTitle = (data.eventTitle || '').trim();
@@ -113,6 +152,15 @@ window.RC_CERTIFICATES = {
       issuedAt: new Date().toISOString()
     };
 
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        await RC_BACKEND.addDoc(RC_BACKEND.PATHS.CERTIFICATES, cert.id, cert);
+      } catch (e) {
+        console.error('Certificates: issue failed', e);
+        return { ok: false, error: 'Could not issue certificate. Please try again.' };
+      }
+    }
+
     list.unshift(cert);
     this.saveCertificates(list);
     return { ok: true, certificate: cert };
@@ -134,18 +182,24 @@ window.RC_CERTIFICATES = {
     return { ok: true, certificate: cert };
   },
 
-  updateStatus(id, status) {
+  async updateStatus(id, status) {
     if (!['active', 'revoked'].includes(status)) return false;
     const list = this.getCertificates();
     const idx = list.findIndex((c) => c.id === id);
     if (idx === -1) return false;
     list[idx].status = status;
     this.saveCertificates(list);
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.updateDoc(RC_BACKEND.PATHS.CERTIFICATES, id, { status });
+    }
     return true;
   },
 
-  deleteCertificate(id) {
+  async deleteCertificate(id) {
     this.saveCertificates(this.getCertificates().filter((c) => c.id !== id));
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.deleteDoc(RC_BACKEND.PATHS.CERTIFICATES, id);
+    }
     return true;
   },
 

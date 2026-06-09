@@ -18,8 +18,8 @@
       <div class="admin-error" id="login-error">Invalid Admin ID or Password</div>
       <form id="login-form">
         <div class="admin-field">
-          <label for="admin-id">Admin ID</label>
-          <input type="text" id="admin-id" name="username" autocomplete="username" required placeholder="Enter admin ID" />
+          <label for="admin-id">Admin ID or Email</label>
+          <input type="text" id="admin-id" name="username" autocomplete="username" required placeholder="admin or admin@rcinnovation.club" />
         </div>
         <div class="admin-field">
           <label for="admin-pass">Password</label>
@@ -30,10 +30,9 @@
         </button>
       </form>
       <p class="admin-hint" style="margin-top:1.25rem;text-align:center;">
-        <strong>Super Admin:</strong> admin / rcinnovation2026<br>
-        <strong>Content Editor:</strong> editor / rceditor2026<br>
-        <strong>Membership Manager:</strong> membership / rcmember2026<br>
-        Change credentials in <code>js/config/admin-config.js</code>
+        <strong>Local mode:</strong> username + password from <code>admin-config.js</code><br>
+        <strong>Supabase mode:</strong> email + password from Supabase Authentication<br>
+        (e.g. admin@rcinnovation.club — see <code>js/config/supabase-config.js</code>)
       </p>
       <p style="text-align:center;margin-top:1rem;">
         <a href="index.html" class="admin-btn" style="font-size:0.8rem;"><i class="fas fa-arrow-left"></i> Back to Website</a>
@@ -53,6 +52,7 @@
         <button type="button" data-panel="stats"><i class="fas fa-chart-line"></i> Stats</button>
         <button type="button" data-panel="about"><i class="fas fa-info-circle"></i> About</button>
         <button type="button" data-panel="events"><i class="fas fa-calendar"></i> Events</button>
+        <button type="button" data-panel="faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</button>
         <button type="button" data-panel="core"><i class="fas fa-users"></i> Core Team</button>
         <button type="button" data-panel="ambassadors"><i class="fas fa-star"></i> Ambassadors</button>
         <button type="button" data-panel="members"><i class="fas fa-user-group"></i> Members</button>
@@ -90,6 +90,7 @@
       <div id="panel-stats" class="admin-panel"></div>
       <div id="panel-about" class="admin-panel"></div>
       <div id="panel-events" class="admin-panel"></div>
+      <div id="panel-faculty" class="admin-panel"></div>
       <div id="panel-core" class="admin-panel"></div>
       <div id="panel-ambassadors" class="admin-panel"></div>
       <div id="panel-members" class="admin-panel"></div>
@@ -113,7 +114,11 @@
   <div class="admin-toast" id="admin-toast">Changes saved successfully!</div>
   <input type="file" id="import-file" accept=".json" />
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config/content-default.js"></script>
+  <script src="js/config/supabase-config.js"></script>
+  <script src="js/supabase/supabase-core.js"></script>
+  <script src="js/core/backend.js"></script>
   <script src="js/config/admin-config.js"></script>
   <script src="js/admin/admin-roles.js"></script>
   <script src="js/core/cms.js"></script>

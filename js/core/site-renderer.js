@@ -19,6 +19,7 @@ window.renderSite = function renderSite(content) {
   renderStats(c.statsSection, c.stats);
   renderAbout(c.about);
   renderEventsSection(c.eventsSection, c.events);
+  renderFacultySection(c.facultySection, c.faculty);
   renderCoreSection(c.coreSection);
   renderTeamHierarchySection(c.teamHierarchySection);
   renderCoreTeam(c.coreTeam);
@@ -139,6 +140,49 @@ function renderEventsSection(section, events) {
   const scroll = document.getElementById('cms-events-scroll');
   if (!scroll) return;
   scroll.innerHTML = past.map((e) => RC_EVENTS.buildPastCard(e)).join('');
+}
+
+function renderFacultySection(section, faculty) {
+  const cfg = section || {};
+  setText('cms-faculty-eyebrow', cfg.eyebrow);
+  setText('cms-faculty-title', cfg.title);
+  setText('cms-faculty-subtitle', cfg.subtitle);
+
+  const timeline = document.getElementById('cms-faculty-timeline');
+  const sectionEl = document.getElementById('faculty');
+  const items = faculty || [];
+  if (sectionEl) sectionEl.hidden = items.length === 0;
+  if (!timeline) return;
+
+  timeline.innerHTML = items.map((member, i) => {
+    const initials = getInitials(member.name);
+    const isCurrent = /present/i.test(member.period || '');
+    const photo = member.image
+      ? `<img src="${escapeHtml(member.image)}" alt="${escapeHtml(member.name)}" class="faculty-card__photo" loading="lazy" decoding="async">`
+      : '';
+
+    return `
+      <article class="faculty-timeline-item${isCurrent ? ' faculty-timeline-item--current' : ''}" data-aos="fade-up" data-aos-delay="${i * 100}">
+        <div class="faculty-timeline-marker" aria-hidden="true">
+          <span class="faculty-timeline-period">${escapeHtml(member.period)}</span>
+          <span class="faculty-timeline-dot"></span>
+        </div>
+        <div class="faculty-card glass card-hover">
+          <div class="faculty-card__photo-wrap">
+            ${photo}
+            <div class="faculty-card__fallback" aria-hidden="true">${initials}</div>
+          </div>
+          <div class="faculty-card__body">
+            ${isCurrent ? '<span class="faculty-card__badge">Current</span>' : ''}
+            <h3 class="faculty-card__name">${escapeHtml(member.name)}</h3>
+            <p class="faculty-card__designation">${escapeHtml(member.designation)}</p>
+            <p class="faculty-card__role">${escapeHtml(member.role)}</p>
+            <p class="faculty-card__desc">${escapeHtml(member.description)}</p>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 function renderCoreSection(section) {

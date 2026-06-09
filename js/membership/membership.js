@@ -1,7 +1,34 @@
 const MEMBERSHIP_STORAGE_KEY = 'rc_membership_applications';
 
+let applicationsCache = null;
+let membershipReady = false;
+
 window.RC_MEMBERSHIP = {
-  getApplications() {
+  async init() {
+    if (membershipReady) return applicationsCache;
+    await RC_CMS.ensureReady();
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        applicationsCache = await RC_BACKEND.listCollection(RC_BACKEND.PATHS.APPLICATIONS, 'submittedAt');
+        localStorage.setItem(MEMBERSHIP_STORAGE_KEY, JSON.stringify(applicationsCache));
+      } catch (e) {
+        console.warn('Membership: cloud load failed, using local cache', e);
+        applicationsCache = this._loadLocal();
+      }
+    } else {
+      applicationsCache = this._loadLocal();
+    }
+    membershipReady = true;
+    return applicationsCache;
+  },
+
+  async ensureReady() {
+    if (membershipReady) return applicationsCache;
+    return this.init();
+  },
+
+  _loadLocal() {
     try {
       const raw = localStorage.getItem(MEMBERSHIP_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
@@ -11,7 +38,14 @@ window.RC_MEMBERSHIP = {
     return [];
   },
 
+  getApplications() {
+    if (applicationsCache) return applicationsCache;
+    applicationsCache = this._loadLocal();
+    return applicationsCache;
+  },
+
   saveApplications(apps) {
+    applicationsCache = apps;
     localStorage.setItem(MEMBERSHIP_STORAGE_KEY, JSON.stringify(apps));
     window.dispatchEvent(new CustomEvent('rc-membership-updated'));
     return true;
@@ -120,13 +154,21 @@ window.RC_MEMBERSHIP = {
     );
   },
 
-  submitApplication(data) {
+  async submitApplication(data) {
     if (!this.isRegistrationOpen()) {
       return { ok: false, error: 'Registration is currently closed.' };
     }
 
     const enrollment = (data.enrollmentNumber || '').trim();
-    if (this.findByEnrollment(enrollment)) {
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      const existing = await RC_BACKEND.queryByField(
+        RC_BACKEND.PATHS.APPLICATIONS, 'enrollmentNumberLower', enrollment.toLowerCase()
+      );
+      if (existing) {
+        return { ok: false, error: 'An application with this enrollment number already exists.' };
+      }
+    } else if (this.findByEnrollment(enrollment)) {
       return { ok: false, error: 'An application with this enrollment number already exists.' };
     }
 
@@ -134,6 +176,7 @@ window.RC_MEMBERSHIP = {
       id: this.generateId(),
       name: (data.name || '').trim(),
       enrollmentNumber: enrollment,
+      enrollmentNumberLower: enrollment.toLowerCase(),
       course: (data.course || '').trim(),
       semester: (data.semester || '').trim(),
       email: (data.email || '').trim(),
@@ -157,26 +200,47 @@ window.RC_MEMBERSHIP = {
       return { ok: false, error: 'Please enter a valid email address.' };
     }
 
-    const apps = this.getApplications();
-    apps.unshift(application);
-    this.saveApplications(apps);
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        await RC_BACKEND.addDoc(RC_BACKEND.PATHS.APPLICATIONS, application.id, application);
+        const apps = this.getApplications();
+        apps.unshift(application);
+        this.saveApplications(apps);
+      } catch (e) {
+        console.error('Membership: submit failed', e);
+        return { ok: false, error: 'Could not submit application. Please try again later.' };
+      }
+    } else {
+      const apps = this.getApplications();
+      apps.unshift(application);
+      this.saveApplications(apps);
+    }
+
     return { ok: true, application };
   },
 
-  updateStatus(id, status) {
+  async updateStatus(id, status) {
     if (!['pending', 'approved', 'rejected'].includes(status)) return false;
     const apps = this.getApplications();
     const idx = apps.findIndex((a) => a.id === id);
     if (idx === -1) return false;
-    apps[idx].status = status;
-    apps[idx].reviewedAt = new Date().toISOString();
+
+    const updates = { status, reviewedAt: new Date().toISOString() };
+    apps[idx] = { ...apps[idx], ...updates };
     this.saveApplications(apps);
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.updateDoc(RC_BACKEND.PATHS.APPLICATIONS, id, updates);
+    }
     return true;
   },
 
-  deleteApplication(id) {
+  async deleteApplication(id) {
     const apps = this.getApplications().filter((a) => a.id !== id);
     this.saveApplications(apps);
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.deleteDoc(RC_BACKEND.PATHS.APPLICATIONS, id);
+    }
     return true;
   },
 

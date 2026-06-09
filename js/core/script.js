@@ -13,6 +13,7 @@ function initSite() {
     window.renderSite(window.RC_CMS.getContent());
   }
   initTeamCards();
+  initFacultyCards();
   if (window.RC_TEAM_HIERARCHY) RC_TEAM_HIERARCHY.init();
   initStatCounters();
   initPopAnimations();
@@ -138,7 +139,7 @@ function initMembershipRegistration() {
     }
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (errorEl) errorEl.textContent = '';
     if (successEl) successEl.textContent = '';
@@ -160,7 +161,7 @@ function initMembershipRegistration() {
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Submitting…';
     }
 
-    const result = window.RC_MEMBERSHIP.submitApplication(data);
+    const result = await window.RC_MEMBERSHIP.submitApplication(data);
 
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -200,7 +201,7 @@ function initContactForm() {
   const successEl = document.getElementById('contact-form-success');
   const submitBtn = document.getElementById('contact-submit-btn');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (errorEl) errorEl.textContent = '';
     if (successEl) successEl.textContent = '';
@@ -217,7 +218,7 @@ function initContactForm() {
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Sending…';
     }
 
-    const result = RC_CONTACT.submitMessage(data);
+    const result = await RC_CONTACT.submitMessage(data);
 
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -253,7 +254,7 @@ function initNewsletterForm() {
   const submitBtn = document.getElementById('newsletter-submit-btn');
   const emailInput = document.getElementById('newsletter-email');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (errorEl) errorEl.textContent = '';
     if (successEl) successEl.textContent = '';
@@ -265,7 +266,7 @@ function initNewsletterForm() {
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Subscribing…';
     }
 
-    const result = RC_NEWSLETTER.subscribe(email);
+    const result = await RC_NEWSLETTER.subscribe(email);
 
     const cfg = RC_NEWSLETTER.getConfig();
     if (submitBtn) {
@@ -286,7 +287,10 @@ function initNewsletterForm() {
 
 window.initNewsletterForm = initNewsletterForm;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await RC_CMS.init();
+  if (window.RC_CERTIFICATES?.init) await RC_CERTIFICATES.init();
+
   if (window.RC_THEME) RC_THEME.init();
   if (window.RC_SEO) RC_SEO.init();
   if (window.RC_ANALYTICS) RC_ANALYTICS.init();
@@ -296,6 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof window.initAnnouncementBar === 'function') window.initAnnouncementBar();
   initNewsletterForm();
   initSite();
+
+  window.addEventListener('rc-content-updated', () => initSite());
 
   try {
     if (typeof AOS !== 'undefined') {
@@ -357,6 +363,17 @@ function initTeamCards() {
   cards.forEach((card) => observer.observe(card));
 }
 window.initTeamCards = initTeamCards;
+
+function initFacultyCards() {
+  document.querySelectorAll('.faculty-card__photo-wrap').forEach((wrap) => {
+    const img = wrap.querySelector('.faculty-card__photo');
+    if (!img) {
+      wrap.classList.add('is-fallback');
+      return;
+    }
+    img.addEventListener('error', () => wrap.classList.add('is-fallback'));
+  });
+}
 
 function initNavbar() {
   const navbar = document.querySelector('.navbar');

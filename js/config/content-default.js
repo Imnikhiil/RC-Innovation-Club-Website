@@ -50,6 +50,29 @@ window.RC_DEFAULT_CONTENT = {
     { tag: 'Intercampus Event', title: 'TECH-KRITI 2.0', date: 'November 14, 2025', description: 'With RC E-CELL & RC SPORT CLUB collaboration.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200' },
     { tag: 'Campus Event', title: 'AI Workshop 2026', date: 'February 12, 2026', description: 'Hands-on AI fundamentals workshop by RC Innovation Club.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200' }
   ],
+  facultySection: {
+    eyebrow: 'Club Leadership & Faculty In-Charge',
+    title: 'Guiding Our Innovation Journey',
+    subtitle: 'Faculty mentors who have guided RC Innovation Club through its growth, shaping student leaders and fostering a culture of hands-on innovation.'
+  },
+  faculty: [
+    {
+      name: 'Dr. Carynthia Kharkongor',
+      designation: 'Assistant Professor',
+      role: 'Faculty In-Charge, RC Innovation Club',
+      period: '2021 – 2025',
+      description: 'Led the club through its formative years — mentoring student leaders, supporting workshops and competitions, and building the foundation for RC Innovation Club at DSEU Rajokri Campus.',
+      image: 'assets/team/faculty/carynthia-kharkongor.jpg'
+    },
+    {
+      name: 'Shanti Lal Dawar',
+      designation: 'Assistant Professor',
+      role: 'Faculty In-Charge, RC Innovation Club',
+      period: '2026 – Present',
+      description: 'Currently guiding the club as Faculty In-Charge — supporting student-led events, emerging technology initiatives, and the continued growth of the RC Innovation Club community.',
+      image: 'assets/team/faculty/shanti-lal-dawar.jpg'
+    }
+  ],
   teamHierarchySection: {
     enabled: true,
     hint: 'Filter by leadership level, department, ambassadors, members, or alumni.'

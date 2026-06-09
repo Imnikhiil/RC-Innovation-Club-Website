@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+
+# Logs & env (never commit secrets here)
+*.log
+.env
+.env.*
+!.env.example
+
+# Dependencies (if added later)
+node_modules/
+
+# Local backups
+*.bak
+rc-innovation-club-backup-*.json

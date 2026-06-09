@@ -1,14 +1,35 @@
 const NEWSLETTER_STORAGE_KEY = 'rc_newsletter_subscribers';
 const ANNOUNCE_DISMISS_KEY = 'rc_announce_dismissed';
 
+let subscribersCache = null;
+let newsletterReady = false;
+
 window.RC_NEWSLETTER = {
-  getConfig() {
-    const defaults = window.RC_DEFAULT_CONTENT?.newsletterSection || {};
-    const content = window.RC_CMS?.getContent() || {};
-    return { ...defaults, ...(content.newsletterSection || {}) };
+  async init() {
+    if (newsletterReady) return subscribersCache;
+    await RC_CMS.ensureReady();
+
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        subscribersCache = await RC_BACKEND.listCollection(RC_BACKEND.PATHS.SUBSCRIBERS, 'subscribedAt');
+        localStorage.setItem(NEWSLETTER_STORAGE_KEY, JSON.stringify(subscribersCache));
+      } catch (e) {
+        console.warn('Newsletter: cloud load failed, using local cache', e);
+        subscribersCache = this._loadLocal();
+      }
+    } else {
+      subscribersCache = this._loadLocal();
+    }
+    newsletterReady = true;
+    return subscribersCache;
   },
 
-  getSubscribers() {
+  async ensureReady() {
+    if (newsletterReady) return subscribersCache;
+    return this.init();
+  },
+
+  _loadLocal() {
     try {
       const raw = localStorage.getItem(NEWSLETTER_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
@@ -18,7 +39,20 @@ window.RC_NEWSLETTER = {
     return [];
   },
 
+  getConfig() {
+    const defaults = window.RC_DEFAULT_CONTENT?.newsletterSection || {};
+    const content = window.RC_CMS?.getContent() || {};
+    return { ...defaults, ...(content.newsletterSection || {}) };
+  },
+
+  getSubscribers() {
+    if (subscribersCache) return subscribersCache;
+    subscribersCache = this._loadLocal();
+    return subscribersCache;
+  },
+
   saveSubscribers(list) {
+    subscribersCache = list;
     localStorage.setItem(NEWSLETTER_STORAGE_KEY, JSON.stringify(list));
     window.dispatchEvent(new CustomEvent('rc-newsletter-updated'));
     return true;
@@ -28,7 +62,7 @@ window.RC_NEWSLETTER = {
     return `sub_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   },
 
-  subscribe(email) {
+  async subscribe(email) {
     const normalized = (email || '').trim().toLowerCase();
     if (!normalized) {
       return { ok: false, error: 'Please enter your email address.' };
@@ -50,13 +84,26 @@ window.RC_NEWSLETTER = {
       subscribedAt: new Date().toISOString()
     };
 
+    if (window.RC_BACKEND?.isEnabled()) {
+      try {
+        await RC_BACKEND.addDoc(RC_BACKEND.PATHS.SUBSCRIBERS, subscriber.id, subscriber);
+      } catch (e) {
+        console.error('Newsletter: subscribe failed', e);
+        return { ok: false, error: 'Could not subscribe. Please try again later.' };
+      }
+    }
+
     list.unshift(subscriber);
     this.saveSubscribers(list);
     return { ok: true, subscriber };
   },
 
-  deleteSubscriber(id) {
-    this.saveSubscribers(this.getSubscribers().filter((s) => s.id !== id));
+  async deleteSubscriber(id) {
+    const list = this.getSubscribers().filter((s) => s.id !== id);
+    this.saveSubscribers(list);
+    if (window.RC_BACKEND?.isEnabled()) {
+      await RC_BACKEND.deleteDoc(RC_BACKEND.PATHS.SUBSCRIBERS, id);
+    }
     return true;
   },
 
@@ -64,7 +111,7 @@ window.RC_NEWSLETTER = {
     let list = this.getSubscribers();
     const q = search.trim().toLowerCase();
     if (q) {
-      list = list.filter((s) => String(s.email || '').toLowerCase().includes(q));
+      list = list.filter((s) => s.email.includes(q));
     }
     return list;
   },
@@ -99,7 +146,8 @@ window.RC_NEWSLETTER = {
     link.download = `rc-newsletter-subscribers-${Date.now()}.csv`;
     link.click();
     URL.revokeObjectURL(url);
-  }
+  },
+
 };
 
 window.RC_ANNOUNCE = {

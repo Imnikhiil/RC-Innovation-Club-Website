@@ -12,18 +12,21 @@ window.RC_ADMIN_CONFIG = {
   users: [
     {
       username: 'admin',
+      email: 'admin@rcinnovation.club',
       password: 'rcinnovation2026',
       role: 'super',
       displayName: 'Super Admin'
     },
     {
       username: 'editor',
+      email: 'editor@rcinnovation.club',
       password: 'rceditor2026',
       role: 'content',
       displayName: 'Content Editor'
     },
     {
       username: 'membership',
+      email: 'membership@rcinnovation.club',
       password: 'rcmember2026',
       role: 'membership',
       displayName: 'Membership Manager'
