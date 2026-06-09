@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | RC Innovation Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN -->
+  <div id="login-screen" class="admin-login-wrap">
+    <div class="admin-login-card">
+      <h1>Admin Panel</h1>
+      <p>RC Innovation Club — manage website content</p>
+      <div class="admin-error" id="login-error">Invalid Admin ID or Password</div>
+      <form id="login-form">
+        <div class="admin-field">
+          <label for="admin-id">Admin ID</label>
+          <input type="text" id="admin-id" name="username" autocomplete="username" required placeholder="Enter admin ID" />
+        </div>
+        <div class="admin-field">
+          <label for="admin-pass">Password</label>
+          <input type="password" id="admin-pass" name="password" autocomplete="current-password" required placeholder="Enter password" />
+        </div>
+        <button type="submit" class="admin-btn admin-btn--primary" style="width:100%;justify-content:center;padding:0.75rem;">
+          <i class="fas fa-lock"></i> Login
+        </button>
+      </form>
+      <p class="admin-hint" style="margin-top:1.25rem;text-align:center;">
+        <strong>Super Admin:</strong> admin / rcinnovation2026<br>
+        <strong>Content Editor:</strong> editor / rceditor2026<br>
+        <strong>Membership Manager:</strong> membership / rcmember2026<br>
+        Change credentials in <code>js/config/admin-config.js</code>
+      </p>
+      <p style="text-align:center;margin-top:1rem;">
+        <a href="index.html" class="admin-btn" style="font-size:0.8rem;"><i class="fas fa-arrow-left"></i> Back to Website</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="admin-app" class="admin-layout" style="display:none;">
+    <aside class="admin-sidebar">
+      <div class="admin-brand">RC <span>Admin</span></div>
+      <div class="admin-sidebar-sub">Content Management</div>
+      <div class="admin-role-badge" id="admin-role-badge" hidden></div>
+      <nav class="admin-nav" id="admin-nav">
+        <button type="button" data-panel="dashboard" class="active"><i class="fas fa-gauge"></i> Dashboard</button>
+        <button type="button" data-panel="hero"><i class="fas fa-home"></i> Hero</button>
+        <button type="button" data-panel="stats"><i class="fas fa-chart-line"></i> Stats</button>
+        <button type="button" data-panel="about"><i class="fas fa-info-circle"></i> About</button>
+        <button type="button" data-panel="events"><i class="fas fa-calendar"></i> Events</button>
+        <button type="button" data-panel="core"><i class="fas fa-users"></i> Core Team</button>
+        <button type="button" data-panel="ambassadors"><i class="fas fa-star"></i> Ambassadors</button>
+        <button type="button" data-panel="members"><i class="fas fa-user-group"></i> Members</button>
+        <button type="button" data-panel="legacy"><i class="fas fa-clock"></i> Legacy</button>
+        <button type="button" data-panel="testimonials"><i class="fas fa-quote-left"></i> Testimonials</button>
+        <button type="button" data-panel="partners"><i class="fas fa-handshake"></i> Partners</button>
+        <button type="button" data-panel="projects"><i class="fas fa-code"></i> Projects</button>
+        <button type="button" data-panel="resources"><i class="fas fa-book"></i> Resources</button>
+        <button type="button" data-panel="gallery"><i class="fas fa-images"></i> Gallery</button>
+        <button type="button" data-panel="join"><i class="fas fa-link"></i> Join & Footer</button>
+        <button type="button" data-panel="membership"><i class="fas fa-id-card"></i> Membership</button>
+        <button type="button" data-panel="contact"><i class="fas fa-envelope"></i> Contact</button>
+        <button type="button" data-panel="certificates"><i class="fas fa-certificate"></i> Certificates</button>
+        <button type="button" data-panel="newsletter"><i class="fas fa-bullhorn"></i> Newsletter</button>
+        <button type="button" data-panel="notifications"><i class="fas fa-bell"></i> Email Alerts</button>
+        <button type="button" data-panel="seo"><i class="fas fa-share-nodes"></i> SEO</button>
+        <button type="button" data-panel="analytics"><i class="fas fa-chart-pie"></i> Analytics</button>
+      </nav>
+      <button type="button" id="logout-btn" class="admin-btn admin-btn--danger" style="margin-top:1rem;">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h2 id="panel-title">Dashboard</h2>
+        <div class="admin-actions">
+          <a href="index.html" target="_blank" class="admin-btn"><i class="fas fa-external-link-alt"></i> View Site</a>
+          <button type="button" id="save-all-btn" class="admin-btn admin-btn--primary"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+      </div>
+
+      <div id="panel-dashboard" class="admin-panel active"></div>
+      <div id="panel-hero" class="admin-panel"></div>
+      <div id="panel-stats" class="admin-panel"></div>
+      <div id="panel-about" class="admin-panel"></div>
+      <div id="panel-events" class="admin-panel"></div>
+      <div id="panel-core" class="admin-panel"></div>
+      <div id="panel-ambassadors" class="admin-panel"></div>
+      <div id="panel-members" class="admin-panel"></div>
+      <div id="panel-legacy" class="admin-panel"></div>
+      <div id="panel-testimonials" class="admin-panel"></div>
+      <div id="panel-partners" class="admin-panel"></div>
+      <div id="panel-projects" class="admin-panel"></div>
+      <div id="panel-resources" class="admin-panel"></div>
+      <div id="panel-gallery" class="admin-panel"></div>
+      <div id="panel-join" class="admin-panel"></div>
+      <div id="panel-membership" class="admin-panel"></div>
+      <div id="panel-contact" class="admin-panel"></div>
+      <div id="panel-certificates" class="admin-panel"></div>
+      <div id="panel-newsletter" class="admin-panel"></div>
+      <div id="panel-notifications" class="admin-panel"></div>
+      <div id="panel-seo" class="admin-panel"></div>
+      <div id="panel-analytics" class="admin-panel"></div>
+    </main>
+  </div>
+
+  <div class="admin-toast" id="admin-toast">Changes saved successfully!</div>
+  <input type="file" id="import-file" accept=".json" />
+
+  <script src="js/config/content-default.js"></script>
+  <script src="js/config/admin-config.js"></script>
+  <script src="js/admin/admin-roles.js"></script>
+  <script src="js/core/cms.js"></script>
+  <script src="js/events/events.js"></script>
+  <script src="js/membership/membership.js"></script>
+  <script src="js/contact/contact.js"></script>
+  <script src="js/certificates/certificates.js"></script>
+  <script src="js/newsletter/newsletter.js"></script>
+  <script src="js/analytics/analytics.js"></script>
+  <script src="js/notifications/email-notifications.js"></script>
+  <script src="js/seo/seo.js"></script>
+  <script src="js/gallery/gallery-media.js"></script>
+  <script src="js/gallery/gallery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script src="js/admin/admin.js"></script>
+  <script src="js/gallery/gallery-admin.js"></script>
+</body>
+</html>

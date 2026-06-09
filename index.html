@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var k = 'rc_theme_preference';
+      var t = null;
+      try { t = localStorage.getItem(k); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, and hands-on learning for future-ready students." />
+  <meta name="keywords" content="RC Innovation Club, DSEU Rajokri, student club, workshops, hackathon, innovation" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="RC Innovation Club | DSEU Rajokri" />
+  <meta property="og:description" content="RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, and hands-on learning for future-ready students." />
+  <meta property="og:image" content="assets/logo/logo.png" />
+  <meta property="og:url" content="" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RC Innovation Club | DSEU Rajokri" />
+  <meta name="twitter:description" content="RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, and hands-on learning for future-ready students." />
+  <meta name="twitter:image" content="assets/logo/logo.png" />
+  <title>RC Innovation Club | DSEU Rajokri</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/gallery.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+</head>
+
+<body class="bg-gradient-pro">
+
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="mobile-nav-overlay xl:hidden" aria-hidden="true"></div>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div id="announce-bar" class="announce-bar announce-bar--hidden" role="region" aria-label="Site announcement" hidden>
+    <div class="announce-bar__inner">
+      <p class="announce-bar__text" id="cms-announce-text"></p>
+      <a href="#" id="cms-announce-link" class="announce-bar__link"></a>
+      <button type="button" class="announce-bar__dismiss" id="announce-dismiss" aria-label="Dismiss announcement">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar fixed w-full z-[100] glass flex justify-between items-center">
+    <a href="#" class="navbar-brand flex items-center gap-3">
+      <img src="assets/logo/logo.png" alt="RC Innovation Club Logo"
+        class="navbar-brand__logo w-10 h-10 rounded-xl object-cover border border-white/10" />
+      <span class="navbar-brand__text text-lg hidden sm:block">
+        RC Innovation <span class="navbar-brand__accent">Club</span>
+      </span>
+    </a>
+
+    <div class="desktop-nav tracking-wide">
+      <a href="#about" class="nav-link" data-section="about">About</a>
+      <a href="#events" class="nav-link" data-section="events">Events</a>
+      <a href="#core" class="nav-link" data-section="core">Core Team</a>
+      <a href="#ambassadors" class="nav-link" data-section="ambassadors">Ambassadors</a>
+      <a href="#members" class="nav-link" data-section="members">Members</a>
+      <a href="#legacy" class="nav-link" data-section="legacy">Legacy</a>
+      <a href="#testimonials" class="nav-link" data-section="testimonials">Testimonials</a>
+      <a href="#partners" class="nav-link" data-section="partners">Partners</a>
+      <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+      <a href="#gallery" class="nav-link" data-section="gallery">Gallery</a>
+      <a href="#resources" class="nav-link" data-section="resources">Resources</a>
+      <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+      <button type="button" class="theme-toggle hidden xl:inline-flex" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
+        <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
+        <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
+      </button>
+      <a href="#join" class="btn-primary px-5 py-2 rounded-full text-sm whitespace-nowrap">Join Now</a>
+    </div>
+
+    <button type="button" class="theme-toggle xl:hidden" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
+      <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
+      <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
+    </button>
+
+    <button class="mobile-menu-btn xl:hidden" aria-label="Open menu" aria-expanded="false" type="button">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav xl:hidden">
+    <a href="#about">About</a>
+    <a href="#events">Events</a>
+    <a href="#core">Core Team</a>
+    <a href="#ambassadors">Ambassadors</a>
+    <a href="#members">Members</a>
+    <a href="#legacy">Legacy</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#partners">Partners</a>
+    <a href="#projects">Projects</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#resources">Resources</a>
+    <a href="#contact">Contact</a>
+    <a href="#join" class="mobile-nav-cta">Join Now</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero-section relative flex items-center justify-center overflow-hidden">
+    <div class="hero-mesh" aria-hidden="true">
+      <div class="hero-mesh__grid"></div>
+      <div class="hero-mesh__ring"></div>
+    </div>
+    <div class="hero-glow hero-glow-1 absolute rounded-full blur-[120px] -top-20 -left-20"></div>
+    <div class="hero-glow hero-glow-2 absolute rounded-full blur-[120px] bottom-0 -right-20"></div>
+
+    <div class="site-container text-center z-10 w-full">
+      <div class="hero-badge" id="cms-hero-badge" data-aos="fade-down">DSEU Rajokri Campus</div>
+
+      <h1 class="hero-title font-extrabold mb-5" id="cms-hero-title" data-aos="fade-up">
+        Turn Your Ideas<br><span class="text-gradient text-gradient-animated">Into Reality</span>
+      </h1>
+
+      <p class="hero-text max-w-2xl mx-auto mb-8 leading-relaxed px-1" id="cms-hero-desc" data-aos="fade-up" data-aos-delay="100">
+        RC Innovation Club empowers students through workshops, competitions, and collaborative projects — bridging classroom learning with real-world impact.
+      </p>
+
+      <div class="hero-actions" data-aos="fade-up" data-aos-delay="200">
+        <a href="#events" class="btn-primary px-8 py-3.5 rounded-xl font-bold text-base" id="cms-hero-btn1">Explore Events</a>
+        <a href="#about" class="btn-secondary px-8 py-3.5 rounded-xl font-bold text-base text-white" id="cms-hero-btn2">Learn More</a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="line"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats" class="stats-section section-block">
+    <div class="site-container">
+      <div class="stats-header text-center mb-8 sm:mb-10" id="stats-header" data-aos="fade-up">
+        <span class="section-eyebrow" id="cms-stats-eyebrow">Our Impact</span>
+        <h2 class="section-title mb-3" id="cms-stats-title">RC Innovation Club in Numbers</h2>
+        <p class="section-subtitle" id="cms-stats-subtitle"></p>
+      </div>
+      <div class="stats-grid" id="cms-stats-grid" data-aos="fade-up" data-aos-delay="100"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section-block">
+    <div class="site-container text-center max-w-4xl mx-auto">
+      <span class="section-eyebrow" id="cms-about-eyebrow" data-aos="fade-up">Who We Are</span>
+      <h2 class="section-title mb-5" id="cms-about-title" data-aos="fade-up">
+        About <span class="text-gradient">RC Innovation Club</span>
+      </h2>
+
+      <p class="section-subtitle leading-relaxed" id="cms-about-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+
+      <div class="about-grid">
+        <div class="about-card glass card-hover" data-aos="zoom-in">
+          <div class="about-card__icon"><i class="fas fa-bullseye" aria-hidden="true"></i></div>
+          <h3 class="about-card__title">Mission</h3>
+          <p class="about-card__text" id="cms-about-mission"></p>
+        </div>
+        <div class="about-card glass card-hover" data-aos="zoom-in" data-aos-delay="100">
+          <div class="about-card__icon"><i class="fas fa-eye" aria-hidden="true"></i></div>
+          <h3 class="about-card__title">Vision</h3>
+          <p class="about-card__text" id="cms-about-vision"></p>
+        </div>
+        <div class="about-card glass card-hover" data-aos="zoom-in" data-aos-delay="200">
+          <div class="about-card__icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+          <h3 class="about-card__title">Culture</h3>
+          <p class="about-card__text" id="cms-about-culture"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events" class="section-block section-alt">
+    <div class="site-container">
+      <div class="text-center mb-14">
+        <span class="section-eyebrow" id="cms-events-eyebrow" data-aos="fade-up">Our Journey</span>
+        <h2 class="section-title mb-3" id="cms-events-title" data-aos="fade-up">Events</h2>
+        <p class="section-subtitle" id="cms-events-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+      </div>
+
+      <div id="cms-upcoming-events-wrap" class="upcoming-events-section" style="display:none">
+        <h3 class="events-subheading" id="cms-upcoming-title" data-aos="fade-up">Upcoming Events</h3>
+        <div class="upcoming-events-grid" id="cms-upcoming-events"></div>
+      </div>
+
+      <h3 class="events-subheading past-events-heading" id="cms-past-title" data-aos="fade-up">Past Events</h3>
+
+      <div class="events-wrapper">
+        <button class="events-nav-btn prev" aria-label="Previous events" type="button">
+          <i class="fas fa-chevron-left text-sm"></i>
+        </button>
+        <button class="events-nav-btn next" aria-label="Next events" type="button">
+          <i class="fas fa-chevron-right text-sm"></i>
+        </button>
+
+      <div class="events-scroll" id="cms-events-scroll"></div>
+      </div>
+
+      <div class="events-progress" aria-hidden="true">
+        <div class="events-progress-track">
+          <div class="events-progress-fill"></div>
+        </div>
+      </div>
+
+      <p class="events-hint" aria-hidden="true">
+        <i class="fas fa-hand-pointer"></i> Swipe to explore events
+      </p>
+    </div>
+  </section>
+
+  <!-- TEAM HIERARCHY FILTER -->
+  <div class="team-hierarchy-wrap site-container" id="team-hierarchy-wrap">
+    <div class="team-hierarchy-bar glass" data-aos="fade-up">
+      <p class="team-hierarchy-hint" id="cms-team-hierarchy-hint">Filter by leadership level, department, ambassadors, members, or alumni.</p>
+      <div class="team-hierarchy-filters" id="team-hierarchy-filters" role="tablist" aria-label="Team hierarchy"></div>
+      <div class="team-dept-filters" id="team-dept-filters" role="tablist" aria-label="Core team departments"></div>
+    </div>
+  </div>
+
+  <!-- CORE TEAM -->
+  <section id="core" class="section-block core-section">
+    <div class="site-container text-center mb-10 sm:mb-16">
+      <span class="section-eyebrow" id="cms-core-eyebrow" data-aos="fade-up">Leadership</span>
+      <h2 class="section-title mb-3" id="cms-core-title" data-aos="fade-up">Core Team</h2>
+      <p class="section-subtitle" id="cms-core-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container team-grid" id="team-grid" aria-label="Core team members"></div>
+  </section>
+
+  <!-- AMBASSADORS -->
+  <section id="ambassadors" class="section-block section-alt">
+    <div class="site-container text-center mb-10 sm:mb-16">
+      <span class="section-eyebrow" id="cms-ambassadors-eyebrow" data-aos="fade-up">Representation</span>
+      <h2 class="section-title mb-3" id="cms-ambassadors-title" data-aos="fade-up">Ambassadors</h2>
+      <p class="section-subtitle" id="cms-ambassadors-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container ambassador-grid" id="cms-ambassadors-grid"></div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section id="members" class="section-block">
+    <div class="site-container text-center mb-10 sm:mb-16">
+      <span class="section-eyebrow" id="cms-members-eyebrow" data-aos="fade-up">Community</span>
+      <h2 class="section-title mb-3" id="cms-members-title" data-aos="fade-up">Members</h2>
+      <p class="section-subtitle" id="cms-members-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container members-grid">
+      <div class="members-panel glass card-hover" data-aos="fade-right">
+        <h3 class="text-xl sm:text-2xl font-black mb-5 sm:mb-6 panel-title-accent" id="cms-members-current-title"></h3>
+        <div class="members-list" id="cms-members-current"></div>
+      </div>
+      <div class="members-panel glass card-hover" data-aos="fade-left">
+        <h3 class="text-xl sm:text-2xl font-black mb-5 sm:mb-6 panel-title-accent" id="cms-members-previous-title"></h3>
+        <div class="space-y-5" id="cms-members-previous"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGACY -->
+  <section id="legacy" class="section-block bg-sky-900/10 border-y border-white/5">
+    <div class="site-container max-w-3xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="section-eyebrow" id="cms-legacy-eyebrow" data-aos="fade-up">Our Story</span>
+        <h2 class="section-title mb-3" id="cms-legacy-title" data-aos="fade-up">Club Legacy</h2>
+        <p class="section-subtitle" id="cms-legacy-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+      </div>
+
+      <div class="timeline" id="cms-legacy-timeline"></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="section-block section-alt">
+    <div class="site-container text-center mb-10 sm:mb-12">
+      <span class="section-eyebrow" id="cms-testimonials-eyebrow" data-aos="fade-up">Voices</span>
+      <h2 class="section-title mb-3" id="cms-testimonials-title" data-aos="fade-up">What Members Say</h2>
+      <p class="section-subtitle" id="cms-testimonials-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container">
+      <div class="testimonials-carousel" id="testimonials-carousel">
+        <button type="button" class="testimonials-nav testimonials-nav--prev" id="testimonials-prev" aria-label="Previous testimonial">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <div class="testimonials-viewport">
+          <div class="testimonials-track" id="testimonials-track"></div>
+        </div>
+        <button type="button" class="testimonials-nav testimonials-nav--next" id="testimonials-next" aria-label="Next testimonial">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="testimonials-dots" id="testimonials-dots" role="tablist" aria-label="Testimonial slides"></div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section id="partners" class="section-block">
+    <div class="site-container text-center mb-10 sm:mb-12">
+      <span class="section-eyebrow" id="cms-partners-eyebrow" data-aos="fade-up">Together We Grow</span>
+      <h2 class="section-title mb-3" id="cms-partners-title" data-aos="fade-up">Partners & Sponsors</h2>
+      <p class="section-subtitle" id="cms-partners-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+    <div class="site-container" id="cms-partners-groups"></div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section-block section-alt">
+    <div class="site-container text-center mb-8 sm:mb-10">
+      <span class="section-eyebrow" id="cms-projects-eyebrow" data-aos="fade-up">Student Work</span>
+      <h2 class="section-title mb-3" id="cms-projects-title" data-aos="fade-up">Project Showcase</h2>
+      <p class="section-subtitle" id="cms-projects-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+    <div class="site-container">
+      <div class="projects-filters" id="projects-filters" data-aos="fade-up" data-aos-delay="80"></div>
+      <div class="projects-grid" id="cms-projects-grid" data-aos="fade-up" data-aos-delay="120"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="section-block section-alt">
+    <div class="site-container text-center mb-10 sm:mb-16">
+      <span class="section-eyebrow" id="cms-gallery-eyebrow" data-aos="fade-up">Moments</span>
+      <h2 class="section-title mb-3" id="cms-gallery-title" data-aos="fade-up">Gallery</h2>
+      <p class="section-subtitle" id="cms-gallery-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+
+    <div class="site-container gallery-grid" id="cms-gallery-grid"></div>
+    <div class="site-container gallery-view-all-wrap" id="gallery-view-all-wrap">
+      <a href="gallery.html" class="btn-secondary px-8 py-3.5 rounded-xl font-bold text-white">
+        <i class="fas fa-images" aria-hidden="true"></i> View All
+      </a>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources" class="section-block">
+    <div class="site-container text-center mb-8 sm:mb-10">
+      <span class="section-eyebrow" id="cms-resources-eyebrow" data-aos="fade-up">Learn & Grow</span>
+      <h2 class="section-title mb-3" id="cms-resources-title" data-aos="fade-up">Resource Hub</h2>
+      <p class="section-subtitle" id="cms-resources-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+    <div class="site-container">
+      <div class="resources-controls" data-aos="fade-up" data-aos-delay="80">
+        <div class="resources-search-wrap">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input type="search" id="resources-search" placeholder="Search resources…" aria-label="Search resources" />
+        </div>
+        <div class="resources-filters" id="resources-filters"></div>
+      </div>
+      <div class="resources-grid" id="cms-resources-grid" data-aos="fade-up" data-aos-delay="120"></div>
+      <p class="resources-empty" id="resources-empty" hidden>No resources match your search.</p>
+    </div>
+  </section>
+
+  <!-- CERTIFICATES -->
+  <section id="certificates" class="section-block section-alt">
+    <div class="site-container text-center mb-8 sm:mb-10 max-w-2xl mx-auto">
+      <span class="section-eyebrow" id="cms-cert-eyebrow" data-aos="fade-up">Recognition</span>
+      <h2 class="section-title mb-3" id="cms-cert-title" data-aos="fade-up">Certificate Verification</h2>
+      <p class="section-subtitle" id="cms-cert-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    </div>
+    <div class="site-container max-w-2xl mx-auto">
+      <div class="cert-verify-panel glass" data-aos="fade-up" data-aos-delay="120">
+        <form id="cert-verify-form" class="cert-verify-form" novalidate>
+          <label for="cert-verify-input" class="cert-verify-form__label" id="cms-cert-verify-label">Enter Certificate ID</label>
+          <div class="cert-verify-form__row">
+            <input type="text" id="cert-verify-input" name="certId" autocomplete="off"
+              placeholder="e.g. RCIC-2026-DEMO01" aria-describedby="cms-cert-verify-hint" />
+            <button type="submit" class="btn-primary cert-verify-form__submit" id="cms-cert-verify-btn">
+              <i class="fas fa-shield-halved" aria-hidden="true"></i> Verify Certificate
+            </button>
+          </div>
+          <p class="cert-verify-form__hint" id="cms-cert-verify-hint">Enter the ID printed on your certificate or membership card.</p>
+        </form>
+        <div id="cert-verify-result" class="cert-verify-result-wrap" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section id="join" class="section-block">
+    <div class="site-container text-center max-w-3xl mx-auto glass join-card card-hover" data-aos="zoom-in">
+      <span class="section-eyebrow" id="cms-join-eyebrow">Get Involved</span>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 mt-2" id="cms-join-title">Join RC Innovation Club</h2>
+      <p class="mb-6 sm:mb-8 max-w-xl mx-auto leading-relaxed text-sm sm:text-base px-1" id="cms-join-desc"></p>
+
+      <div id="membership-cta" class="membership-cta" style="display:none">
+        <button type="button" id="membership-open-btn" class="btn-primary px-8 py-3.5 rounded-xl font-bold" onclick="window.openMembershipForm && window.openMembershipForm(event)">
+          <i class="fas fa-user-plus" aria-hidden="true"></i> Join RC Innovation Club
+        </button>
+      </div>
+
+      <div id="membership-closed-msg" class="membership-notice" style="display:none" role="status">
+        <div class="membership-notice__icon" id="membership-notice-icon" aria-hidden="true">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div class="membership-notice__body">
+          <strong id="membership-closed-title">Registration Closed</strong>
+          <p id="membership-closed-text">Membership registration is not open right now. Please try again next semester.</p>
+        </div>
+      </div>
+
+      <div class="join-actions">
+        <a href="#" id="cms-join-link-ig" target="_blank" rel="noopener" class="btn-primary px-8 py-3.5 rounded-xl font-bold">
+          <span id="cms-join-btn-ig">Follow on Instagram</span>
+        </a>
+        <a href="#" id="cms-join-link-wa" target="_blank" rel="noopener" class="btn-secondary px-8 py-3.5 rounded-xl font-bold text-white">
+          <span id="cms-join-btn-wa">Join WhatsApp Channel</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Inline membership registration form -->
+    <div id="membership-form-panel" class="membership-panel site-container max-w-3xl mx-auto">
+      <div class="membership-panel__inner glass">
+        <div class="membership-panel__header">
+          <h3 class="membership-panel__title">Membership Registration</h3>
+          <button type="button" class="membership-panel__close" id="membership-close-btn" aria-label="Close registration form" onclick="window.closeMembershipForm && window.closeMembershipForm(event)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <p class="membership-panel__subtitle">Fill out the form below to apply for RC Innovation Club membership.</p>
+
+        <form id="membership-form" class="membership-form" novalidate>
+          <div class="membership-form__grid">
+            <div class="membership-field">
+              <label for="mem-name">Full Name <span class="required">*</span></label>
+              <input type="text" id="mem-name" name="name" required autocomplete="name" placeholder="Your full name" />
+            </div>
+            <div class="membership-field">
+              <label for="mem-enrollment">Enrollment Number <span class="required">*</span></label>
+              <input type="text" id="mem-enrollment" name="enrollmentNumber" required placeholder="e.g. 24CS001" />
+            </div>
+            <div class="membership-field">
+              <label for="mem-course">Course <span class="required">*</span></label>
+              <input type="text" id="mem-course" name="course" required placeholder="e.g. B.Tech CSE" />
+            </div>
+            <div class="membership-field">
+              <label for="mem-semester">Semester <span class="required">*</span></label>
+              <input type="text" id="mem-semester" name="semester" required placeholder="e.g. 4th Semester" />
+            </div>
+            <div class="membership-field">
+              <label for="mem-email">Email <span class="required">*</span></label>
+              <input type="email" id="mem-email" name="email" required autocomplete="email" placeholder="you@example.com" />
+            </div>
+            <div class="membership-field">
+              <label for="mem-phone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="mem-phone" name="phone" required autocomplete="tel" placeholder="10-digit mobile number" />
+            </div>
+          </div>
+          <div class="membership-field">
+            <label for="mem-skills">Skills</label>
+            <input type="text" id="mem-skills" name="skills" placeholder="e.g. Python, Web Development, Robotics" />
+          </div>
+          <div class="membership-field">
+            <label for="mem-interests">Interests</label>
+            <input type="text" id="mem-interests" name="interests" placeholder="e.g. AI, Hackathons, Design" />
+          </div>
+          <div class="membership-field">
+            <label for="mem-reason">Reason for Joining <span class="required">*</span></label>
+            <textarea id="mem-reason" name="reason" rows="3" required placeholder="Why do you want to join RC Innovation Club?"></textarea>
+          </div>
+          <div class="membership-form__error" id="membership-form-error" role="alert"></div>
+          <div class="membership-form__success" id="membership-form-success" role="status"></div>
+          <button type="submit" class="btn-primary membership-form__submit" id="membership-submit-btn">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i> Submit Application
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section-block section-alt">
+    <div class="site-container">
+      <div class="text-center mb-10 sm:mb-12 max-w-2xl mx-auto">
+        <span class="section-eyebrow" id="cms-contact-eyebrow" data-aos="fade-up">Get in Touch</span>
+        <h2 class="section-title mb-3" id="cms-contact-title" data-aos="fade-up">Contact Us</h2>
+        <p class="section-subtitle" id="cms-contact-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+      </div>
+
+      <div class="contact-layout">
+        <div class="contact-info glass card-hover" data-aos="fade-right">
+          <h3 class="contact-info__title">Reach RC Innovation Club</h3>
+          <p class="contact-info__text">We welcome questions from students, faculty, sponsors, and partner organizations.</p>
+          <ul class="contact-info__list">
+            <li>
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+              <a href="#" id="cms-contact-email">rcinnovationclub@gmail.com</a>
+            </li>
+            <li>
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+              <a href="#" id="cms-contact-instagram" target="_blank" rel="noopener">Instagram</a>
+            </li>
+            <li>
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              <a href="#" id="cms-contact-whatsapp" target="_blank" rel="noopener">WhatsApp Channel</a>
+            </li>
+            <li>
+              <i class="fas fa-location-dot" aria-hidden="true"></i>
+              <span>DSEU Rajokri Campus, New Delhi</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="contact-form-panel glass" data-aos="fade-left">
+          <form id="contact-form" class="contact-form" novalidate>
+            <div class="contact-form__grid">
+              <div class="contact-field">
+                <label for="contact-name" id="cms-contact-name-label">Full Name <span class="required">*</span></label>
+                <input type="text" id="contact-name" name="name" required autocomplete="name" placeholder="Your name" />
+              </div>
+              <div class="contact-field">
+                <label for="contact-email" id="cms-contact-email-label">Email <span class="required">*</span></label>
+                <input type="email" id="contact-email" name="email" required autocomplete="email" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="contact-field">
+              <label for="contact-subject" id="cms-contact-subject-label">Subject <span class="required">*</span></label>
+              <select id="contact-subject" name="subject" required>
+                <option value="">Select a subject</option>
+              </select>
+            </div>
+            <div class="contact-field">
+              <label for="contact-message" id="cms-contact-message-label">Message <span class="required">*</span></label>
+              <textarea id="contact-message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+            </div>
+            <div class="contact-form__error" id="contact-form-error" role="alert"></div>
+            <div class="contact-form__success" id="contact-form-success" role="status"></div>
+            <button type="submit" class="btn-primary contact-form__submit" id="contact-submit-btn">
+              <i class="fas fa-paper-plane" aria-hidden="true"></i> <span id="cms-contact-submit-label">Send Message</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section id="newsletter" class="newsletter-section section-block" hidden>
+    <div class="site-container">
+      <div class="newsletter-panel glass" data-aos="fade-up">
+        <div class="newsletter-panel__copy">
+          <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
+          <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
+          <p class="newsletter-panel__privacy" id="cms-newsletter-privacy"></p>
+        </div>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="newsletter-form__row">
+            <input type="email" id="newsletter-email" name="email" autocomplete="email"
+              placeholder="Enter your email" aria-label="Email for newsletter" required />
+            <button type="submit" class="btn-primary newsletter-form__submit" id="newsletter-submit-btn">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span id="cms-newsletter-btn-label">Subscribe</span>
+            </button>
+          </div>
+          <div class="newsletter-form__error" id="newsletter-form-error" role="alert"></div>
+          <div class="newsletter-form__success" id="newsletter-form-success" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer border-t border-white/10">
+    <div class="site-container !px-0 max-w-[var(--container-max)]">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="flex items-center gap-3 mb-2">
+            <img src="assets/logo/logo.png" alt="" class="w-9 h-9 rounded-lg object-cover border border-white/10" />
+            <span class="font-extrabold text-lg" id="cms-footer-brand">RC Innovation Club</span>
+          </div>
+          <p id="cms-footer-desc">Student-led innovation community at Delhi Skill and Entrepreneurship University, Rajokri Campus.</p>
+          <div class="social-links mt-5">
+            <a href="#" id="cms-footer-ig" target="_blank" rel="noopener" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" id="cms-footer-wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="#" id="cms-footer-mail" aria-label="Email">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+          <div class="share-section" id="share-section" hidden>
+            <p class="share-section__label" id="share-section-label">Share this site</p>
+            <div class="share-buttons" id="share-buttons"></div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Navigate</h4>
+          <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#events">Events</a>
+            <a href="#core">Core Team</a>
+            <a href="#gallery">Gallery</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Contact</h4>
+          <div class="footer-links">
+            <a href="#" id="cms-footer-email-link">rcinnovationclub@gmail.com</a>
+            <a href="#contact">Contact Us</a>
+            <a href="#certificates">Verify Certificate</a>
+            <a href="#join">Join the Club</a>
+            <a href="#" id="cms-contact-ig" target="_blank" rel="noopener">Instagram</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center text-slate-600 text-sm" id="cms-footer-copyright"></p>
+      <p class="text-center mt-4">
+        <a href="admin.html" class="text-slate-700 text-xs hover:text-sky-400 transition">Admin Panel</a>
+      </p>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top" type="button">
+    <i class="fas fa-arrow-up text-sm"></i>
+  </button>
+
+  <!-- Gallery Lightbox -->
+  <div id="gallery-lightbox" class="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <button type="button" class="gallery-lightbox__close" data-lightbox-close aria-label="Close preview">
+      <i class="fas fa-times"></i>
+    </button>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--prev" id="gallery-lightbox-prev" aria-label="Previous">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--next" id="gallery-lightbox-next" aria-label="Next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="gallery-lightbox__content">
+      <div id="gallery-lightbox-media" class="gallery-lightbox__media"></div>
+      <div class="gallery-lightbox__info glass">
+        <div class="gallery-lightbox__counter" id="gallery-lightbox-counter"></div>
+        <h2 id="gallery-lightbox-title"></h2>
+        <div class="gallery-lightbox__meta" id="gallery-lightbox-meta"></div>
+        <p id="gallery-lightbox-desc"></p>
+      </div>
+    </div>
+    <div class="gallery-lightbox__backdrop" data-lightbox-close></div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/config/content-default.js"></script>
+  <script src="js/core/cms.js"></script>
+  <script src="js/events/events.js"></script>
+  <script src="js/membership/membership.js"></script>
+  <script src="js/contact/contact.js"></script>
+  <script src="js/newsletter/newsletter.js"></script>
+  <script src="js/seo/seo.js"></script>
+  <script src="js/theme/theme.js"></script>
+  <script src="js/testimonials/testimonials.js"></script>
+  <script src="js/partners/partners.js"></script>
+  <script src="js/projects/projects.js"></script>
+  <script src="js/resources/resources.js"></script>
+  <script src="js/certificates/certificates.js"></script>
+  <script src="js/analytics/analytics.js"></script>
+  <script src="js/notifications/email-notifications.js"></script>
+  <script src="js/team/team-hierarchy.js"></script>
+  <script src="js/stats/stats.js"></script>
+  <script src="js/gallery/gallery-media.js"></script>
+  <script src="js/gallery/gallery.js"></script>
+  <script src="js/gallery/gallery-lightbox.js"></script>
+  <script src="js/core/site-renderer.js"></script>
+  <script src="js/core/script.js"></script>
+</body>
+</html>

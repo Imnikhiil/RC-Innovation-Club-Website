@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var k = 'rc_theme_preference';
+      var t = null;
+      try { t = localStorage.getItem(k); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="RC Innovation Club Gallery — photos and videos from workshops, competitions, and campus events." />
+  <meta name="keywords" content="RC Innovation Club gallery, DSEU events, workshop photos" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="Gallery | RC Innovation Club" />
+  <meta property="og:description" content="RC Innovation Club Gallery — photos and videos from workshops, competitions, and campus events." />
+  <meta property="og:image" content="assets/events/Robotics Workshop.jpg" />
+  <meta property="og:url" content="" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gallery | RC Innovation Club" />
+  <meta name="twitter:description" content="RC Innovation Club Gallery — photos and videos from workshops, competitions, and campus events." />
+  <meta name="twitter:image" content="assets/events/Robotics Workshop.jpg" />
+  <title>Gallery | RC Innovation Club</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/gallery.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+</head>
+<body class="bg-gradient-pro gallery-page-body">
+
+  <div id="announce-bar" class="announce-bar announce-bar--hidden" role="region" aria-label="Site announcement" hidden>
+    <div class="announce-bar__inner">
+      <p class="announce-bar__text" id="cms-announce-text"></p>
+      <a href="#" id="cms-announce-link" class="announce-bar__link"></a>
+      <button type="button" class="announce-bar__dismiss" id="announce-dismiss" aria-label="Dismiss announcement">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <nav class="navbar fixed w-full z-[100] glass flex justify-between items-center">
+    <a href="index.html" class="navbar-brand flex items-center gap-3">
+      <img src="assets/logo/logo.png" alt="RC Innovation Club Logo"
+        class="navbar-brand__logo w-10 h-10 rounded-xl object-cover border border-white/10" />
+      <span class="navbar-brand__text text-lg hidden sm:block">
+        RC Innovation <span class="navbar-brand__accent">Club</span>
+      </span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
+        <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
+        <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
+      </button>
+      <a href="index.html" class="btn-secondary px-5 py-2 rounded-full text-sm font-bold text-white">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <main class="gallery-page-main site-container">
+    <header class="gallery-page-header text-center">
+      <span class="section-eyebrow" id="gallery-page-eyebrow">Moments</span>
+      <h1 class="section-title mb-3" id="gallery-page-title">Gallery</h1>
+      <p class="section-subtitle max-w-2xl mx-auto" id="gallery-page-subtitle"></p>
+    </header>
+
+    <div class="gallery-page-controls">
+      <div class="gallery-search-wrap">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="gallery-search" placeholder="Search events, categories…" aria-label="Search gallery" />
+      </div>
+      <div class="gallery-filters" id="gallery-filters"></div>
+    </div>
+
+    <div class="gallery-page-grid" id="gallery-page-grid"></div>
+    <p id="gallery-page-empty" class="gallery-page-empty" style="display:none">No gallery items match your search.</p>
+  </main>
+
+  <footer class="site-footer border-t border-white/10 mt-16">
+    <div class="site-container text-center py-8">
+      <div class="share-section share-section--center" id="share-section" hidden>
+        <p class="share-section__label" id="share-section-label">Share this site</p>
+        <div class="share-buttons share-buttons--center" id="share-buttons"></div>
+      </div>
+      <p class="text-slate-500 text-sm mt-6">© RC Innovation Club · DSEU Rajokri Campus</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="gallery-lightbox" class="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <button type="button" class="gallery-lightbox__close" data-lightbox-close aria-label="Close preview">
+      <i class="fas fa-times"></i>
+    </button>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--prev" id="gallery-lightbox-prev" aria-label="Previous">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--next" id="gallery-lightbox-next" aria-label="Next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="gallery-lightbox__content">
+      <div id="gallery-lightbox-media" class="gallery-lightbox__media"></div>
+      <div class="gallery-lightbox__info glass">
+        <div class="gallery-lightbox__counter" id="gallery-lightbox-counter"></div>
+        <h2 id="gallery-lightbox-title"></h2>
+        <div class="gallery-lightbox__meta" id="gallery-lightbox-meta"></div>
+        <p id="gallery-lightbox-desc"></p>
+      </div>
+    </div>
+    <div class="gallery-lightbox__backdrop" data-lightbox-close></div>
+  </div>
+
+  <script src="js/config/content-default.js"></script>
+  <script src="js/core/cms.js"></script>
+  <script src="js/analytics/analytics.js"></script>
+  <script src="js/newsletter/newsletter.js"></script>
+  <script src="js/seo/seo.js"></script>
+  <script src="js/theme/theme.js"></script>
+  <script src="js/core/site-renderer.js"></script>
+  <script src="js/gallery/gallery-media.js"></script>
+  <script src="js/gallery/gallery.js"></script>
+  <script src="js/gallery/gallery-lightbox.js"></script>
+  <script src="js/gallery/gallery-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+const CMS_STORAGE_KEY = 'rc_innovation_club_content';
+const CMS_SESSION_KEY = 'rc_admin_session';
+
+const ASSET_PATH_MIGRATIONS = [
+  [/^CLUB LOGO\//, 'assets/logo/'],
+  [/^PAST EVENTS PICTURES\//, 'assets/events/'],
+  [/^CURRENT CORE MEMBERS PIC\//, 'assets/team/core/'],
+  [/^Core Images\//, 'assets/team/other/'],
+  [/^Ambassdor\//, 'assets/team/ambassadors/']
+];
+
+function migrateAssetPath(path) {
+  if (!path || typeof path !== 'string' || path.startsWith('http')) return path;
+  let migrated = path;
+  ASSET_PATH_MIGRATIONS.forEach(([pattern, replacement]) => {
+    migrated = migrated.replace(pattern, replacement);
+  });
+  return migrated;
+}
+
+function migrateContentAssets(content) {
+  if (!content || typeof content !== 'object') return content;
+
+  if (Array.isArray(content.events)) {
+    content.events = content.events.map((e) => ({ ...e, image: migrateAssetPath(e.image) }));
+  }
+  if (Array.isArray(content.coreTeam)) {
+    content.coreTeam = content.coreTeam.map((m) => ({ ...m, img: migrateAssetPath(m.img) }));
+  }
+  if (Array.isArray(content.ambassadors)) {
+    content.ambassadors = content.ambassadors.map((a) => ({ ...a, image: migrateAssetPath(a.image) }));
+  }
+  if (Array.isArray(content.gallery)) {
+    content.gallery = content.gallery.map((g) => ({
+      ...g,
+      src: migrateAssetPath(g.src || g.image),
+      image: migrateAssetPath(g.image)
+    }));
+  }
+  return content;
+}
+
+window.RC_CMS = {
+  getDefaultContent() {
+    return JSON.parse(JSON.stringify(window.RC_DEFAULT_CONTENT));
+  },
+
+  getContent() {
+    try {
+      const saved = localStorage.getItem(CMS_STORAGE_KEY);
+      if (saved) {
+        return this.mergeContent(this.getDefaultContent(), JSON.parse(saved));
+      }
+    } catch (e) {
+      console.warn('CMS: could not load saved content', e);
+    }
+    return migrateContentAssets(this.getDefaultContent());
+  },
+
+  mergeContent(defaults, saved) {
+    const merged = { ...defaults, ...saved };
+    const arrays = [
+      'stats', 'events', 'coreTeam', 'ambassadors',
+      'membersCurrent', 'membersPrevious', 'legacy', 'testimonials', 'partners', 'projects', 'resources', 'gallery'
+    ];
+    arrays.forEach((key) => {
+      if (Array.isArray(saved[key])) merged[key] = saved[key];
+    });
+    const objects = [
+      'hero', 'statsSection', 'about', 'eventsSection', 'teamHierarchySection', 'coreSection', 'ambassadorsSection',
+      'membersSection', 'legacySection', 'testimonialsSection', 'partnersSection', 'projectsSection', 'resourcesSection', 'gallerySection', 'announcementBar', 'newsletterSection',
+      'analyticsSection', 'notificationsSection', 'certificatesSection', 'contactSection', 'join', 'footer', 'social', 'registration', 'seo'
+    ];
+    objects.forEach((key) => {
+      if (saved[key] && typeof saved[key] === 'object') {
+        merged[key] = { ...defaults[key], ...saved[key] };
+      } else if (defaults[key] && typeof defaults[key] === 'object') {
+        merged[key] = { ...defaults[key] };
+      }
+    });
+
+    const reg = merged.registration;
+    if (
+      reg &&
+      reg.enabled === false &&
+      !reg.startDate &&
+      !reg.endDate &&
+      defaults.registration
+    ) {
+      merged.registration = { ...defaults.registration, ...reg, enabled: defaults.registration.enabled };
+    }
+
+    if (merged.seo && defaults.seo) {
+      merged.seo.pages = {
+        home: { ...(defaults.seo.pages?.home || {}), ...(merged.seo.pages?.home || {}) },
+        gallery: { ...(defaults.seo.pages?.gallery || {}), ...(merged.seo.pages?.gallery || {}) }
+      };
+      merged.seo.share = { ...(defaults.seo.share || {}), ...(merged.seo.share || {}) };
+    }
+
+    return migrateContentAssets(merged);
+  },
+
+  saveContent(content) {
+    localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(content));
+    window.dispatchEvent(new CustomEvent('rc-content-updated'));
+    return true;
+  },
+
+  resetContent() {
+    localStorage.removeItem(CMS_STORAGE_KEY);
+    window.dispatchEvent(new CustomEvent('rc-content-updated'));
+    return this.getDefaultContent();
+  },
+
+  exportContent() {
+    const blob = new Blob([JSON.stringify(this.getContent(), null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rc-innovation-club-backup-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  importContent(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          this.saveContent(this.mergeContent(this.getDefaultContent(), data));
+          resolve(this.getContent());
+        } catch (e) {
+          reject(new Error('Invalid JSON file'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Could not read file'));
+      reader.readAsText(file);
+    });
+  },
+
+  getAdminUsers() {
+    const config = window.RC_ADMIN_CONFIG;
+    if (!config) return [];
+    if (Array.isArray(config.users) && config.users.length) return config.users;
+    if (config.username) {
+      return [{
+        username: config.username,
+        password: config.password,
+        role: 'super',
+        displayName: 'Super Admin'
+      }];
+    }
+    return [];
+  },
+
+  getSession() {
+    try {
+      const raw = sessionStorage.getItem(CMS_SESSION_KEY);
+      if (!raw) return null;
+      const session = JSON.parse(raw);
+      if (Date.now() > session.expires) {
+        this.logout();
+        return null;
+      }
+      if (!session.role) {
+        session.role = 'super';
+      }
+      return session;
+    } catch {
+      return null;
+    }
+  },
+
+  getRole() {
+    return this.getSession()?.role || 'super';
+  },
+
+  getDisplayName() {
+    const session = this.getSession();
+    return session?.displayName || session?.user || 'Admin';
+  },
+
+  login(username, password) {
+    const config = window.RC_ADMIN_CONFIG;
+    if (!config) return false;
+
+    const user = this.getAdminUsers().find(
+      (u) => u.username === username && u.password === password
+    );
+    if (!user) return false;
+
+    const hours = config.sessionHours || 8;
+    const session = {
+      user: user.username,
+      role: user.role || 'super',
+      displayName: user.displayName || user.username,
+      expires: Date.now() + hours * 60 * 60 * 1000
+    };
+    sessionStorage.setItem(CMS_SESSION_KEY, JSON.stringify(session));
+    return true;
+  },
+
+  logout() {
+    sessionStorage.removeItem(CMS_SESSION_KEY);
+  },
+
+  isLoggedIn() {
+    return !!this.getSession();
+  },
+
+  canAccessPanel(panel) {
+    if (!window.RC_ADMIN_ROLES) return true;
+    return RC_ADMIN_ROLES.canAccessPanel(this.getRole(), panel);
+  },
+
+  canPerformAction(action) {
+    if (!window.RC_ADMIN_ROLES) return true;
+    return RC_ADMIN_ROLES.canPerformAction(this.getRole(), action);
+  },
+
+  requireAuth() {
+    if (!this.isLoggedIn()) {
+      window.location.href = 'admin.html';
+      return false;
+    }
+    return true;
+  }
+};
