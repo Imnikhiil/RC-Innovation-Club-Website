@@ -175,8 +175,11 @@ window.RC_TEAM_PROFILES = {
   },
 
   staggerReveal(card) {
-    card.querySelectorAll('[data-reveal-item]').forEach((el, i) => {
-      setTimeout(() => el.classList.add('is-revealed'), 120 + i * 65);
+    const items = card.querySelectorAll('[data-reveal-item]');
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    items.forEach((el, i) => {
+      const delay = isMobile ? 40 + i * 35 : 120 + i * 65;
+      setTimeout(() => el.classList.add('is-revealed'), delay);
     });
   },
 
