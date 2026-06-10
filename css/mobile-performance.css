@@ -1,0 +1,297 @@
+/* Mobile responsiveness + performance (blur/animation off on small screens) */
+
+button,
+a,
+.dash-btn,
+.btn-primary,
+.btn-secondary {
+  touch-action: manipulation;
+}
+
+@media (max-width: 767px) {
+  /* Hero — compact, thumb-friendly */
+  .dash-hero {
+    min-height: auto;
+    padding-top: calc(var(--nav-height) + var(--announce-bar-height) + 1.25rem);
+    padding-bottom: 2rem;
+  }
+
+  .dash-hero__layout {
+    gap: 1.5rem;
+  }
+
+  .dash-hero__title {
+    font-size: clamp(1.85rem, 8.5vw, 2.5rem);
+    line-height: 1.08;
+    max-width: none;
+  }
+
+  .dash-hero__lead {
+    font-size: 0.95rem;
+    margin-bottom: 1.35rem;
+    line-height: 1.75;
+  }
+
+  .dash-hero__badge {
+    margin-bottom: 1rem;
+    font-size: 0.62rem;
+  }
+
+  .dash-hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dash-hero__actions .dash-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .dash-hero__quick {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+    padding-bottom: 0.15rem;
+  }
+
+  .dash-hero__quick::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dash-quick-link {
+    flex-shrink: 0;
+  }
+
+  .dash-hero__visual {
+    max-width: 12.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dash-visual__chip {
+    font-size: 0.55rem;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .dash-visual__chip--1 { top: 4%; right: -2%; }
+  .dash-visual__chip--3 { right: 0; }
+
+  /* Stats */
+  .dash-stats {
+    margin-top: -1rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .dash-stats__shell {
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .dash-stats__grid,
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .dash-stats .stat-card {
+    padding: 1rem 0.85rem;
+  }
+
+  .dash-stats .stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* About bento */
+  .dash-about__bento {
+    gap: 0.85rem;
+  }
+
+  .dash-bento-card {
+    padding: 1.35rem 1.15rem;
+  }
+
+  /* Sections */
+  .site-main > .section-block {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .ui-section-head,
+  .site-container.ui-section-head {
+    margin-bottom: 2rem !important;
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.55rem, 6.5vw, 2rem);
+  }
+
+  .section-subtitle {
+    font-size: 0.92rem;
+  }
+
+  /* Navbar mobile */
+  .navbar {
+    padding-left: max(var(--section-x), env(safe-area-inset-left));
+    padding-right: max(var(--section-x), env(safe-area-inset-right));
+  }
+
+  .navbar-brand__text {
+    display: block !important;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+
+  .navbar-brand {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobile-nav {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-nav a {
+    padding: 0.65rem 0;
+    font-size: 1rem;
+  }
+
+  /* Contact & join */
+  .contact-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  .contact-info,
+  .contact-form-panel {
+    padding: 1.35rem;
+  }
+
+  .join-card {
+    padding: 1.75rem 1.15rem;
+  }
+
+  .join-actions {
+    width: 100%;
+  }
+
+  .join-actions .btn-primary,
+  .join-actions .btn-secondary {
+    width: 100%;
+  }
+
+  .cert-verify-form__row {
+    flex-direction: column;
+  }
+
+  .cert-verify-form__submit {
+    width: 100%;
+  }
+
+  /* Events carousel */
+  .events-wrapper {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  .events-nav-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  /* Team & grids */
+  .team-hierarchy-bar {
+    padding: 1rem;
+  }
+
+  .team-hierarchy-filters,
+  .team-dept-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+  }
+
+  .projects-filters,
+  .resources-filters,
+  .gallery-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  /* Performance: disable expensive effects on mobile */
+  .dash-hero__aurora,
+  .dash-hero__aurora--1,
+  .dash-hero__aurora--2,
+  .dash-hero__aurora--3 {
+    display: none;
+  }
+
+  .glass,
+  .navbar,
+  .mobile-nav,
+  .dash-stats__shell,
+  .members-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .dash-visual__ring--outer,
+  .dash-visual__ring--mid,
+  .dash-hero__badge-dot,
+  .dash-visual__chip,
+  .text-gradient-animated {
+    animation: none !important;
+  }
+
+  html.reveal-ready [data-reveal]:not(.is-revealed),
+  html.reveal-ready [data-aos]:not(.is-revealed) {
+    filter: none !important;
+    transform: translateY(16px);
+  }
+
+  .event-card.is-focused {
+    transform: scale(1.01) translateY(-2px) !important;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .dash-stats__grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-hero__quick {
+    gap: 0.35rem;
+  }
+
+  .dash-quick-link {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.65rem;
+  }
+}
+
+/* Touch devices: no hover-only effects */
+@media (hover: none) {
+  .event-card::before {
+    display: none;
+  }
+
+  .card-hover:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+}

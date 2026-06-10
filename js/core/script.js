@@ -6,6 +6,33 @@ async function initGalleryHome(items) {
     window.initGalleryLightbox(items || RC_GALLERY.getHomeItems());
   }
 }
+
+function initGalleryHomeLazy() {
+  const section = document.getElementById('gallery');
+  const grid = document.getElementById('cms-gallery-grid');
+  if (!section || !grid || section.dataset.galleryReady === 'true') return;
+
+  const run = () => {
+    if (section.dataset.galleryReady === 'true') return;
+    section.dataset.galleryReady = 'true';
+    initGalleryHome();
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          run();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px 0px' }
+    );
+    observer.observe(section);
+  } else {
+    run();
+  }
+}
 window.initGalleryHome = initGalleryHome;
 
 function initSite() {
@@ -21,7 +48,7 @@ function initSite() {
   initPopAnimations();
   initEventsScroll();
   updateMembershipCTA();
-  initGalleryHome();
+  initGalleryHomeLazy();
   if (window.RC_REVEAL) RC_REVEAL.refresh();
 }
 
@@ -289,30 +316,35 @@ function initNewsletterForm() {
 
 window.initNewsletterForm = initNewsletterForm;
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   if (window.RC_REVEAL) RC_REVEAL.init();
-
-  await RC_CMS.init();
-  if (window.RC_CERTIFICATES?.init) await RC_CERTIFICATES.init();
-
   if (window.RC_THEME) RC_THEME.init();
-  if (window.RC_SEO) RC_SEO.init();
-  if (window.RC_ANALYTICS) RC_ANALYTICS.init();
-  initMembershipRegistration();
-  initContactForm();
-  if (window.RC_CERTIFICATES) RC_CERTIFICATES.initVerify();
-  if (typeof window.initAnnouncementBar === 'function') window.initAnnouncementBar();
-  initNewsletterForm();
+
+  // Paint immediately from local cache — do not wait for cloud CMS
   initSite();
-  if (window.RC_REVEAL) RC_REVEAL.refresh();
-
-  window.addEventListener('rc-content-updated', () => initSite());
-
   initNavbar();
   initMobileMenu();
   initBackToTop();
   initScrollProgress();
   initActiveNav();
+  initMembershipRegistration();
+  initContactForm();
+  if (window.RC_CERTIFICATES) RC_CERTIFICATES.initVerify();
+  if (typeof window.initAnnouncementBar === 'function') window.initAnnouncementBar();
+  initNewsletterForm();
+  if (window.RC_SEO) RC_SEO.init();
+  if (window.RC_ANALYTICS) RC_ANALYTICS.init();
+
+  window.addEventListener('rc-content-updated', () => initSite());
+
+  // Sync cloud content in background (won't block first paint)
+  RC_CMS.init()
+    .then(() => (window.RC_CERTIFICATES?.init ? RC_CERTIFICATES.init() : null))
+    .then(() => {
+      initSite();
+      if (window.RC_REVEAL) RC_REVEAL.refresh();
+    })
+    .catch((err) => console.warn('CMS background sync:', err.message || err));
 });
 
 function prefersReducedMotion() {
@@ -621,24 +653,26 @@ function initEventsScroll() {
 
     container.addEventListener('scroll', eventsOnScroll, { passive: true });
 
-    container.addEventListener('mousemove', (e) => {
-      const card = e.target.closest('.event-card');
-      if (!card || !card.classList.contains('is-focused')) return;
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      container.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.event-card');
+        if (!card || !card.classList.contains('is-focused')) return;
 
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      card.style.setProperty('--mouse-x', `${x}%`);
-      card.style.setProperty('--mouse-y', `${y}%`);
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
 
-      const tiltX = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
-      const tiltY = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
-      card.style.transform = `perspective(900px) rotateY(${tiltX}deg) rotateX(${tiltY}deg) scale(1.04) translateY(-6px)`;
-    });
+        const tiltX = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+        const tiltY = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+        card.style.transform = `perspective(900px) rotateY(${tiltX}deg) rotateX(${tiltY}deg) scale(1.04) translateY(-6px)`;
+      });
 
-    container.addEventListener('mouseleave', () => {
-      eventsGetCards().forEach((card) => { card.style.transform = ''; });
-    });
+      container.addEventListener('mouseleave', () => {
+        eventsGetCards().forEach((card) => { card.style.transform = ''; });
+      });
+    }
 
     const visibilityObserver = new IntersectionObserver(
       (entries) => {

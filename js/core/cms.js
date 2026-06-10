@@ -82,8 +82,30 @@ window.RC_CMS = {
 
     cmsInitPromise = (async () => {
       if (window.RC_BACKEND?.isEnabled()) {
-        await RC_BACKEND.init();
-        let remote = await RC_BACKEND.getCmsContent();
+        const withTimeout = (promise, ms) =>
+          Promise.race([
+            promise,
+            new Promise((_, reject) => setTimeout(() => reject(new Error('CMS sync timeout')), ms))
+          ]);
+
+        try {
+          await withTimeout(RC_BACKEND.init(), 5000);
+        } catch (e) {
+          console.warn('CMS: backend init skipped', e.message);
+          contentCache = loadLocalContent();
+          cmsReady = true;
+          return contentCache;
+        }
+
+        let remote;
+        try {
+          remote = await withTimeout(RC_BACKEND.getCmsContent(), 5000);
+        } catch (e) {
+          console.warn('CMS: remote fetch timeout, using local', e.message);
+          contentCache = loadLocalContent();
+          cmsReady = true;
+          return contentCache;
+        }
         if (!remote || !Object.keys(remote).length) {
           await RC_BACKEND.seedFromLocalIfEmpty();
           remote = await RC_BACKEND.getCmsContent();
