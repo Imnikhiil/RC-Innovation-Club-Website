@@ -1,4 +1,14 @@
 const THEME_STORAGE_KEY = 'rc_theme_preference';
+const COLOR_STORAGE_KEY = 'rc_color_preference';
+const VALID_COLORS = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+
+const COLOR_META = {
+  ocean: { label: 'Ocean', themeColor: { dark: '#020617', light: '#f8fafc' } },
+  sunset: { label: 'Sunset', themeColor: { dark: '#1a0a04', light: '#fff7ed' } },
+  emerald: { label: 'Emerald', themeColor: { dark: '#021a14', light: '#f0fdf4' } },
+  royal: { label: 'Royal', themeColor: { dark: '#0f0a2e', light: '#f5f3ff' } },
+  coral: { label: 'Coral', themeColor: { dark: '#1a0610', light: '#fff1f2' } }
+};
 
 window.RC_THEME = {
   getPreference() {
@@ -11,6 +21,16 @@ window.RC_THEME = {
     return null;
   },
 
+  getColorPreference() {
+    try {
+      const saved = localStorage.getItem(COLOR_STORAGE_KEY);
+      if (VALID_COLORS.includes(saved)) return saved;
+    } catch {
+      /* ignore */
+    }
+    return 'ocean';
+  },
+
   getSystemTheme() {
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   },
@@ -19,16 +39,33 @@ window.RC_THEME = {
     return this.getPreference() || this.getSystemTheme();
   },
 
+  getResolvedColor() {
+    return this.getColorPreference();
+  },
+
+  updateMetaThemeColor(theme, color) {
+    const resolvedTheme = theme || this.getResolvedTheme();
+    const resolvedColor = color || this.getResolvedColor();
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    const palette = COLOR_META[resolvedColor] || COLOR_META.ocean;
+    meta.setAttribute('content', palette.themeColor[resolvedTheme] || palette.themeColor.dark);
+  },
+
+  applyColor(color) {
+    const resolved = VALID_COLORS.includes(color) ? color : 'ocean';
+    document.documentElement.setAttribute('data-color', resolved);
+    this.updateColorPicker(resolved);
+    this.updateMetaThemeColor(this.getResolvedTheme(), resolved);
+    return resolved;
+  },
+
   apply(theme) {
     const resolved = theme === 'dark' || theme === 'light' ? theme : this.getResolvedTheme();
     document.documentElement.setAttribute('data-theme', resolved);
-
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) {
-      meta.setAttribute('content', resolved === 'light' ? '#f8fafc' : '#020617');
-    }
-
+    this.applyColor(this.getResolvedColor());
     this.updateToggleButtons(resolved);
+    this.updateMetaThemeColor(resolved, this.getResolvedColor());
     return resolved;
   },
 
@@ -40,7 +77,18 @@ window.RC_THEME = {
       /* ignore */
     }
     this.apply(theme);
-    window.dispatchEvent(new CustomEvent('rc-theme-changed', { detail: { theme } }));
+    window.dispatchEvent(new CustomEvent('rc-theme-changed', { detail: { theme, color: this.getResolvedColor() } }));
+  },
+
+  setColorPreference(color) {
+    if (!VALID_COLORS.includes(color)) return;
+    try {
+      localStorage.setItem(COLOR_STORAGE_KEY, color);
+    } catch {
+      /* ignore */
+    }
+    this.applyColor(color);
+    window.dispatchEvent(new CustomEvent('rc-theme-changed', { detail: { theme: this.getResolvedTheme(), color } }));
   },
 
   toggle() {
@@ -59,6 +107,73 @@ window.RC_THEME = {
     });
   },
 
+  updateColorPicker(color) {
+    const resolved = VALID_COLORS.includes(color) ? color : 'ocean';
+    document.querySelectorAll('[data-color-pick]').forEach((btn) => {
+      const active = btn.getAttribute('data-color-pick') === resolved;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  },
+
+  closeColorPicker() {
+    document.querySelectorAll('[data-theme-picker]').forEach((picker) => {
+      const panel = picker.querySelector('[data-theme-picker-panel]');
+      const trigger = picker.querySelector('[data-theme-picker-trigger]');
+      if (panel) panel.hidden = true;
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      picker.classList.remove('is-open');
+    });
+  },
+
+  toggleColorPicker(trigger) {
+    const picker = trigger.closest('[data-theme-picker]');
+    if (!picker) return;
+    const panel = picker.querySelector('[data-theme-picker-panel]');
+    if (!panel) return;
+    const willOpen = panel.hidden;
+    this.closeColorPicker();
+    if (willOpen) {
+      panel.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      picker.classList.add('is-open');
+    }
+  },
+
+  initColorPicker() {
+    document.querySelectorAll('[data-color-pick]').forEach((btn) => {
+      if (btn.dataset.bound === 'true') return;
+      btn.dataset.bound = 'true';
+      btn.addEventListener('click', () => {
+        this.setColorPreference(btn.getAttribute('data-color-pick'));
+        this.closeColorPicker();
+      });
+    });
+
+    document.querySelectorAll('[data-theme-picker-trigger]').forEach((trigger) => {
+      if (trigger.dataset.bound === 'true') return;
+      trigger.dataset.bound = 'true';
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleColorPicker(trigger);
+      });
+    });
+
+    document.querySelectorAll('[data-theme-picker-panel]').forEach((panel) => {
+      panel.addEventListener('click', (e) => e.stopPropagation());
+    });
+
+    if (!window._rcColorPickerDocBound) {
+      window._rcColorPickerDocBound = true;
+      document.addEventListener('click', () => this.closeColorPicker());
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeColorPicker();
+      });
+    }
+
+    this.updateColorPicker(this.getResolvedColor());
+  },
+
   init() {
     this.apply();
 
@@ -75,6 +190,7 @@ window.RC_THEME = {
       btn.addEventListener('click', () => this.toggle());
     });
 
+    this.initColorPicker();
     this.updateToggleButtons();
   }
 };

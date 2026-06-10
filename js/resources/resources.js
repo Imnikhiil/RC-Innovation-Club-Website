@@ -90,7 +90,7 @@ window.RC_RESOURCES = {
 
     if (empty) empty.hidden = true;
     grid.innerHTML = items.map((r, i) => this.buildCardHtml(r, i)).join('');
-    if (typeof AOS !== 'undefined') AOS.refresh();
+    if (window.RC_REVEAL) RC_REVEAL.refresh();
   },
 
   initHub() {

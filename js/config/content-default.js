@@ -83,23 +83,402 @@ window.RC_DEFAULT_CONTENT = {
     subtitle: 'The students driving events, operations, and club growth.'
   },
   coreTeam: [
-    { name: 'Ankit Kumar Verma', role: 'Ambassador', img: 'assets/team/core/Ankit Verma.jpg', accent: 'sky', lead: true, department: 'leadership' },
+    {
+      name: 'Ankit Kumar Verma',
+      role: 'Ambassador',
+      img: 'assets/team/core/Ankit Verma.jpg',
+      accent: 'sky',
+      lead: true,
+      department: 'leadership',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Representing the club with professionalism and student-focused impact.',
+        introduction: 'I am Ankit Kumar Verma, serving as the Ambassador of RC Innovation Club at DSEU Rajokri Campus. I focus on representing the club in official activities, supporting team coordination, and ensuring smooth execution of club initiatives.',
+        responsibilities: [
+          'Represent the club in official events & activities',
+          'Support communication between members & faculty',
+          'Encourage participation & promote club initiatives',
+          'Assist in organizing workshops and events',
+          'Maintain professionalism & coordination during executions'
+        ],
+        skills: ['Leadership', 'Communication', 'Team Coordination', 'Event Support'],
+        links: {
+          whatsapp: 'https://wa.me/919310644433',
+          linkedin: '',
+          instagram: 'https://www.instagram.com/imyournikhil',
+          github: '',
+          email: 'imyournikhil@gmail.com',
+          portfolio: ''
+        }
+      }
+    },
     { name: 'Aman Mishra', role: 'Assistant Ambassador', img: 'assets/team/core/Aman.jpeg', accent: 'violet', department: 'leadership' },
-    { name: 'Raushani Singh', role: 'General Secretary', img: 'assets/team/core/raushni.jpeg', accent: 'sky', department: 'leadership' },
-    { name: 'Neha Thakur', role: 'Communication Secretary', img: 'assets/team/core/Neha.jpg', accent: 'violet', department: 'leadership' },
-    { name: 'Ankit Singh Dhami', role: 'Technical Head', img: 'assets/team/core/Ankit Singh Dhami.png', accent: 'sky', department: 'technical' },
-    { name: 'Rishab Kumar Jha', role: 'Tech Support Coordinator', img: 'assets/team/core/Rishab.png', accent: 'violet', department: 'technical' },
-    { name: 'Raashi Singh', role: 'Event Head', img: 'assets/team/core/Raashi.jpeg', accent: 'sky', department: 'events' },
-    { name: 'Pooja', role: 'Event Assistant', img: 'assets/team/core/Pooja.jpg', accent: 'violet', department: 'events' },
-    { name: 'Mansi', role: 'Media Head', img: 'assets/team/core/mansi.jpeg', accent: 'sky', department: 'media' },
-    { name: 'Om Kumar Nayak', role: 'Poster Designer', img: 'assets/team/core/Om.jpeg', accent: 'violet', department: 'media' },
-    { name: 'Vanshika Dixit', role: 'Poster Designer', img: 'assets/team/core/Vanshika.jpeg', accent: 'sky', department: 'media' },
-    { name: 'Vashu', role: 'Social Media Executive', img: 'assets/team/core/Vashu.jpeg', accent: 'violet', department: 'media' },
-    { name: 'Akansha', role: 'Content & Documents Executive', img: 'assets/team/other/Akansha.png', accent: 'sky', department: 'media' },
-    { name: 'Sneha Rajput', role: 'Video Editor Head', img: 'assets/team/other/Sneha.jpg', accent: 'violet', department: 'media' },
+    {
+      name: 'Raushani Singh',
+      role: 'General Secretary',
+      img: 'assets/team/core/raushni.jpeg',
+      accent: 'sky',
+      department: 'leadership',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Ensuring smooth club operations through leadership and coordination.',
+        introduction: 'I am Raushani Singh, working as the General Secretary of RC Innovation Club at DSEU Rajokri Campus. My role includes managing club operations, coordinating between teams, and ensuring tasks are executed efficiently. I support the club\'s growth by maintaining structure, discipline, and effective collaboration among members.',
+        responsibilities: [
+          'Manage overall club coordination and workflow',
+          'Support planning and execution of club events',
+          'Ensure task allocation and progress tracking',
+          'Maintain meeting records and internal communication',
+          'Assist in decision-making and team management'
+        ],
+        skills: ['Leadership', 'Management', 'Communication', 'Planning'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Neha Thakur',
+      role: 'Communication Secretary',
+      img: 'assets/team/core/Neha.jpg',
+      accent: 'violet',
+      department: 'leadership',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Connecting members, maintaining clarity, and ensuring smooth communication.',
+        introduction: 'I am Neha Thakur, serving as the Communication Secretary of RC Innovation Club at DSEU Rajokri Campus. I ensure effective communication within the team, manage updates, and maintain coordination between members and leadership for smooth execution of club activities.',
+        responsibilities: [
+          'Manage internal communication and announcements',
+          'Coordinate between teams and leadership',
+          'Ensure timely updates for meetings and events',
+          'Maintain clarity in task instructions and reporting',
+          'Support documentation-related communication'
+        ],
+        skills: ['Communication', 'Coordination', 'Management', 'Teamwork'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Ankit Singh Dhami',
+      role: 'Technical Head',
+      img: 'assets/team/core/Ankit Singh Dhami.png',
+      accent: 'sky',
+      department: 'technical',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Leading technical innovation and supporting project execution.',
+        introduction: 'I am Ankit Singh Dhami, working as the Technical Head of RC Innovation Club at DSEU Rajokri Campus. My role focuses on guiding technical tasks, supporting innovation projects, and ensuring strong execution of technical activities within the club.',
+        responsibilities: [
+          'Lead technical projects and club innovation tasks',
+          'Guide team members in technical development',
+          'Support workshop technical setup and execution',
+          'Ensure technical quality and problem-solving',
+          'Maintain technical coordination during events'
+        ],
+        skills: ['Technical Leadership', 'Problem Solving', 'Project Support', 'Innovation'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Rishab Kumar Jha',
+      role: 'Tech Support Executive',
+      img: 'assets/team/core/Rishab.png',
+      accent: 'violet',
+      department: 'technical',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Ensuring smooth technical operations and quick troubleshooting.',
+        introduction: 'I am Rishab Kumar Jha, serving as the Tech Support Executive of RC Innovation Club at DSEU Rajokri Campus. I support technical requirements during events and projects, assist members with troubleshooting, and ensure smooth technical operations.',
+        responsibilities: [
+          'Provide technical support during events and sessions',
+          'Assist in setup of systems, tools, and equipment',
+          'Troubleshoot basic technical issues during execution',
+          'Support technical coordination under Technical Head',
+          'Help maintain smooth workflow in technical tasks'
+        ],
+        skills: ['Technical Support', 'Troubleshooting', 'Coordination', 'Teamwork'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Raashi Singh',
+      role: 'Event Head',
+      img: 'assets/team/core/Raashi.jpeg',
+      accent: 'sky',
+      department: 'events',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Planning, managing, and delivering successful club events.',
+        introduction: 'I am Raashi Singh, working as the Event Head of RC Innovation Club at DSEU Rajokri Campus. My responsibility is to plan, coordinate, and execute events and workshops smoothly while ensuring proper management, discipline, and participant engagement.',
+        responsibilities: [
+          'Lead event planning and execution process',
+          'Coordinate with teams for smooth event workflow',
+          'Manage scheduling, venue, and operations',
+          'Ensure proper coordination with participants and faculty',
+          'Monitor execution quality and overall event success'
+        ],
+        skills: ['Event Management', 'Leadership', 'Planning', 'Coordination'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Pooja',
+      role: 'Event Assistant',
+      img: 'assets/team/core/Pooja.jpg',
+      accent: 'violet',
+      department: 'events',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Supporting event execution with coordination and reliability.',
+        introduction: 'I am Pooja, serving as the Event Assistant of RC Innovation Club at DSEU Rajokri Campus. I support the Event Head in managing event operations, coordinating tasks, and ensuring a smooth event experience for all participants.',
+        responsibilities: [
+          'Assist in event planning and coordination',
+          'Support team management during execution',
+          'Help with participant handling and guidance',
+          'Ensure on-ground support and discipline',
+          'Support arrangements and event workflow'
+        ],
+        skills: ['Coordination', 'Team Support', 'Management', 'Communication'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Mansi',
+      role: 'Media Head',
+      img: 'assets/team/core/mansi.jpeg',
+      accent: 'sky',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Creating a strong digital presence through creative media.',
+        introduction: 'I am Mansi, serving as the Media Head of RC Innovation Club at DSEU Rajokri Campus. I focus on managing media content, ensuring quality visuals, and maintaining the club\'s online presence through effective creative strategy.',
+        responsibilities: [
+          'Lead media content planning and execution',
+          'Manage visual content for events and updates',
+          'Coordinate with designers and editors',
+          'Maintain a consistent media identity for the club',
+          'Support social media content execution'
+        ],
+        skills: ['Media Management', 'Creativity', 'Content Strategy', 'Coordination'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Om Kumar Nayak',
+      role: 'Poster Designer',
+      img: 'assets/team/core/Om.jpeg',
+      accent: 'violet',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Designing impactful visuals for club promotions.',
+        introduction: 'I am Om Kumar Nayak, working as a Poster Designer at RC Innovation Club in DSEU Rajokri Campus. I design creative posters and promotional visuals that support event marketing and strengthen the club\'s visual identity.',
+        responsibilities: [
+          'Design posters for events, workshops, and announcements',
+          'Maintain brand-style design consistency',
+          'Support media team with creative assets',
+          'Improve promotional reach through strong visuals',
+          'Work on timely delivery of designs'
+        ],
+        skills: ['Graphic Design', 'Creativity', 'Branding', 'Visual Communication'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Vanshika Dixit',
+      role: 'Poster Designer',
+      img: 'assets/team/core/Vanshika.jpeg',
+      accent: 'sky',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Crafting creative designs that represent club identity.',
+        introduction: 'I am Vanshika Dixit, serving as a Poster Designer at RC Innovation Club in DSEU Rajokri Campus. My focus is to create visually appealing promotional designs that support the club\'s events and initiatives.',
+        responsibilities: [
+          'Design posters and creatives for club activities',
+          'Support media head in design planning',
+          'Maintain visual identity and theme consistency',
+          'Ensure on-time design submissions',
+          'Contribute creative ideas for promotions'
+        ],
+        skills: ['Graphic Design', 'Creativity', 'Editing', 'Visual Communication'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Vashu',
+      role: 'Social Media Executive',
+      img: 'assets/team/core/Vashu.jpeg',
+      accent: 'violet',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Building engagement and growing the club\'s social presence.',
+        introduction: 'I am Vashu, serving as the Social Media Executive of RC Innovation Club at DSEU Rajokri Campus. I manage content posting, engagement, and online communication to strengthen the club\'s visibility and reach among students.',
+        responsibilities: [
+          'Manage club\'s social media posting schedule',
+          'Support promotions for events and workshops',
+          'Engage with audience and respond to messages',
+          'Coordinate with media/design team for content',
+          'Help grow club reach and engagement'
+        ],
+        skills: ['Social Media', 'Communication', 'Content Handling', 'Creativity'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Akansha',
+      role: 'Content & Documents Executive',
+      img: 'assets/team/other/Akansha.png',
+      accent: 'sky',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Managing documentation with clarity, quality, and professionalism.',
+        introduction: 'I am Akansha, serving as the Content & Documents Executive of RC Innovation Club at DSEU Rajokri Campus. My role focuses on writing, maintaining, and managing important documents, reports, and official content for the club.',
+        responsibilities: [
+          'Prepare official documents and reports',
+          'Manage event documentation and records',
+          'Assist in content writing and announcements',
+          'Maintain structured data and files',
+          'Ensure accuracy and professionalism in content'
+        ],
+        skills: ['Documentation', 'Writing', 'Management', 'Organization'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
+    {
+      name: 'Sneha Rajput',
+      role: 'Video Editor Head',
+      img: 'assets/team/other/Sneha.jpg',
+      accent: 'violet',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Leading video content production with creativity and quality.',
+        introduction: 'I am Sneha Rajput, working as the Video Editor Head of RC Innovation Club at DSEU Rajokri Campus. I manage video editing tasks, guide the editing team, and ensure high-quality content for club promotions and event highlights.',
+        responsibilities: [
+          'Lead video editing tasks and team coordination',
+          'Ensure quality and consistency in video content',
+          'Create event highlight videos and promotional reels',
+          'Support media team with video requirements',
+          'Maintain timely delivery of edited content'
+        ],
+        skills: ['Video Editing', 'Creativity', 'Team Leadership', 'Content Production'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
     { name: 'Tushar', role: 'Video Editor', img: 'assets/team/other/Tushar.jpg', accent: 'sky', department: 'media' },
     { name: 'Aman Kumar Sharma', role: 'Photography Head', img: 'assets/team/other/Aman Sharma.png', accent: 'violet', department: 'media' },
-    { name: 'Ritesh Verma', role: 'Photography Assistant', img: 'assets/team/core/Ritesh.jpeg', accent: 'sky', department: 'media' },
+    {
+      name: 'Ritesh Verma',
+      role: 'Photography Assistant',
+      img: 'assets/team/core/Ritesh.jpeg',
+      accent: 'sky',
+      department: 'media',
+      profile: {
+        campus: 'DSEU Rajokri Campus',
+        tagline: 'Supporting photography coverage with discipline and coordination.',
+        introduction: 'I am Ritesh Verma, serving as the Photography Assistant of RC Innovation Club at DSEU Rajokri Campus. I assist in photography coverage during events and support the Photography Head in ensuring smooth capture and content management.',
+        responsibilities: [
+          'Assist in event photography coverage',
+          'Support camera handling and shot management',
+          'Maintain coordination during event coverage',
+          'Help organize and transfer event photos',
+          'Support media team with photo requirements'
+        ],
+        skills: ['Photography', 'Coordination', 'Team Support', 'Consistency'],
+        links: {
+          whatsapp: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          email: '',
+          portfolio: ''
+        }
+      }
+    },
     { name: 'Anirudh Tiwari', role: 'Finance Secretary', img: 'assets/team/core/Aunirudh.jpeg', accent: 'violet', department: 'finance' }
   ],
   ambassadorsSection: {

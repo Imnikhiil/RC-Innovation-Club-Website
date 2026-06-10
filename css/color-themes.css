@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════
+   Color palettes — works with dark & light (data-theme)
+   Set via data-color on <html>
+   ═══════════════════════════════════════════════════════════ */
+
+:root,
+[data-color="ocean"] {
+  --accent: #22d3ee;
+  --accent-deep: #0891b2;
+  --accent-secondary: #a78bfa;
+  --accent-muted: rgba(34, 211, 238, 0.12);
+  --accent-glow: rgba(34, 211, 238, 0.38);
+  --indigo: #a78bfa;
+  --gradient-brand: linear-gradient(135deg, #22d3ee 0%, #38bdf8 38%, #a78bfa 100%);
+  --gradient-surface: linear-gradient(165deg, rgba(34, 211, 238, 0.07) 0%, rgba(167, 139, 250, 0.05) 55%, transparent 100%);
+  --hero-glow-1: rgba(34, 211, 238, 0.14);
+  --hero-glow-2: rgba(167, 139, 250, 0.12);
+  --page-glow-1: rgba(34, 211, 238, 0.16);
+  --page-glow-2: rgba(167, 139, 250, 0.14);
+  --page-glow-3: rgba(8, 145, 178, 0.1);
+  --dash-glow-1: rgba(34, 211, 238, 0.22);
+  --dash-glow-2: rgba(167, 139, 250, 0.18);
+  --dash-glow-3: rgba(56, 189, 248, 0.12);
+  --dash-btn-gradient: linear-gradient(135deg, #22d3ee 0%, #38bdf8 50%, #67e8f9 100%);
+  --dash-btn-text: #020617;
+  --swatch-a: #22d3ee;
+  --swatch-b: #a78bfa;
+}
+
+[data-color="sunset"] {
+  --accent: #fb923c;
+  --accent-deep: #ea580c;
+  --accent-secondary: #f472b6;
+  --accent-muted: rgba(251, 146, 60, 0.14);
+  --accent-glow: rgba(251, 146, 60, 0.38);
+  --indigo: #f472b6;
+  --gradient-brand: linear-gradient(135deg, #fb923c 0%, #f97316 42%, #f472b6 100%);
+  --gradient-surface: linear-gradient(165deg, rgba(251, 146, 60, 0.08) 0%, rgba(244, 114, 182, 0.06) 55%, transparent 100%);
+  --hero-glow-1: rgba(251, 146, 60, 0.16);
+  --hero-glow-2: rgba(244, 114, 182, 0.14);
+  --page-glow-1: rgba(251, 146, 60, 0.18);
+  --page-glow-2: rgba(244, 114, 182, 0.14);
+  --page-glow-3: rgba(234, 88, 12, 0.1);
+  --dash-glow-1: rgba(251, 146, 60, 0.24);
+  --dash-glow-2: rgba(244, 114, 182, 0.2);
+  --dash-glow-3: rgba(251, 191, 36, 0.12);
+  --dash-btn-gradient: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #fdba74 100%);
+  --dash-btn-text: #1c0a00;
+  --swatch-a: #fb923c;
+  --swatch-b: #f472b6;
+}
+
+[data-color="emerald"] {
+  --accent: #34d399;
+  --accent-deep: #059669;
+  --accent-secondary: #2dd4bf;
+  --accent-muted: rgba(52, 211, 153, 0.13);
+  --accent-glow: rgba(52, 211, 153, 0.36);
+  --indigo: #2dd4bf;
+  --gradient-brand: linear-gradient(135deg, #34d399 0%, #10b981 42%, #2dd4bf 100%);
+  --gradient-surface: linear-gradient(165deg, rgba(52, 211, 153, 0.08) 0%, rgba(45, 212, 191, 0.06) 55%, transparent 100%);
+  --hero-glow-1: rgba(52, 211, 153, 0.15);
+  --hero-glow-2: rgba(45, 212, 191, 0.13);
+  --page-glow-1: rgba(52, 211, 153, 0.17);
+  --page-glow-2: rgba(45, 212, 191, 0.13);
+  --page-glow-3: rgba(5, 150, 105, 0.1);
+  --dash-glow-1: rgba(52, 211, 153, 0.22);
+  --dash-glow-2: rgba(45, 212, 191, 0.18);
+  --dash-glow-3: rgba(16, 185, 129, 0.12);
+  --dash-btn-gradient: linear-gradient(135deg, #34d399 0%, #10b981 50%, #6ee7b7 100%);
+  --dash-btn-text: #022c22;
+  --swatch-a: #34d399;
+  --swatch-b: #2dd4bf;
+}
+
+[data-color="royal"] {
+  --accent: #818cf8;
+  --accent-deep: #6366f1;
+  --accent-secondary: #c084fc;
+  --accent-muted: rgba(129, 140, 248, 0.14);
+  --accent-glow: rgba(129, 140, 248, 0.4);
+  --indigo: #c084fc;
+  --gradient-brand: linear-gradient(135deg, #818cf8 0%, #6366f1 42%, #c084fc 100%);
+  --gradient-surface: linear-gradient(165deg, rgba(129, 140, 248, 0.08) 0%, rgba(192, 132, 252, 0.06) 55%, transparent 100%);
+  --hero-glow-1: rgba(129, 140, 248, 0.16);
+  --hero-glow-2: rgba(192, 132, 252, 0.14);
+  --page-glow-1: rgba(129, 140, 248, 0.18);
+  --page-glow-2: rgba(192, 132, 252, 0.14);
+  --page-glow-3: rgba(99, 102, 241, 0.1);
+  --dash-glow-1: rgba(129, 140, 248, 0.24);
+  --dash-glow-2: rgba(192, 132, 252, 0.2);
+  --dash-glow-3: rgba(167, 139, 250, 0.12);
+  --dash-btn-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #a5b4fc 100%);
+  --dash-btn-text: #0f0a2e;
+  --swatch-a: #818cf8;
+  --swatch-b: #c084fc;
+}
+
+[data-color="coral"] {
+  --accent: #fb7185;
+  --accent-deep: #e11d48;
+  --accent-secondary: #fbbf24;
+  --accent-muted: rgba(251, 113, 133, 0.14);
+  --accent-glow: rgba(251, 113, 133, 0.38);
+  --indigo: #fbbf24;
+  --gradient-brand: linear-gradient(135deg, #fb7185 0%, #f43f5e 42%, #fbbf24 100%);
+  --gradient-surface: linear-gradient(165deg, rgba(251, 113, 133, 0.08) 0%, rgba(251, 191, 36, 0.06) 55%, transparent 100%);
+  --hero-glow-1: rgba(251, 113, 133, 0.16);
+  --hero-glow-2: rgba(251, 191, 36, 0.14);
+  --page-glow-1: rgba(251, 113, 133, 0.17);
+  --page-glow-2: rgba(251, 191, 36, 0.13);
+  --page-glow-3: rgba(225, 29, 72, 0.1);
+  --dash-glow-1: rgba(251, 113, 133, 0.22);
+  --dash-glow-2: rgba(251, 191, 36, 0.18);
+  --dash-glow-3: rgba(244, 63, 94, 0.12);
+  --dash-btn-gradient: linear-gradient(135deg, #fb7185 0%, #f43f5e 50%, #fda4af 100%);
+  --dash-btn-text: #2a0610;
+  --swatch-a: #fb7185;
+  --swatch-b: #fbbf24;
+}
+
+/* Page background uses palette glows */
+.bg-gradient-pro {
+  background:
+    radial-gradient(ellipse 110% 70% at 50% -25%, var(--page-glow-1), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, var(--page-glow-2), transparent 52%),
+    radial-gradient(ellipse 45% 35% at 0% 80%, var(--page-glow-3), transparent 48%),
+    linear-gradient(180deg, #030712 0%, #060d1c 45%, #030712 100%);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: #fff;
+}
+
+/* ── Light mode per palette ── */
+[data-theme="light"][data-color="ocean"] {
+  --accent: #0891b2;
+  --accent-deep: #0e7490;
+  --accent-secondary: #7c3aed;
+  --accent-muted: rgba(8, 145, 178, 0.1);
+  --accent-glow: rgba(8, 145, 178, 0.28);
+  --dash-btn-gradient: linear-gradient(135deg, #0891b2 0%, #0284c7 50%, #22d3ee 100%);
+  --dash-btn-text: #fff;
+}
+
+[data-theme="light"][data-color="sunset"] {
+  --accent: #ea580c;
+  --accent-deep: #c2410c;
+  --accent-secondary: #db2777;
+  --accent-muted: rgba(234, 88, 12, 0.1);
+  --accent-glow: rgba(234, 88, 12, 0.28);
+  --gradient-brand: linear-gradient(135deg, #ea580c 0%, #f97316 42%, #db2777 100%);
+  --dash-btn-gradient: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%);
+  --dash-btn-text: #fff;
+}
+
+[data-theme="light"][data-color="emerald"] {
+  --accent: #059669;
+  --accent-deep: #047857;
+  --accent-secondary: #0d9488;
+  --accent-muted: rgba(5, 150, 105, 0.1);
+  --accent-glow: rgba(5, 150, 105, 0.28);
+  --gradient-brand: linear-gradient(135deg, #059669 0%, #10b981 42%, #0d9488 100%);
+  --dash-btn-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+  --dash-btn-text: #fff;
+}
+
+[data-theme="light"][data-color="royal"] {
+  --accent: #6366f1;
+  --accent-deep: #4f46e5;
+  --accent-secondary: #9333ea;
+  --accent-muted: rgba(99, 102, 241, 0.1);
+  --accent-glow: rgba(99, 102, 241, 0.28);
+  --gradient-brand: linear-gradient(135deg, #6366f1 0%, #4f46e5 42%, #9333ea 100%);
+  --dash-btn-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #818cf8 100%);
+  --dash-btn-text: #fff;
+}
+
+[data-theme="light"][data-color="coral"] {
+  --accent: #e11d48;
+  --accent-deep: #be123c;
+  --accent-secondary: #d97706;
+  --accent-muted: rgba(225, 29, 72, 0.1);
+  --accent-glow: rgba(225, 29, 72, 0.28);
+  --gradient-brand: linear-gradient(135deg, #e11d48 0%, #f43f5e 42%, #d97706 100%);
+  --dash-btn-gradient: linear-gradient(135deg, #e11d48 0%, #f43f5e 50%, #fb7185 100%);
+  --dash-btn-text: #fff;
+}
+
+[data-theme="light"] .bg-gradient-pro {
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -22%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 58%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, color-mix(in srgb, var(--accent-secondary) 9%, transparent), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}

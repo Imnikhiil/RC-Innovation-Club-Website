@@ -23,6 +23,18 @@ function migrateAssetPath(path) {
   return migrated;
 }
 
+function mergeCoreTeamProfiles(defaultTeam, savedTeam) {
+  if (!Array.isArray(savedTeam)) return savedTeam;
+  const profilesByName = {};
+  (defaultTeam || []).forEach((member) => {
+    if (member.profile) profilesByName[member.name] = member.profile;
+  });
+  return savedTeam.map((member) => {
+    if (member.profile || !profilesByName[member.name]) return member;
+    return { ...member, profile: profilesByName[member.name] };
+  });
+}
+
 function migrateContentAssets(content) {
   if (!content || typeof content !== 'object') return content;
 
@@ -119,6 +131,9 @@ window.RC_CMS = {
     arrays.forEach((key) => {
       if (Array.isArray(saved[key])) merged[key] = saved[key];
     });
+    if (Array.isArray(merged.coreTeam)) {
+      merged.coreTeam = mergeCoreTeamProfiles(defaults.coreTeam, merged.coreTeam);
+    }
     const objects = [
       'hero', 'statsSection', 'about', 'eventsSection', 'facultySection', 'teamHierarchySection', 'coreSection', 'ambassadorsSection',
       'membersSection', 'legacySection', 'testimonialsSection', 'partnersSection', 'projectsSection', 'resourcesSection', 'gallerySection', 'announcementBar', 'newsletterSection',

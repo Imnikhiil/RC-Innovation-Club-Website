@@ -14,13 +14,15 @@ function initSite() {
   }
   initTeamCards();
   initFacultyCards();
+  if (window.RC_TEAM_PROFILES) RC_TEAM_PROFILES.init();
   if (window.RC_TEAM_HIERARCHY) RC_TEAM_HIERARCHY.init();
+  if (typeof window.initMembersReveal === 'function') window.initMembersReveal();
   initStatCounters();
   initPopAnimations();
   initEventsScroll();
   updateMembershipCTA();
   initGalleryHome();
-  if (typeof AOS !== 'undefined') AOS.refresh();
+  if (window.RC_REVEAL) RC_REVEAL.refresh();
 }
 
 function showEl(el) {
@@ -288,6 +290,8 @@ function initNewsletterForm() {
 window.initNewsletterForm = initNewsletterForm;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if (window.RC_REVEAL) RC_REVEAL.init();
+
   await RC_CMS.init();
   if (window.RC_CERTIFICATES?.init) await RC_CERTIFICATES.init();
 
@@ -300,30 +304,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (typeof window.initAnnouncementBar === 'function') window.initAnnouncementBar();
   initNewsletterForm();
   initSite();
+  if (window.RC_REVEAL) RC_REVEAL.refresh();
 
   window.addEventListener('rc-content-updated', () => initSite());
-
-  try {
-    if (typeof AOS !== 'undefined') {
-      AOS.init({
-        duration: 800,
-        once: true,
-        offset: 40,
-        easing: 'ease-out-cubic',
-        disable: () => window.innerWidth < 480
-      });
-    }
-  } catch (err) {
-    console.warn('AOS init skipped:', err);
-  }
 
   initNavbar();
   initMobileMenu();
   initBackToTop();
   initScrollProgress();
   initActiveNav();
-
-  window.addEventListener('rc-content-updated', initSite);
 });
 
 function prefersReducedMotion() {

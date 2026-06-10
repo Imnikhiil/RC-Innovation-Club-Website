@@ -49,11 +49,19 @@ function setHtml(id, html) {
   if (el) el.innerHTML = html;
 }
 
+function setBtnLabel(id, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const label = el.querySelector('span');
+  if (label) label.textContent = text;
+  else el.textContent = text;
+}
+
 function renderHero(hero) {
   setText('cms-hero-badge', hero.badge);
-  setHtml('cms-hero-title', `${escapeHtml(hero.title)}<br><span class="text-gradient text-gradient-animated">${escapeHtml(hero.titleHighlight)}</span>`);
+  setHtml('cms-hero-title', `${escapeHtml(hero.title)}<br><span class="dash-hero__highlight text-gradient text-gradient-animated">${escapeHtml(hero.titleHighlight)}</span>`);
   setText('cms-hero-desc', hero.description);
-  setText('cms-hero-btn1', hero.btnPrimary);
+  setBtnLabel('cms-hero-btn1', hero.btnPrimary);
   setText('cms-hero-btn2', hero.btnSecondary);
 }
 
@@ -96,7 +104,7 @@ function renderStats(section, stats) {
 function renderAbout(about) {
   setText('cms-about-eyebrow', about.eyebrow);
   const aboutName = about.title.replace(/^About\s+/i, '') || about.title;
-  setHtml('cms-about-title', `About <span class="text-gradient">${escapeHtml(aboutName)}</span>`);
+  setHtml('cms-about-title', `About <span class="dash-hero__highlight text-gradient">${escapeHtml(aboutName)}</span>`);
   setText('cms-about-subtitle', about.subtitle);
   setText('cms-about-mission', about.mission);
   setText('cms-about-vision', about.vision);
@@ -207,9 +215,17 @@ function renderCoreTeam(team) {
     const initials = getInitials(member.name);
     const accent = member.accent === 'violet' ? 'violet' : 'sky';
     const leadClass = member.lead ? ' team-card--lead' : '';
+    const profileClass = member.profile ? ' team-card--has-profile' : '';
+    const profileSlug = member.profile && window.RC_TEAM_PROFILES
+      ? RC_TEAM_PROFILES.slugify(member.name)
+      : '';
+    const profileAttrs = member.profile
+      ? ` data-profile-slug="${escapeHtml(profileSlug)}" role="button" tabindex="0" aria-label="View ${escapeHtml(member.name)} profile"`
+      : '';
     const badge = member.lead ? '<span class="team-card__badge">Lead</span>' : '';
+    const viewHint = member.profile ? '<span class="team-card__view-hint"><i class="fa-solid fa-user" aria-hidden="true"></i> View Profile</span>' : '';
     return `
-      <article class="team-card team-card--${accent}${leadClass}" data-reveal style="transition-delay: ${(index % 4) * 90}ms">
+      <article class="team-card team-card--${accent}${leadClass}${profileClass}" data-reveal style="transition-delay: ${(index % 4) * 90}ms"${profileAttrs}>
         <div class="team-card__inner glass">
           ${badge}
           <div class="team-card__photo-wrap">
@@ -220,6 +236,7 @@ function renderCoreTeam(team) {
           </div>
           <h4 class="team-card__name">${escapeHtml(member.name)}</h4>
           <span class="team-card__role">${escapeHtml(member.role)}</span>
+          ${viewHint}
         </div>
       </article>
     `;
@@ -245,6 +262,33 @@ function renderAmbassadorsSection(section, ambassadors) {
   `).join('');
 }
 
+function buildMemberChip(member, index) {
+  const accent = index % 2 === 0 ? 'sky' : 'violet';
+  return `
+    <div class="member-chip member-chip--${accent}" data-member-reveal style="--chip-i: ${index}">
+      <div class="member-chip__inner">
+        <span class="member-chip__ring" aria-hidden="true"></span>
+        <span class="member-chip__avatar" aria-hidden="true">${getInitials(member.name)}</span>
+        <span class="member-chip__name">${escapeHtml(member.name)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function buildAlumniCard(member, index) {
+  return `
+    <article class="alumni-card" data-member-reveal style="--chip-i: ${index}">
+      <div class="alumni-card__shine" aria-hidden="true"></div>
+      <span class="alumni-card__avatar" aria-hidden="true">${getInitials(member.name)}</span>
+      <div class="alumni-card__body">
+        <h4 class="alumni-card__name">${escapeHtml(member.name)}</h4>
+        ${member.role ? `<span class="alumni-card__role">${escapeHtml(member.role)}</span>` : ''}
+      </div>
+      <span class="alumni-card__badge" aria-hidden="true"><i class="fas fa-star"></i></span>
+    </article>
+  `;
+}
+
 function renderMembersSection(section, current, previous) {
   setText('cms-members-eyebrow', section.eyebrow);
   setText('cms-members-title', section.title);
@@ -254,24 +298,36 @@ function renderMembersSection(section, current, previous) {
 
   const currentList = document.getElementById('cms-members-current');
   const previousList = document.getElementById('cms-members-previous');
+  const currentMeta = document.getElementById('cms-members-current-meta');
+  const previousMeta = document.getElementById('cms-members-previous-meta');
+
+  const currentItems = current || [];
+  const previousItems = previous || [];
+
+  if (currentMeta) {
+    currentMeta.textContent = currentItems.length
+      ? `${currentItems.length} active member${currentItems.length === 1 ? '' : 's'}`
+      : '';
+  }
+  if (previousMeta) {
+    previousMeta.textContent = previousItems.length
+      ? `${previousItems.length} alumni contributor${previousItems.length === 1 ? '' : 's'}`
+      : '';
+  }
+
   if (currentList) {
-    currentList.innerHTML = current.map((m) => `
-      <div class="member-row">
-        <div class="avatar-initials" aria-hidden="true">${getInitials(m.name)}</div>
-        <p class="font-semibold text-slate-200">${escapeHtml(m.name)}</p>
-      </div>
-    `).join('');
+    currentList.innerHTML = currentItems.length
+      ? currentItems.map((m, i) => buildMemberChip(m, i)).join('')
+      : '<p class="members-empty">No members listed for this cohort.</p>';
   }
   if (previousList) {
-    previousList.innerHTML = previous.map((m) => `
-      <div class="member-row">
-        <div class="avatar-initials" aria-hidden="true">${getInitials(m.name)}</div>
-        <div>
-          <p class="font-semibold text-slate-200">${escapeHtml(m.name)}</p>
-          ${m.role ? `<p class="text-slate-500 text-sm">${escapeHtml(m.role)}</p>` : ''}
-        </div>
-      </div>
-    `).join('');
+    previousList.innerHTML = previousItems.length
+      ? previousItems.map((m, i) => buildAlumniCard(m, i)).join('')
+      : '<p class="members-empty">No previous members listed.</p>';
+  }
+
+  if (typeof window.initMembersReveal === 'function') {
+    window.initMembersReveal();
   }
 }
 
@@ -340,7 +396,7 @@ function renderPartnersSection(section, partners) {
     </div>
   `).join('');
 
-  if (typeof AOS !== 'undefined') AOS.refresh();
+  if (window.RC_REVEAL) RC_REVEAL.refresh();
 }
 
 function renderProjectsSection(section, projects) {

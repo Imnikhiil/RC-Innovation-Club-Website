@@ -48,11 +48,19 @@ window.RC_TEAM_HIERARCHY = {
     const initials = member.name.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
     const accent = member.accent === 'violet' ? 'violet' : 'sky';
     const leadClass = member.lead ? ' team-card--lead' : '';
+    const profileClass = member.profile ? ' team-card--has-profile' : '';
+    const profileSlug = member.profile && window.RC_TEAM_PROFILES
+      ? RC_TEAM_PROFILES.slugify(member.name)
+      : '';
+    const profileAttrs = member.profile
+      ? ` data-profile-slug="${this.escapeHtml(profileSlug)}" role="button" tabindex="0" aria-label="View ${this.escapeHtml(member.name)} profile"`
+      : '';
     const badge = member.lead ? '<span class="team-card__badge">Lead</span>' : '';
+    const viewHint = member.profile ? '<span class="team-card__view-hint"><i class="fa-solid fa-user" aria-hidden="true"></i> View Profile</span>' : '';
     const dept = this.inferDepartment(member);
 
     return `
-      <article class="team-card team-card--${accent}${leadClass}" data-reveal data-team-dept="${dept}" style="transition-delay: ${(index % 4) * 90}ms">
+      <article class="team-card team-card--${accent}${leadClass}${profileClass}" data-reveal data-team-dept="${dept}" style="transition-delay: ${(index % 4) * 90}ms"${profileAttrs}>
         <div class="team-card__inner glass">
           ${badge}
           <div class="team-card__photo-wrap">
@@ -63,6 +71,7 @@ window.RC_TEAM_HIERARCHY = {
           </div>
           <h4 class="team-card__name">${this.escapeHtml(member.name)}</h4>
           <span class="team-card__role">${this.escapeHtml(member.role)}</span>
+          ${viewHint}
         </div>
       </article>
     `;

@@ -95,7 +95,7 @@ window.RC_PROJECTS = {
       grid.innerHTML = filtered.length
         ? filtered.map((p, i) => this.buildCardHtml(p, i)).join('')
         : '<p class="projects-empty">No projects in this category yet.</p>';
-      if (typeof AOS !== 'undefined') AOS.refresh();
+      if (window.RC_REVEAL) RC_REVEAL.refresh();
     };
 
     const statuses = [

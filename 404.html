@@ -2,20 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (colors.indexOf(c) === -1) c = 'ocean';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Page Not Found | RC Innovation Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/color-themes.css" />
+  <link rel="stylesheet" href="css/site-ui.css" />
   <style>
     body { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
     .err-wrap { max-width: 28rem; }
-    .err-code { font-size: 4rem; font-weight: 800; color: #38bdf8; line-height: 1; }
-    .err-title { font-size: 1.5rem; margin: 1rem 0 0.5rem; }
-    .err-text { color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.6; }
+    .err-code {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 18vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .err-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin: 1rem 0 0.5rem; }
+    .err-text { color: var(--text-muted); margin-bottom: 1.75rem; line-height: 1.7; }
     .err-links { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .err-links a { padding: 0.65rem 1.25rem; border-radius: 0.75rem; text-decoration: none; font-weight: 600; }
-    .err-links a.primary { background: #0284c7; color: #fff; }
-    .err-links a.secondary { border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; }
+    .err-links a { padding: 0.75rem 1.35rem; border-radius: 0.875rem; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+    .err-links a.primary { background: var(--dash-btn-gradient, var(--gradient-brand)); color: var(--dash-btn-text, #020617); box-shadow: 0 8px 24px var(--accent-glow); }
+    .err-links a.secondary { border: 1px solid var(--border); color: var(--text-primary); background: rgba(8, 14, 28, 0.5); }
+    .err-links a.secondary:hover { border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
   </style>
 </head>
 <body class="bg-gradient-pro">
@@ -24,7 +52,7 @@
     <h1 class="err-title">Page not found</h1>
     <p class="err-text">The page you are looking for does not exist or may have been moved.</p>
     <div class="err-links">
-      <a href="/" class="primary">Back to Home</a>
+      <a href="/" class="primary"><i class="fas fa-home" aria-hidden="true"></i> Back to Home</a>
       <a href="/gallery.html" class="secondary">Gallery</a>
     </div>
   </div>

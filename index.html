@@ -4,13 +4,17 @@
   <meta charset="UTF-8" />
   <script>
     (function () {
-      var k = 'rc_theme_preference';
-      var t = null;
-      try { t = localStorage.getItem(k); } catch (e) {}
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
       if (t !== 'dark' && t !== 'light') {
         t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
       }
+      if (colors.indexOf(c) === -1) c = 'ocean';
       document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
     })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -33,10 +37,23 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/gallery.css" />
-  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/style.css?v=20250611" />
+  <link rel="stylesheet" href="css/home.css?v=20250611" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250611" />
+  <link rel="stylesheet" href="css/theme.css?v=20250611" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250611" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250611" />
+  <style>
+    /* Critical layout — ensures new UI shows even if cache is stale */
+    .dash-hero { min-height: 100svh; display: flex; align-items: center; position: relative; overflow: hidden; }
+    .dash-hero__layout { display: grid; gap: 2.5rem; align-items: center; width: 100%; }
+    @media (min-width: 1024px) {
+      .dash-hero__layout { grid-template-columns: 1fr 1fr; }
+      .dash-hero__content { text-align: left; }
+    }
+    .dash-hero__visual { display: flex; justify-content: center; }
+    .dash-visual { position: relative; width: min(100%, 20rem); aspect-ratio: 1; }
+  </style>
 </head>
 
 <body class="bg-gradient-pro">
@@ -79,17 +96,51 @@
       <a href="#gallery" class="nav-link" data-section="gallery">Gallery</a>
       <a href="#resources" class="nav-link" data-section="resources">Resources</a>
       <a href="#contact" class="nav-link" data-section="contact">Contact</a>
-      <button type="button" class="theme-toggle hidden xl:inline-flex" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
-        <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
-        <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
-      </button>
+      <div class="theme-controls hidden xl:flex items-center gap-2">
+        <div class="theme-picker" data-theme-picker>
+          <button type="button" class="theme-picker__trigger" data-theme-picker-trigger aria-label="Choose color theme" aria-haspopup="listbox" aria-expanded="false">
+            <i class="fas fa-palette" aria-hidden="true"></i>
+          </button>
+          <div class="theme-picker__panel" data-theme-picker-panel hidden role="listbox" aria-label="Color themes">
+            <p class="theme-picker__heading">Color theme</p>
+            <div class="theme-picker__swatches">
+              <button type="button" class="theme-picker__swatch theme-picker__swatch--ocean" data-color-pick="ocean" aria-label="Ocean" title="Ocean — Cyan & Violet"></button>
+              <button type="button" class="theme-picker__swatch theme-picker__swatch--sunset" data-color-pick="sunset" aria-label="Sunset" title="Sunset — Orange & Pink"></button>
+              <button type="button" class="theme-picker__swatch theme-picker__swatch--emerald" data-color-pick="emerald" aria-label="Emerald" title="Emerald — Fresh Green"></button>
+              <button type="button" class="theme-picker__swatch theme-picker__swatch--royal" data-color-pick="royal" aria-label="Royal" title="Royal — Indigo & Purple"></button>
+              <button type="button" class="theme-picker__swatch theme-picker__swatch--coral" data-color-pick="coral" aria-label="Coral" title="Coral — Rose & Gold"></button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
+          <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
+          <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
+        </button>
+      </div>
       <a href="#join" class="btn-primary px-5 py-2 rounded-full text-sm whitespace-nowrap">Join Now</a>
     </div>
 
-    <button type="button" class="theme-toggle xl:hidden" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
-      <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
-      <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
-    </button>
+    <div class="theme-controls flex items-center gap-2 xl:hidden">
+      <div class="theme-picker theme-picker--compact" data-theme-picker>
+        <button type="button" class="theme-picker__trigger" data-theme-picker-trigger aria-label="Choose color theme" aria-haspopup="listbox" aria-expanded="false">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </button>
+        <div class="theme-picker__panel" data-theme-picker-panel hidden role="listbox" aria-label="Color themes">
+          <p class="theme-picker__heading">Color theme</p>
+          <div class="theme-picker__swatches">
+            <button type="button" class="theme-picker__swatch theme-picker__swatch--ocean" data-color-pick="ocean" aria-label="Ocean" title="Ocean"></button>
+            <button type="button" class="theme-picker__swatch theme-picker__swatch--sunset" data-color-pick="sunset" aria-label="Sunset" title="Sunset"></button>
+            <button type="button" class="theme-picker__swatch theme-picker__swatch--emerald" data-color-pick="emerald" aria-label="Emerald" title="Emerald"></button>
+            <button type="button" class="theme-picker__swatch theme-picker__swatch--royal" data-color-pick="royal" aria-label="Royal" title="Royal"></button>
+            <button type="button" class="theme-picker__swatch theme-picker__swatch--coral" data-color-pick="coral" aria-label="Coral" title="Coral"></button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
+        <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
+        <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
+      </button>
+    </div>
 
     <button class="mobile-menu-btn xl:hidden" aria-label="Open menu" aria-expanded="false" type="button">
       <span></span><span></span><span></span>
@@ -110,98 +161,150 @@
     <a href="#gallery">Gallery</a>
     <a href="#resources">Resources</a>
     <a href="#contact">Contact</a>
+    <div class="mobile-theme-bar" aria-label="Color themes">
+      <span class="mobile-theme-bar__label">Color theme</span>
+      <div class="mobile-theme-bar__swatches">
+        <button type="button" class="theme-picker__swatch theme-picker__swatch--ocean" data-color-pick="ocean" aria-label="Ocean" title="Ocean"></button>
+        <button type="button" class="theme-picker__swatch theme-picker__swatch--sunset" data-color-pick="sunset" aria-label="Sunset" title="Sunset"></button>
+        <button type="button" class="theme-picker__swatch theme-picker__swatch--emerald" data-color-pick="emerald" aria-label="Emerald" title="Emerald"></button>
+        <button type="button" class="theme-picker__swatch theme-picker__swatch--royal" data-color-pick="royal" aria-label="Royal" title="Royal"></button>
+        <button type="button" class="theme-picker__swatch theme-picker__swatch--coral" data-color-pick="coral" aria-label="Coral" title="Coral"></button>
+      </div>
+    </div>
     <a href="#join" class="mobile-nav-cta">Join Now</a>
   </div>
 
-  <!-- HERO -->
-  <section class="hero-section relative flex items-center justify-center overflow-hidden">
-    <div class="hero-mesh" aria-hidden="true">
-      <div class="hero-mesh__grid"></div>
-      <div class="hero-mesh__ring"></div>
-    </div>
-    <div class="hero-glow hero-glow-1 absolute rounded-full blur-[120px] -top-20 -left-20"></div>
-    <div class="hero-glow hero-glow-2 absolute rounded-full blur-[120px] bottom-0 -right-20"></div>
+  <!-- MAIN DASHBOARD -->
+  <div id="dashboard" class="dash">
 
-    <div class="site-container text-center z-10 w-full">
-      <div class="hero-badge" id="cms-hero-badge" data-aos="fade-down">DSEU Rajokri Campus</div>
-
-      <h1 class="hero-title font-extrabold mb-5" id="cms-hero-title" data-aos="fade-up">
-        Turn Your Ideas<br><span class="text-gradient text-gradient-animated">Into Reality</span>
-      </h1>
-
-      <p class="hero-text max-w-2xl mx-auto mb-8 leading-relaxed px-1" id="cms-hero-desc" data-aos="fade-up" data-aos-delay="100">
-        RC Innovation Club empowers students through workshops, competitions, and collaborative projects — bridging classroom learning with real-world impact.
-      </p>
-
-      <div class="hero-actions" data-aos="fade-up" data-aos-delay="200">
-        <a href="#events" class="btn-primary px-8 py-3.5 rounded-xl font-bold text-base" id="cms-hero-btn1">Explore Events</a>
-        <a href="#about" class="btn-secondary px-8 py-3.5 rounded-xl font-bold text-base text-white" id="cms-hero-btn2">Learn More</a>
+    <section class="dash-hero" aria-label="Welcome">
+      <div class="dash-hero__atmosphere" aria-hidden="true">
+        <div class="dash-hero__aurora dash-hero__aurora--1"></div>
+        <div class="dash-hero__aurora dash-hero__aurora--2"></div>
+        <div class="dash-hero__aurora dash-hero__aurora--3"></div>
+        <div class="dash-hero__grid-lines"></div>
       </div>
-    </div>
 
-    <div class="scroll-indicator" aria-hidden="true">
-      <span>Scroll</span>
-      <div class="line"></div>
-    </div>
-  </section>
+      <div class="site-container dash-hero__layout">
+        <div class="dash-hero__content">
+          <div class="dash-hero__badge" data-reveal>
+            <span class="dash-hero__badge-dot" aria-hidden="true"></span>
+            <span class="dash-hero__badge-text" id="cms-hero-badge">DSEU Rajokri Campus</span>
+          </div>
 
-  <!-- STATS -->
-  <section id="stats" class="stats-section section-block">
-    <div class="site-container">
-      <div class="stats-header text-center mb-8 sm:mb-10" id="stats-header" data-aos="fade-up">
-        <span class="section-eyebrow" id="cms-stats-eyebrow">Our Impact</span>
-        <h2 class="section-title mb-3" id="cms-stats-title">RC Innovation Club in Numbers</h2>
-        <p class="section-subtitle" id="cms-stats-subtitle"></p>
-      </div>
-      <div class="stats-grid" id="cms-stats-grid" data-aos="fade-up" data-aos-delay="100"></div>
-    </div>
-  </section>
+          <h1 class="dash-hero__title" id="cms-hero-title" data-reveal data-reveal-delay="70">
+            Turn Your Ideas<br><span class="dash-hero__highlight text-gradient text-gradient-animated">Into Reality</span>
+          </h1>
 
-  <!-- ABOUT -->
-  <section id="about" class="section-block">
-    <div class="site-container text-center max-w-4xl mx-auto">
-      <span class="section-eyebrow" id="cms-about-eyebrow" data-aos="fade-up">Who We Are</span>
-      <h2 class="section-title mb-5" id="cms-about-title" data-aos="fade-up">
-        About <span class="text-gradient">RC Innovation Club</span>
-      </h2>
+          <p class="dash-hero__lead" id="cms-hero-desc" data-reveal data-reveal-delay="140">
+            RC Innovation Club empowers students through workshops, competitions, and collaborative projects — bridging classroom learning with real-world impact.
+          </p>
 
-      <p class="section-subtitle leading-relaxed" id="cms-about-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+          <div class="dash-hero__actions" data-reveal data-reveal-delay="210">
+            <a href="#events" class="dash-btn dash-btn--primary" id="cms-hero-btn1">
+              <span>Explore Events</span>
+              <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a href="#about" class="dash-btn dash-btn--ghost" id="cms-hero-btn2">Learn More</a>
+          </div>
 
-      <div class="about-grid">
-        <div class="about-card glass card-hover" data-aos="zoom-in">
-          <div class="about-card__icon"><i class="fas fa-bullseye" aria-hidden="true"></i></div>
-          <h3 class="about-card__title">Mission</h3>
-          <p class="about-card__text" id="cms-about-mission"></p>
+          <nav class="dash-hero__quick" aria-label="Quick navigation" data-reveal data-reveal-delay="280">
+            <a href="#events" class="dash-quick-link"><i class="fas fa-calendar-days" aria-hidden="true"></i><span>Events</span></a>
+            <a href="#core" class="dash-quick-link"><i class="fas fa-user-tie" aria-hidden="true"></i><span>Team</span></a>
+            <a href="#gallery" class="dash-quick-link"><i class="fas fa-images" aria-hidden="true"></i><span>Gallery</span></a>
+            <a href="#join" class="dash-quick-link"><i class="fas fa-rocket" aria-hidden="true"></i><span>Join</span></a>
+          </nav>
         </div>
-        <div class="about-card glass card-hover" data-aos="zoom-in" data-aos-delay="100">
-          <div class="about-card__icon"><i class="fas fa-eye" aria-hidden="true"></i></div>
-          <h3 class="about-card__title">Vision</h3>
-          <p class="about-card__text" id="cms-about-vision"></p>
-        </div>
-        <div class="about-card glass card-hover" data-aos="zoom-in" data-aos-delay="200">
-          <div class="about-card__icon"><i class="fas fa-users" aria-hidden="true"></i></div>
-          <h3 class="about-card__title">Culture</h3>
-          <p class="about-card__text" id="cms-about-culture"></p>
+
+        <div class="dash-hero__visual" data-reveal data-reveal-delay="120" aria-hidden="true">
+          <div class="dash-visual">
+            <div class="dash-visual__glow"></div>
+            <div class="dash-visual__ring dash-visual__ring--outer"></div>
+            <div class="dash-visual__ring dash-visual__ring--mid"></div>
+            <div class="dash-visual__ring dash-visual__ring--inner"></div>
+            <div class="dash-visual__logo-wrap">
+              <img src="assets/logo/logo.png" alt="" class="dash-visual__logo" width="168" height="168" />
+            </div>
+            <span class="dash-visual__chip dash-visual__chip--1">Innovation</span>
+            <span class="dash-visual__chip dash-visual__chip--2">Workshops</span>
+            <span class="dash-visual__chip dash-visual__chip--3">Community</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+
+      <a href="#stats" class="dash-hero__scroll" aria-label="View impact statistics">
+        <span class="dash-hero__scroll-text">Explore</span>
+        <span class="dash-hero__scroll-track" aria-hidden="true"><span class="dash-hero__scroll-thumb"></span></span>
+      </a>
+    </section>
+
+    <section id="stats" class="dash-stats section-block">
+      <div class="site-container">
+        <div class="dash-stats__shell" data-reveal>
+          <header class="dash-stats__head" id="stats-header">
+            <div class="dash-stats__head-copy">
+              <span class="dash-label" id="cms-stats-eyebrow">Our Impact</span>
+              <h2 class="dash-stats__title" id="cms-stats-title">RC Innovation Club in Numbers</h2>
+              <p class="dash-stats__subtitle" id="cms-stats-subtitle"></p>
+            </div>
+          </header>
+          <div class="dash-stats__grid stats-grid" id="cms-stats-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="dash-about section-block">
+      <div class="site-container">
+        <header class="dash-about__head" data-reveal>
+          <span class="dash-label" id="cms-about-eyebrow">Who We Are</span>
+          <h2 class="dash-about__title" id="cms-about-title">
+            About <span class="dash-hero__highlight text-gradient">RC Innovation Club</span>
+          </h2>
+          <p class="dash-about__lead" id="cms-about-subtitle" data-reveal data-reveal-delay="80"></p>
+        </header>
+
+        <div class="dash-about__bento" data-reveal data-reveal-delay="140">
+          <article class="dash-bento-card dash-bento-card--mission">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-bullseye"></i></div>
+            <h3 class="dash-bento-card__title">Mission</h3>
+            <p class="dash-bento-card__text" id="cms-about-mission"></p>
+          </article>
+          <article class="dash-bento-card dash-bento-card--vision">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-eye"></i></div>
+            <h3 class="dash-bento-card__title">Vision</h3>
+            <p class="dash-bento-card__text" id="cms-about-vision"></p>
+          </article>
+          <article class="dash-bento-card dash-bento-card--culture">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-users"></i></div>
+            <h3 class="dash-bento-card__title">Culture</h3>
+            <p class="dash-bento-card__text" id="cms-about-culture"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <main class="site-main">
 
   <!-- EVENTS -->
   <section id="events" class="section-block section-alt">
     <div class="site-container">
-      <div class="text-center mb-14">
-        <span class="section-eyebrow" id="cms-events-eyebrow" data-aos="fade-up">Our Journey</span>
-        <h2 class="section-title mb-3" id="cms-events-title" data-aos="fade-up">Events</h2>
-        <p class="section-subtitle" id="cms-events-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
-      </div>
+      <header class="ui-section-head">
+        <span class="section-eyebrow" id="cms-events-eyebrow" data-reveal>Our Journey</span>
+        <h2 class="section-title mb-3" id="cms-events-title" data-reveal>Events</h2>
+        <p class="section-subtitle" id="cms-events-subtitle" data-reveal data-reveal-delay="100"></p>
+      </header>
 
       <div id="cms-upcoming-events-wrap" class="upcoming-events-section" style="display:none">
-        <h3 class="events-subheading" id="cms-upcoming-title" data-aos="fade-up">Upcoming Events</h3>
+        <h3 class="events-subheading" id="cms-upcoming-title" data-reveal>Upcoming Events</h3>
         <div class="upcoming-events-grid" id="cms-upcoming-events"></div>
       </div>
 
-      <h3 class="events-subheading past-events-heading" id="cms-past-title" data-aos="fade-up">Past Events</h3>
+      <h3 class="events-subheading past-events-heading" id="cms-past-title" data-reveal>Past Events</h3>
 
       <div class="events-wrapper">
         <button class="events-nav-btn prev" aria-label="Previous events" type="button">
@@ -228,10 +331,10 @@
 
   <!-- FACULTY IN-CHARGE -->
   <section id="faculty" class="section-block">
-    <div class="site-container text-center mb-10 sm:mb-14">
-      <span class="section-eyebrow" id="cms-faculty-eyebrow" data-aos="fade-up">Club Leadership & Faculty In-Charge</span>
-      <h2 class="section-title mb-3" id="cms-faculty-title" data-aos="fade-up">Guiding Our Innovation Journey</h2>
-      <p class="section-subtitle" id="cms-faculty-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-faculty-eyebrow" data-reveal>Club Leadership & Faculty In-Charge</span>
+      <h2 class="section-title mb-3" id="cms-faculty-title" data-reveal>Guiding Our Innovation Journey</h2>
+      <p class="section-subtitle" id="cms-faculty-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container">
@@ -241,7 +344,7 @@
 
   <!-- TEAM HIERARCHY FILTER -->
   <div class="team-hierarchy-wrap site-container" id="team-hierarchy-wrap">
-    <div class="team-hierarchy-bar glass" data-aos="fade-up">
+    <div class="team-hierarchy-bar glass" data-reveal>
       <p class="team-hierarchy-hint" id="cms-team-hierarchy-hint">Filter by leadership level, department, ambassadors, members, or alumni.</p>
       <div class="team-hierarchy-filters" id="team-hierarchy-filters" role="tablist" aria-label="Team hierarchy"></div>
       <div class="team-dept-filters" id="team-dept-filters" role="tablist" aria-label="Core team departments"></div>
@@ -250,10 +353,10 @@
 
   <!-- CORE TEAM -->
   <section id="core" class="section-block core-section">
-    <div class="site-container text-center mb-10 sm:mb-16">
-      <span class="section-eyebrow" id="cms-core-eyebrow" data-aos="fade-up">Leadership</span>
-      <h2 class="section-title mb-3" id="cms-core-title" data-aos="fade-up">Core Team</h2>
-      <p class="section-subtitle" id="cms-core-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-core-eyebrow" data-reveal>Leadership</span>
+      <h2 class="section-title mb-3" id="cms-core-title" data-reveal>Core Team</h2>
+      <p class="section-subtitle" id="cms-core-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container team-grid" id="team-grid" aria-label="Core team members"></div>
@@ -261,43 +364,61 @@
 
   <!-- AMBASSADORS -->
   <section id="ambassadors" class="section-block section-alt">
-    <div class="site-container text-center mb-10 sm:mb-16">
-      <span class="section-eyebrow" id="cms-ambassadors-eyebrow" data-aos="fade-up">Representation</span>
-      <h2 class="section-title mb-3" id="cms-ambassadors-title" data-aos="fade-up">Ambassadors</h2>
-      <p class="section-subtitle" id="cms-ambassadors-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-ambassadors-eyebrow" data-reveal>Representation</span>
+      <h2 class="section-title mb-3" id="cms-ambassadors-title" data-reveal>Ambassadors</h2>
+      <p class="section-subtitle" id="cms-ambassadors-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container ambassador-grid" id="cms-ambassadors-grid"></div>
   </section>
 
   <!-- MEMBERS -->
-  <section id="members" class="section-block">
-    <div class="site-container text-center mb-10 sm:mb-16">
-      <span class="section-eyebrow" id="cms-members-eyebrow" data-aos="fade-up">Community</span>
-      <h2 class="section-title mb-3" id="cms-members-title" data-aos="fade-up">Members</h2>
-      <p class="section-subtitle" id="cms-members-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+  <section id="members" class="section-block members-section">
+    <div class="members-section__glow" aria-hidden="true"></div>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-members-eyebrow" data-reveal>Community</span>
+      <h2 class="section-title mb-3" id="cms-members-title" data-reveal>Members</h2>
+      <p class="section-subtitle" id="cms-members-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container members-grid">
-      <div class="members-panel glass card-hover" data-aos="fade-right">
-        <h3 class="text-xl sm:text-2xl font-black mb-5 sm:mb-6 panel-title-accent" id="cms-members-current-title"></h3>
-        <div class="members-list" id="cms-members-current"></div>
-      </div>
-      <div class="members-panel glass card-hover" data-aos="fade-left">
-        <h3 class="text-xl sm:text-2xl font-black mb-5 sm:mb-6 panel-title-accent" id="cms-members-previous-title"></h3>
-        <div class="space-y-5" id="cms-members-previous"></div>
-      </div>
+      <article class="members-panel members-panel--current" data-reveal>
+        <header class="members-panel__header">
+          <div class="members-panel__icon members-panel__icon--sky" aria-hidden="true">
+            <i class="fas fa-user-group"></i>
+          </div>
+          <div class="members-panel__titles">
+            <h3 class="members-panel__title" id="cms-members-current-title"></h3>
+            <p class="members-panel__meta" id="cms-members-current-meta"></p>
+          </div>
+        </header>
+        <div class="members-mosaic" id="cms-members-current" aria-label="Current members"></div>
+      </article>
+
+      <article class="members-panel members-panel--alumni" data-reveal data-reveal-delay="120">
+        <header class="members-panel__header">
+          <div class="members-panel__icon members-panel__icon--violet" aria-hidden="true">
+            <i class="fas fa-award"></i>
+          </div>
+          <div class="members-panel__titles">
+            <h3 class="members-panel__title" id="cms-members-previous-title"></h3>
+            <p class="members-panel__meta" id="cms-members-previous-meta"></p>
+          </div>
+        </header>
+        <div class="members-alumni" id="cms-members-previous" aria-label="Previous members"></div>
+      </article>
     </div>
   </section>
 
   <!-- LEGACY -->
-  <section id="legacy" class="section-block bg-sky-900/10 border-y border-white/5">
+  <section id="legacy" class="section-block section-alt">
     <div class="site-container max-w-3xl mx-auto">
-      <div class="text-center mb-14">
-        <span class="section-eyebrow" id="cms-legacy-eyebrow" data-aos="fade-up">Our Story</span>
-        <h2 class="section-title mb-3" id="cms-legacy-title" data-aos="fade-up">Club Legacy</h2>
-        <p class="section-subtitle" id="cms-legacy-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
-      </div>
+      <header class="ui-section-head">
+        <span class="section-eyebrow" id="cms-legacy-eyebrow" data-reveal>Our Story</span>
+        <h2 class="section-title mb-3" id="cms-legacy-title" data-reveal>Club Legacy</h2>
+        <p class="section-subtitle" id="cms-legacy-subtitle" data-reveal data-reveal-delay="100"></p>
+      </header>
 
       <div class="timeline" id="cms-legacy-timeline"></div>
     </div>
@@ -305,10 +426,10 @@
 
   <!-- TESTIMONIALS -->
   <section id="testimonials" class="section-block section-alt">
-    <div class="site-container text-center mb-10 sm:mb-12">
-      <span class="section-eyebrow" id="cms-testimonials-eyebrow" data-aos="fade-up">Voices</span>
-      <h2 class="section-title mb-3" id="cms-testimonials-title" data-aos="fade-up">What Members Say</h2>
-      <p class="section-subtitle" id="cms-testimonials-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-testimonials-eyebrow" data-reveal>Voices</span>
+      <h2 class="section-title mb-3" id="cms-testimonials-title" data-reveal>What Members Say</h2>
+      <p class="section-subtitle" id="cms-testimonials-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container">
@@ -329,33 +450,33 @@
 
   <!-- PARTNERS -->
   <section id="partners" class="section-block">
-    <div class="site-container text-center mb-10 sm:mb-12">
-      <span class="section-eyebrow" id="cms-partners-eyebrow" data-aos="fade-up">Together We Grow</span>
-      <h2 class="section-title mb-3" id="cms-partners-title" data-aos="fade-up">Partners & Sponsors</h2>
-      <p class="section-subtitle" id="cms-partners-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-partners-eyebrow" data-reveal>Together We Grow</span>
+      <h2 class="section-title mb-3" id="cms-partners-title" data-reveal>Partners & Sponsors</h2>
+      <p class="section-subtitle" id="cms-partners-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
     <div class="site-container" id="cms-partners-groups"></div>
   </section>
 
   <!-- PROJECTS -->
   <section id="projects" class="section-block section-alt">
-    <div class="site-container text-center mb-8 sm:mb-10">
-      <span class="section-eyebrow" id="cms-projects-eyebrow" data-aos="fade-up">Student Work</span>
-      <h2 class="section-title mb-3" id="cms-projects-title" data-aos="fade-up">Project Showcase</h2>
-      <p class="section-subtitle" id="cms-projects-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-projects-eyebrow" data-reveal>Student Work</span>
+      <h2 class="section-title mb-3" id="cms-projects-title" data-reveal>Project Showcase</h2>
+      <p class="section-subtitle" id="cms-projects-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
     <div class="site-container">
-      <div class="projects-filters" id="projects-filters" data-aos="fade-up" data-aos-delay="80"></div>
-      <div class="projects-grid" id="cms-projects-grid" data-aos="fade-up" data-aos-delay="120"></div>
+      <div class="projects-filters" id="projects-filters" data-reveal data-reveal-delay="80"></div>
+      <div class="projects-grid" id="cms-projects-grid" data-reveal data-reveal-delay="120"></div>
     </div>
   </section>
 
   <!-- GALLERY -->
   <section id="gallery" class="section-block section-alt">
-    <div class="site-container text-center mb-10 sm:mb-16">
-      <span class="section-eyebrow" id="cms-gallery-eyebrow" data-aos="fade-up">Moments</span>
-      <h2 class="section-title mb-3" id="cms-gallery-title" data-aos="fade-up">Gallery</h2>
-      <p class="section-subtitle" id="cms-gallery-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-gallery-eyebrow" data-reveal>Moments</span>
+      <h2 class="section-title mb-3" id="cms-gallery-title" data-reveal>Gallery</h2>
+      <p class="section-subtitle" id="cms-gallery-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
 
     <div class="site-container gallery-grid" id="cms-gallery-grid"></div>
@@ -368,33 +489,33 @@
 
   <!-- RESOURCES -->
   <section id="resources" class="section-block">
-    <div class="site-container text-center mb-8 sm:mb-10">
-      <span class="section-eyebrow" id="cms-resources-eyebrow" data-aos="fade-up">Learn & Grow</span>
-      <h2 class="section-title mb-3" id="cms-resources-title" data-aos="fade-up">Resource Hub</h2>
-      <p class="section-subtitle" id="cms-resources-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-resources-eyebrow" data-reveal>Learn & Grow</span>
+      <h2 class="section-title mb-3" id="cms-resources-title" data-reveal>Resource Hub</h2>
+      <p class="section-subtitle" id="cms-resources-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
     <div class="site-container">
-      <div class="resources-controls" data-aos="fade-up" data-aos-delay="80">
+      <div class="resources-controls" data-reveal data-reveal-delay="80">
         <div class="resources-search-wrap">
           <i class="fas fa-search" aria-hidden="true"></i>
           <input type="search" id="resources-search" placeholder="Search resources…" aria-label="Search resources" />
         </div>
         <div class="resources-filters" id="resources-filters"></div>
       </div>
-      <div class="resources-grid" id="cms-resources-grid" data-aos="fade-up" data-aos-delay="120"></div>
+      <div class="resources-grid" id="cms-resources-grid" data-reveal data-reveal-delay="120"></div>
       <p class="resources-empty" id="resources-empty" hidden>No resources match your search.</p>
     </div>
   </section>
 
   <!-- CERTIFICATES -->
   <section id="certificates" class="section-block section-alt">
-    <div class="site-container text-center mb-8 sm:mb-10 max-w-2xl mx-auto">
-      <span class="section-eyebrow" id="cms-cert-eyebrow" data-aos="fade-up">Recognition</span>
-      <h2 class="section-title mb-3" id="cms-cert-title" data-aos="fade-up">Certificate Verification</h2>
-      <p class="section-subtitle" id="cms-cert-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
+    <div class="site-container ui-section-head max-w-2xl mx-auto">
+      <span class="section-eyebrow" id="cms-cert-eyebrow" data-reveal>Recognition</span>
+      <h2 class="section-title mb-3" id="cms-cert-title" data-reveal>Certificate Verification</h2>
+      <p class="section-subtitle" id="cms-cert-subtitle" data-reveal data-reveal-delay="100"></p>
     </div>
     <div class="site-container max-w-2xl mx-auto">
-      <div class="cert-verify-panel glass" data-aos="fade-up" data-aos-delay="120">
+      <div class="cert-verify-panel glass" data-reveal data-reveal-delay="120">
         <form id="cert-verify-form" class="cert-verify-form" novalidate>
           <label for="cert-verify-input" class="cert-verify-form__label" id="cms-cert-verify-label">Enter Certificate ID</label>
           <div class="cert-verify-form__row">
@@ -413,7 +534,7 @@
 
   <!-- JOIN -->
   <section id="join" class="section-block">
-    <div class="site-container text-center max-w-3xl mx-auto glass join-card card-hover" data-aos="zoom-in">
+    <div class="site-container max-w-3xl mx-auto glass join-card ui-panel card-hover" data-reveal>
       <span class="section-eyebrow" id="cms-join-eyebrow">Get Involved</span>
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 mt-2" id="cms-join-title">Join RC Innovation Club</h2>
       <p class="mb-6 sm:mb-8 max-w-xl mx-auto leading-relaxed text-sm sm:text-base px-1" id="cms-join-desc"></p>
@@ -507,14 +628,14 @@
   <!-- CONTACT -->
   <section id="contact" class="section-block section-alt">
     <div class="site-container">
-      <div class="text-center mb-10 sm:mb-12 max-w-2xl mx-auto">
-        <span class="section-eyebrow" id="cms-contact-eyebrow" data-aos="fade-up">Get in Touch</span>
-        <h2 class="section-title mb-3" id="cms-contact-title" data-aos="fade-up">Contact Us</h2>
-        <p class="section-subtitle" id="cms-contact-subtitle" data-aos="fade-up" data-aos-delay="100"></p>
-      </div>
+      <header class="ui-section-head max-w-2xl mx-auto">
+        <span class="section-eyebrow" id="cms-contact-eyebrow" data-reveal>Get in Touch</span>
+        <h2 class="section-title mb-3" id="cms-contact-title" data-reveal>Contact Us</h2>
+        <p class="section-subtitle" id="cms-contact-subtitle" data-reveal data-reveal-delay="100"></p>
+      </header>
 
       <div class="contact-layout">
-        <div class="contact-info glass card-hover" data-aos="fade-right">
+        <div class="contact-info glass card-hover" data-reveal>
           <h3 class="contact-info__title">Reach RC Innovation Club</h3>
           <p class="contact-info__text">We welcome questions from students, faculty, sponsors, and partner organizations.</p>
           <ul class="contact-info__list">
@@ -537,7 +658,7 @@
           </ul>
         </div>
 
-        <div class="contact-form-panel glass" data-aos="fade-left">
+        <div class="contact-form-panel glass" data-reveal>
           <form id="contact-form" class="contact-form" novalidate>
             <div class="contact-form__grid">
               <div class="contact-field">
@@ -573,7 +694,7 @@
   <!-- NEWSLETTER -->
   <section id="newsletter" class="newsletter-section section-block" hidden>
     <div class="site-container">
-      <div class="newsletter-panel glass" data-aos="fade-up">
+      <div class="newsletter-panel glass" data-reveal>
         <div class="newsletter-panel__copy">
           <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
           <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
@@ -594,6 +715,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- FOOTER -->
   <footer class="site-footer border-t border-white/10">
@@ -655,6 +778,21 @@
     <i class="fas fa-arrow-up text-sm"></i>
   </button>
 
+  <!-- Team Profile Modal -->
+  <div id="team-profile-modal" class="team-profile-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Team member profile">
+    <div class="team-profile-modal__backdrop" data-profile-close>
+      <div class="team-profile-modal__mesh" aria-hidden="true"></div>
+      <div class="team-profile-modal__grain" aria-hidden="true"></div>
+    </div>
+    <div class="team-profile-modal__wrap">
+      <button type="button" class="team-profile-modal__close" data-profile-close aria-label="Close profile">
+        <span class="team-profile-modal__close-ring" aria-hidden="true"></span>
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+      <div id="team-profile-mount" class="team-profile-modal__mount"></div>
+    </div>
+  </div>
+
   <!-- Gallery Lightbox -->
   <div id="gallery-lightbox" class="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
     <button type="button" class="gallery-lightbox__close" data-lightbox-close aria-label="Close preview">
@@ -678,7 +816,6 @@
     <div class="gallery-lightbox__backdrop" data-lightbox-close></div>
   </div>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config/content-default.js"></script>
   <script src="js/config/supabase-config.js"></script>
@@ -698,12 +835,15 @@
   <script src="js/certificates/certificates.js"></script>
   <script src="js/analytics/analytics.js"></script>
   <script src="js/notifications/email-notifications.js"></script>
+  <script src="js/team/team-profiles.js"></script>
+  <script src="js/team/members-section.js"></script>
   <script src="js/team/team-hierarchy.js"></script>
   <script src="js/stats/stats.js"></script>
   <script src="js/gallery/gallery-media.js"></script>
   <script src="js/gallery/gallery.js"></script>
   <script src="js/gallery/gallery-lightbox.js"></script>
-  <script src="js/core/site-renderer.js"></script>
-  <script src="js/core/script.js"></script>
+  <script src="js/core/reveal.js?v=20250611"></script>
+  <script src="js/core/site-renderer.js?v=20250611"></script>
+  <script src="js/core/script.js?v=20250611"></script>
 </body>
 </html>
