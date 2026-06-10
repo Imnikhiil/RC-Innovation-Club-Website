@@ -9,6 +9,11 @@ a,
 }
 
 @media (max-width: 767px) {
+  :root {
+    --section-x: 1rem;
+    --section-y: 3rem;
+  }
+
   /* Hero — compact, thumb-friendly */
   .dash-hero {
     min-height: auto;
@@ -115,23 +120,31 @@ a,
 
   /* Sections */
   .site-main > .section-block {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
   }
 
   .ui-section-head,
   .site-container.ui-section-head {
-    margin-bottom: 2rem !important;
-    padding-left: 0.15rem;
-    padding-right: 0.15rem;
+    margin-bottom: 1.5rem !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section-eyebrow {
+    font-size: 0.6rem;
+    padding: 0.32rem 0.75rem 0.32rem 0.6rem;
+    margin-bottom: 0.75rem;
   }
 
   .section-title {
-    font-size: clamp(1.55rem, 6.5vw, 2rem);
+    font-size: clamp(1.45rem, 6vw, 1.85rem);
+    margin-bottom: 0.65rem;
   }
 
   .section-subtitle {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
   }
 
   /* Navbar mobile */
@@ -228,6 +241,456 @@ a,
     scrollbar-width: none;
   }
 
+  .team-hierarchy-btn,
+  .team-dept-btn,
+  .projects-filter-btn,
+  .resources-filter-btn,
+  .gallery-filter-btn {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    padding: 0.38rem 0.7rem;
+  }
+
+  /* Faculty timeline — stack marker above card */
+  .faculty-timeline {
+    gap: 1.15rem;
+  }
+
+  .faculty-timeline::before {
+    display: none;
+  }
+
+  .faculty-timeline-item {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .faculty-timeline-marker {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-top: 0;
+  }
+
+  .faculty-timeline-period {
+    max-width: none;
+    text-align: left;
+    font-size: 0.62rem;
+  }
+
+  .faculty-card {
+    padding: 0.9rem;
+    gap: 0.75rem;
+    border-radius: 1rem;
+  }
+
+  .faculty-card__photo-wrap {
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 0.85rem;
+  }
+
+  .faculty-card__name {
+    font-size: 1rem;
+  }
+
+  .faculty-card__designation {
+    font-size: 0.82rem;
+  }
+
+  .faculty-card__role {
+    font-size: 0.78rem;
+  }
+
+  .faculty-card__desc {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    margin-top: 0.5rem;
+  }
+
+  /* Core team grid — compact cards */
+  .team-grid {
+    gap: 0.55rem;
+  }
+
+  .team-card__inner {
+    padding: 0.75rem 0.45rem 0.65rem;
+    border-radius: 1rem;
+  }
+
+  .team-card__photo-wrap {
+    width: clamp(4rem, 20vw, 5rem);
+    height: clamp(4rem, 20vw, 5rem);
+    margin-bottom: 0.55rem;
+    border-radius: 0.9rem;
+  }
+
+  .team-card__name {
+    font-size: 0.72rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .team-card__role {
+    font-size: 0.55rem;
+    padding: 0.22rem 0.45rem;
+  }
+
+  .team-card__badge {
+    top: 0.4rem;
+    right: 0.4rem;
+    font-size: 0.48rem;
+    padding: 0.18rem 0.38rem;
+  }
+
+  /* Ambassadors */
+  .ambassador-grid {
+    gap: 0.85rem;
+  }
+
+  .ambassador-card {
+    padding: 1rem;
+    gap: 0.75rem;
+    border-radius: 1.1rem;
+  }
+
+  .ambassador-card img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .ambassador-card h4 {
+    font-size: 0.92rem;
+  }
+
+  /* Members */
+  .members-panel {
+    padding: 1rem;
+    border-radius: 1.15rem;
+  }
+
+  .members-panel__header {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .members-panel__icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.9rem;
+    border-radius: 0.65rem;
+  }
+
+  .members-panel__title {
+    font-size: 0.95rem;
+  }
+
+  .members-panel__meta {
+    font-size: 0.65rem;
+  }
+
+  .members-mosaic {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .member-chip__inner {
+    padding: 0.55rem 0.3rem 0.5rem;
+    border-radius: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .member-chip__avatar {
+    width: 2.15rem;
+    height: 2.15rem;
+    font-size: 0.62rem;
+  }
+
+  .member-chip__ring {
+    top: 0.45rem;
+    width: 2.15rem;
+    height: 2.15rem;
+    animation: none;
+  }
+
+  .member-chip__name {
+    font-size: 0.58rem;
+    line-height: 1.25;
+  }
+
+  .alumni-card {
+    padding: 0.7rem 0.8rem;
+    gap: 0.65rem;
+  }
+
+  /* Club legacy timeline */
+  .timeline-item {
+    padding-left: 0;
+    padding-bottom: 1rem;
+  }
+
+  .timeline::before {
+    left: 0.45rem;
+  }
+
+  .timeline-item::before {
+    left: 0.1rem;
+    width: 11px;
+    height: 11px;
+  }
+
+  .timeline-item.glass {
+    margin-left: 1.65rem;
+    padding: 0.85rem 0.9rem;
+    border-radius: 1rem;
+  }
+
+  .timeline-item .text-lg {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
+  .timeline-item .text-sm {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  /* Testimonials */
+  .testimonial-card {
+    padding: 1.1rem;
+    border-radius: 1rem;
+  }
+
+  .testimonial-card__quote {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-card__avatar-wrap {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .testimonials-dots {
+    margin-top: 0.85rem;
+  }
+
+  /* Partners & sponsors — single column on phones */
+  .partners-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .partners-group__title {
+    font-size: 0.72rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .partners-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .partner-card {
+    padding: 1rem 0.9rem;
+    border-radius: 1rem;
+  }
+
+  .partner-card__logo-wrap {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 0.65rem;
+    border-radius: 0.85rem;
+  }
+
+  .partner-card__name {
+    font-size: 0.88rem;
+  }
+
+  .partner-card__desc {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Projects */
+  .projects-grid {
+    gap: 0.85rem;
+  }
+
+  .project-card {
+    border-radius: 1rem;
+  }
+
+  .project-card__media {
+    aspect-ratio: 16 / 10;
+    max-height: 10.5rem;
+  }
+
+  .project-card__body {
+    padding: 0.95rem 1rem 1.05rem;
+  }
+
+  .project-card__title {
+    font-size: 0.95rem;
+  }
+
+  .project-card__desc {
+    font-size: 0.8rem;
+  }
+
+  /* Gallery */
+  .gallery-grid {
+    gap: 0.75rem;
+  }
+
+  .gallery-item {
+    border-radius: 1rem;
+  }
+
+  .gallery-item img {
+    height: clamp(8.5rem, 42vw, 10.5rem);
+  }
+
+  .gallery-card__thumb {
+    height: clamp(8.5rem, 42vw, 10.5rem);
+  }
+
+  .gallery-card {
+    border-radius: 1rem;
+  }
+
+  .gallery-card__overlay {
+    padding: 0.75rem;
+    opacity: 1;
+  }
+
+  .gallery-card__title {
+    font-size: 0.88rem;
+  }
+
+  /* Resources */
+  .resource-card {
+    padding: 0.9rem;
+    gap: 0.75rem;
+    border-radius: 1rem;
+  }
+
+  .resource-card__icon {
+    width: 2.35rem;
+    height: 2.35rem;
+    font-size: 0.95rem;
+  }
+
+  .resource-card__title {
+    font-size: 0.92rem;
+  }
+
+  .resource-card__desc {
+    font-size: 0.8rem;
+  }
+
+  .resource-card__btn {
+    font-size: 0.78rem;
+    padding: 0.45rem 0.85rem;
+  }
+
+  /* Certificate & join */
+  .cert-verify-panel {
+    padding: 1.1rem;
+    border-radius: 1.1rem;
+  }
+
+  .cert-verify-form__row input {
+    font-size: 0.85rem;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .cert-verify-form__submit {
+    min-height: 44px;
+    font-size: 0.88rem;
+  }
+
+  .join-card {
+    padding: 1.35rem 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .join-card .text-2xl,
+  .join-card h2 {
+    font-size: clamp(1.35rem, 5.5vw, 1.65rem) !important;
+  }
+
+  .newsletter-panel {
+    padding: 1.15rem;
+    gap: 1rem;
+    border-radius: 1.1rem;
+  }
+
+  .newsletter-panel__title {
+    font-size: 1.1rem;
+  }
+
+  .newsletter-panel__subtitle {
+    font-size: 0.85rem;
+  }
+
+  .contact-info,
+  .contact-form-panel {
+    padding: 1.1rem;
+    border-radius: 1.1rem;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding-top: 2rem;
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .footer-grid {
+    gap: 1.35rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .footer-brand p {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  .footer-heading {
+    font-size: 0.65rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .footer-links {
+    gap: 0.45rem;
+  }
+
+  .footer-links a {
+    font-size: 0.84rem;
+  }
+
+  .social-links {
+    gap: 0.5rem;
+  }
+
+  .social-links a {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  /* No hover lift on touch */
+  .team-card:hover .team-card__inner,
+  .members-panel:hover,
+  .member-chip:hover .member-chip__inner,
+  .partner-card:hover,
+  .project-card:hover .project-card__image {
+    transform: none;
+  }
+
   /* Performance: disable expensive effects on mobile */
   .dash-hero__aurora,
   .dash-hero__aurora--1,
@@ -269,6 +732,10 @@ a,
 }
 
 @media (max-width: 380px) {
+  :root {
+    --section-x: 0.85rem;
+  }
+
   .dash-stats__grid,
   .stats-grid {
     grid-template-columns: 1fr;
@@ -281,6 +748,18 @@ a,
   .dash-quick-link {
     font-size: 0.65rem;
     padding: 0.4rem 0.65rem;
+  }
+
+  .team-grid {
+    gap: 0.45rem;
+  }
+
+  .team-card__inner {
+    padding: 0.65rem 0.35rem 0.55rem;
+  }
+
+  .members-mosaic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
