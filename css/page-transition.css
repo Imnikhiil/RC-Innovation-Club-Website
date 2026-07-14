@@ -1,0 +1,65 @@
+/* Smooth page transitions between site pages */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s;
+}
+
+.page-transition__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(3, 7, 18, 0.2) 0%, var(--bg-primary) 55%, var(--bg-primary) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.page-transition.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+html.page-leaving body {
+  opacity: 0.55;
+  transform: translateY(10px) scale(0.992);
+  filter: blur(2px);
+  transition:
+    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.32s ease;
+}
+
+html.page-enter body {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+html.page-enter-active body {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  html.page-leaving body,
+  html.page-enter body,
+  html.page-enter-active body {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .page-transition {
+    display: none;
+  }
+}
