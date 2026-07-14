@@ -56,7 +56,7 @@ window.RC_SEO = {
     const siteUrl = this.getSiteUrl();
     const path = pageKey === 'home' ? '/' : `/${pageKey}`;
     const canonical = page.canonicalUrl?.trim() || (siteUrl ? `${siteUrl}${path === '/' ? '/' : path}` : '');
-    const image = page.ogImage || cfg.defaultImage || 'assets/logo/logo.webp';
+    const image = page.ogImage || cfg.defaultImage || 'assets/logo/og-share.png';
 
     return {
       title: page.title || cfg.siteName || 'RC Innovation Club',
@@ -91,6 +91,29 @@ window.RC_SEO = {
     el.setAttribute('href', href);
   },
 
+  ensureFavicons() {
+    const icons = [
+      { rel: 'icon', href: 'favicon.ico', sizes: 'any' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: 'assets/logo/favicon-32.png' },
+      { rel: 'icon', type: 'image/png', sizes: '48x48', href: 'assets/logo/favicon-48.png' },
+      { rel: 'apple-touch-icon', sizes: '180x180', href: 'assets/logo/apple-touch-icon.png' }
+    ];
+    icons.forEach((cfg) => {
+      const sel = cfg.sizes
+        ? `link[rel="${cfg.rel}"][sizes="${cfg.sizes}"]`
+        : `link[rel="${cfg.rel}"]`;
+      let el = document.querySelector(sel);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', cfg.rel);
+        if (cfg.type) el.setAttribute('type', cfg.type);
+        if (cfg.sizes) el.setAttribute('sizes', cfg.sizes);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', cfg.href);
+    });
+  },
+
   applyPageSeo(pageKey) {
     const cfg = this.getConfig();
     const meta = this.getPageMeta(pageKey);
@@ -105,6 +128,10 @@ window.RC_SEO = {
     this.setMeta('property', 'og:title', meta.title);
     this.setMeta('property', 'og:description', meta.description);
     this.setMeta('property', 'og:image', meta.image);
+    this.setMeta('property', 'og:image:type', 'image/png');
+    this.setMeta('property', 'og:image:width', '1200');
+    this.setMeta('property', 'og:image:height', '630');
+    this.setMeta('property', 'og:image:alt', cfg.siteName || 'RC Innovation Club');
     this.setMeta('property', 'og:url', meta.canonical);
     this.setMeta('property', 'og:type', meta.ogType);
     this.setMeta('property', 'og:site_name', cfg.siteName || 'RC Innovation Club');
@@ -113,6 +140,7 @@ window.RC_SEO = {
     this.setMeta('name', 'twitter:title', meta.title);
     this.setMeta('name', 'twitter:description', meta.description);
     this.setMeta('name', 'twitter:image', meta.image);
+    this.ensureFavicons();
     if (cfg.twitterHandle) {
       this.setMeta('name', 'twitter:site', cfg.twitterHandle);
     }
@@ -130,7 +158,7 @@ window.RC_SEO = {
       '@type': cfg.organizationType || 'Organization',
       name: cfg.organizationName || cfg.siteName || 'RC Innovation Club',
       url: meta.canonical || this.getSiteUrl(),
-      logo: meta.image,
+      logo: this.resolveUrl('assets/logo/logo.png') || meta.image,
       description: meta.description,
       email: social.email || undefined,
       sameAs: sameAs.length ? sameAs : undefined

@@ -733,7 +733,7 @@ window.RC_DEFAULT_CONTENT = {
   seo: {
     siteName: 'RC Innovation Club',
     siteUrl: 'https://rc-innovation-club.onrender.com',
-    defaultImage: 'assets/logo/logo.webp',
+    defaultImage: 'assets/logo/og-share.png',
     organizationName: 'RC Innovation Club',
     organizationType: 'Organization',
     twitterHandle: '',
@@ -744,7 +744,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'RC Innovation Club | DSEU Rajokri',
         description: 'RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, hackathons, and hands-on learning for future-ready students.',
         keywords: 'RC Innovation Club, DSEU Rajokri, student club, workshops, hackathon, Python, robotics, innovation',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -753,7 +753,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'About | RC Innovation Club',
         description: 'Mission, vision, faculty mentors, legacy, testimonials, and partners of RC Innovation Club at DSEU Rajokri.',
         keywords: 'RC Innovation Club about, DSEU Rajokri, mission, faculty, partners',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -762,7 +762,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Events | RC Innovation Club',
         description: 'Upcoming and past workshops, competitions, and seminars by RC Innovation Club.',
         keywords: 'RC Innovation Club events, workshops, hackathon, DSEU',
-        ogImage: 'assets/events/Robotics Workshop.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -771,7 +771,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Team | RC Innovation Club',
         description: 'Core team, ambassadors, and members of RC Innovation Club at DSEU Rajokri.',
         keywords: 'RC Innovation Club team, ambassadors, core members',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -780,7 +780,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Projects | RC Innovation Club',
         description: 'Student projects and showcases from RC Innovation Club.',
         keywords: 'RC Innovation Club projects, student showcase',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -789,7 +789,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Gallery | RC Innovation Club',
         description: 'Photos and videos from RC Innovation Club workshops, competitions, seminars, and campus events at DSEU Rajokri.',
         keywords: 'RC Innovation Club gallery, DSEU events, workshop photos, club activities',
-        ogImage: 'assets/events/Robotics Workshop.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -798,7 +798,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Resources | RC Innovation Club',
         description: 'Learning resources and certificate verification for RC Innovation Club.',
         keywords: 'RC Innovation Club resources, certificate verify',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -807,7 +807,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Join | RC Innovation Club',
         description: 'Apply for RC Innovation Club membership at DSEU Rajokri Campus.',
         keywords: 'join RC Innovation Club, membership, DSEU Rajokri',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -816,7 +816,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Contact | RC Innovation Club',
         description: 'Contact RC Innovation Club at DSEU Rajokri Campus.',
         keywords: 'contact RC Innovation Club, DSEU Rajokri',
-        ogImage: 'assets/logo/logo.webp',
+        ogImage: 'assets/logo/og-share.png',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
