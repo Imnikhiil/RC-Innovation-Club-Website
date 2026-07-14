@@ -157,8 +157,11 @@ function initMembershipRegistration() {
     if (!joinLink || !window.RC_MEMBERSHIP.isRegistrationOpen()) return;
     e.preventDefault();
     const joinSection = document.getElementById('join');
-    if (joinSection) joinSection.scrollIntoView({ behavior: 'smooth' });
-    setTimeout(openMembershipForm, 400);
+    if (joinSection) {
+      if (window.RC_REVEAL) RC_REVEAL.revealIn(joinSection, { instant: true });
+      joinSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+    setTimeout(openMembershipForm, 120);
   });
 
   document.addEventListener('keydown', (e) => {
@@ -320,10 +323,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.RC_REVEAL) RC_REVEAL.init();
   if (window.RC_THEME) RC_THEME.init();
 
+  let lastPaintedFingerprint = '';
+  const contentFingerprint = (content) => {
+    try {
+      return JSON.stringify(content);
+    } catch (_) {
+      return String(Date.now());
+    }
+  };
+
+  const paintSite = () => {
+    const content = window.RC_CMS.getContent();
+    const fp = contentFingerprint(content);
+    if (fp === lastPaintedFingerprint) return;
+    lastPaintedFingerprint = fp;
+    initSite();
+  };
+
   // Paint immediately from local cache — do not wait for cloud CMS
-  initSite();
+  paintSite();
   initNavbar();
   initMobileMenu();
+  initSmoothNav();
   initBackToTop();
   initScrollProgress();
   initActiveNav();
@@ -335,13 +356,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.RC_SEO) RC_SEO.init();
   if (window.RC_ANALYTICS) RC_ANALYTICS.init();
 
-  window.addEventListener('rc-content-updated', () => initSite());
+  window.addEventListener('rc-content-updated', () => paintSite());
 
   // Sync cloud content in background (won't block first paint)
   RC_CMS.init()
     .then(() => (window.RC_CERTIFICATES?.init ? RC_CERTIFICATES.init() : null))
     .then(() => {
-      initSite();
+      paintSite();
       if (window.RC_REVEAL) RC_REVEAL.refresh();
     })
     .catch((err) => console.warn('CMS background sync:', err.message || err));
@@ -408,6 +429,22 @@ function initNavbar() {
   onScroll();
 }
 
+function initSmoothNav() {
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href === '#' || href.length < 2) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+    if (window.RC_REVEAL) RC_REVEAL.revealIn(target, { instant: true });
+    target.scrollIntoView({ behavior: 'auto', block: 'start' });
+    history.replaceState(null, '', href);
+  });
+}
+
 function initMobileMenu() {
   const btn = document.querySelector('.mobile-menu-btn');
   const menu = document.querySelector('.mobile-nav');
@@ -460,7 +497,8 @@ const eventsCarousel = {
   pauseUntil: 0,
   container: null,
   wrapper: null,
-  SCROLL_SPEED: 0.55
+  spotlightSkip: 0,
+  SCROLL_SPEED: 0.4
 };
 
 function eventsGetContainer() {
@@ -601,8 +639,11 @@ function eventsAutoScrollTick() {
     container.scrollLeft = 0;
   }
 
-  eventsUpdateProgress();
-  eventsUpdateSpotlight();
+  eventsCarousel.spotlightSkip = (eventsCarousel.spotlightSkip + 1) % 4;
+  if (eventsCarousel.spotlightSkip === 0) {
+    eventsUpdateProgress();
+    eventsUpdateSpotlight();
+  }
 }
 
 function eventsStartAutoScroll() {
@@ -788,27 +829,36 @@ function initPopAnimations() {
 
 function initBackToTop() {
   const btn = document.querySelector('.back-to-top');
-  if (!btn) return;
+  const bar = document.querySelector('.scroll-progress');
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY;
+    if (btn) btn.classList.toggle('visible', y > 500);
+    if (bar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (y / docHeight) * 100 : 0;
+      bar.style.width = `${progress}%`;
+    }
+  };
 
   window.addEventListener('scroll', () => {
-    btn.classList.toggle('visible', window.scrollY > 500);
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
   }, { passive: true });
 
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  update();
+
+  btn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
   });
 }
 
 function initScrollProgress() {
-  const bar = document.querySelector('.scroll-progress');
-  if (!bar) return;
-
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    bar.style.width = `${progress}%`;
-  }, { passive: true });
+  // Handled inside initBackToTop to avoid duplicate scroll listeners
 }
 
 function initActiveNav() {

@@ -27,24 +27,30 @@
   <meta property="og:site_name" content="RC Innovation Club" />
   <meta property="og:title" content="RC Innovation Club | DSEU Rajokri" />
   <meta property="og:description" content="RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, and hands-on learning for future-ready students." />
-  <meta property="og:image" content="assets/logo/logo.png" />
+  <meta property="og:image" content="assets/logo/logo.webp" />
   <meta property="og:url" content="" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="RC Innovation Club | DSEU Rajokri" />
   <meta name="twitter:description" content="RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, and hands-on learning for future-ready students." />
-  <meta name="twitter:image" content="assets/logo/logo.png" />
+  <meta name="twitter:image" content="assets/logo/logo.webp" />
   <title>RC Innovation Club | DSEU Rajokri</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/tw-utilities.css?v=20250612" />
-  <link rel="stylesheet" href="css/style.css?v=20250613" />
-  <link rel="stylesheet" href="css/home.css?v=20250612" />
-  <link rel="stylesheet" href="css/gallery.css?v=20250612" />
-  <link rel="stylesheet" href="css/theme.css?v=20250612" />
-  <link rel="stylesheet" href="css/color-themes.css?v=20250612" />
-  <link rel="stylesheet" href="css/site-ui.css?v=20250612" />
-  <link rel="stylesheet" href="css/mobile-performance.css?v=20250613" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="css/tw-utilities.css?v=20250614" />
+  <link rel="stylesheet" href="css/style.css?v=20250614" />
+  <link rel="stylesheet" href="css/home.css?v=20250614" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250614" />
+  <link rel="stylesheet" href="css/theme.css?v=20250614" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
+  <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
   <style>
     /* Critical layout — ensures new UI shows even if cache is stale */
     .dash-hero { min-height: 100svh; display: flex; align-items: center; position: relative; overflow: hidden; }
@@ -77,7 +83,7 @@
   <!-- NAVBAR -->
   <nav class="navbar fixed w-full z-[100] glass flex justify-between items-center">
     <a href="#" class="navbar-brand flex items-center gap-3">
-      <img src="assets/logo/logo.png" alt="RC Innovation Club Logo"
+      <img src="assets/logo/logo.webp" alt="RC Innovation Club Logo"
         class="navbar-brand__logo w-10 h-10 rounded-xl object-cover border border-white/10" />
       <span class="navbar-brand__text text-lg hidden sm:block">
         RC Innovation <span class="navbar-brand__accent">Club</span>
@@ -225,7 +231,7 @@
             <div class="dash-visual__ring dash-visual__ring--mid"></div>
             <div class="dash-visual__ring dash-visual__ring--inner"></div>
             <div class="dash-visual__logo-wrap">
-              <img src="assets/logo/logo.png" alt="" class="dash-visual__logo" width="168" height="168" />
+              <img src="assets/logo/logo.webp" alt="" class="dash-visual__logo" width="168" height="168" />
             </div>
             <span class="dash-visual__chip dash-visual__chip--1">Innovation</span>
             <span class="dash-visual__chip dash-visual__chip--2">Workshops</span>
@@ -726,7 +732,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="flex items-center gap-3 mb-2">
-            <img src="assets/logo/logo.png" alt="" class="w-9 h-9 rounded-lg object-cover border border-white/10" />
+            <img src="assets/logo/logo.webp" alt="" class="w-9 h-9 rounded-lg object-cover border border-white/10" />
             <span class="font-extrabold text-lg" id="cms-footer-brand">RC Innovation Club</span>
           </div>
           <p id="cms-footer-desc">Student-led innovation community at Delhi Skill and Entrepreneurship University, Rajokri Campus.</p>
@@ -819,33 +825,47 @@
   </div>
 
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="js/config/content-default.js?v=20250612"></script>
-  <script defer src="js/config/supabase-config.js?v=20250612"></script>
-  <script defer src="js/supabase/supabase-core.js?v=20250612"></script>
-  <script defer src="js/core/backend.js?v=20250612"></script>
-  <script defer src="js/core/cms.js?v=20250612"></script>
-  <script defer src="js/events/events.js?v=20250612"></script>
-  <script defer src="js/membership/membership.js?v=20250612"></script>
-  <script defer src="js/contact/contact.js?v=20250612"></script>
-  <script defer src="js/newsletter/newsletter.js?v=20250612"></script>
-  <script defer src="js/seo/seo.js?v=20250612"></script>
-  <script defer src="js/theme/theme.js?v=20250612"></script>
-  <script defer src="js/testimonials/testimonials.js?v=20250612"></script>
-  <script defer src="js/partners/partners.js?v=20250612"></script>
-  <script defer src="js/projects/projects.js?v=20250612"></script>
-  <script defer src="js/resources/resources.js?v=20250612"></script>
-  <script defer src="js/certificates/certificates.js?v=20250612"></script>
-  <script defer src="js/analytics/analytics.js?v=20250612"></script>
-  <script defer src="js/notifications/email-notifications.js?v=20250612"></script>
-  <script defer src="js/team/team-profiles.js?v=20250612"></script>
-  <script defer src="js/team/members-section.js?v=20250612"></script>
-  <script defer src="js/team/team-hierarchy.js?v=20250612"></script>
-  <script defer src="js/stats/stats.js?v=20250612"></script>
-  <script defer src="js/gallery/gallery-media.js?v=20250612"></script>
-  <script defer src="js/gallery/gallery.js?v=20250612"></script>
-  <script defer src="js/gallery/gallery-lightbox.js?v=20250612"></script>
-  <script defer src="js/core/reveal.js?v=20250612"></script>
-  <script defer src="js/core/site-renderer.js?v=20250612"></script>
-  <script defer src="js/core/script.js?v=20250612"></script>
+  <script defer src="js/config/content-default.js?v=20250614"></script>
+  <script defer src="js/config/supabase-config.js?v=20250614"></script>
+  <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
+  <script defer src="js/core/backend.js?v=20250614"></script>
+  <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/events/events.js?v=20250614"></script>
+  <script defer src="js/membership/membership.js?v=20250614"></script>
+  <script defer src="js/contact/contact.js?v=20250614"></script>
+  <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
+  <script defer src="js/seo/seo.js?v=20250614"></script>
+  <script defer src="js/theme/theme.js?v=20250614"></script>
+  <script defer src="js/testimonials/testimonials.js?v=20250614"></script>
+  <script defer src="js/partners/partners.js?v=20250614"></script>
+  <script defer src="js/projects/projects.js?v=20250614"></script>
+  <script defer src="js/resources/resources.js?v=20250614"></script>
+  <script defer src="js/certificates/certificates.js?v=20250614"></script>
+  <script defer src="js/analytics/analytics.js?v=20250614"></script>
+  <script defer src="js/team/team-profiles.js?v=20250614"></script>
+  <script defer src="js/team/members-section.js?v=20250614"></script>
+  <script defer src="js/team/team-hierarchy.js?v=20250614"></script>
+  <script defer src="js/stats/stats.js?v=20250614"></script>
+  <script defer src="js/gallery/gallery-media.js?v=20250614"></script>
+  <script defer src="js/gallery/gallery.js?v=20250614"></script>
+  <script defer src="js/gallery/gallery-lightbox.js?v=20250614"></script>
+  <script defer src="js/core/reveal.js?v=20250614"></script>
+  <script defer src="js/core/site-renderer.js?v=20250614"></script>
+  <script defer src="js/core/script.js?v=20250614"></script>
+  <script>
+    (function loadSecondary() {
+      function inject() {
+        var s = document.createElement('script');
+        s.src = 'js/notifications/email-notifications.js?v=20250614';
+        s.defer = true;
+        document.body.appendChild(s);
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(inject, { timeout: 3000 });
+      } else {
+        setTimeout(inject, 1500);
+      }
+    })();
+  </script>
 </body>
 </html>

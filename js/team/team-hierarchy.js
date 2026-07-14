@@ -151,7 +151,8 @@ window.RC_TEAM_HIERARCHY = {
       : 'core';
     const targetEl = document.getElementById(target);
     if (targetEl && state.group !== 'all') {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.RC_REVEAL) RC_REVEAL.revealIn(targetEl, { instant: true });
+      targetEl.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
   },
 

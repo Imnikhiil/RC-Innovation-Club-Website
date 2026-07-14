@@ -302,7 +302,7 @@ window.RC_CERTIFICATES = {
     const title = this.getTitleForType(c.type);
     const issuerName = cfg.issuerName || 'RC Innovation Club';
     const issuerTitle = cfg.issuerTitle || 'DSEU Rajokri Campus';
-    const logoPath = new URL('assets/logo/logo.png', window.location.href).href;
+    const logoPath = new URL('assets/logo/logo.webp', window.location.href).href;
     const issueDate = this.formatDate(c.issueDate);
     const bodyText = c.type === 'membership'
       ? `This certifies that <strong>${this.escapeHtml(c.recipientName)}</strong> is an official member of <strong>${this.escapeHtml(c.eventTitle)}</strong>.`

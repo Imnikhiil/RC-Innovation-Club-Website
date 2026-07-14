@@ -50,7 +50,7 @@ window.RC_SEO = {
     const siteUrl = this.getSiteUrl();
     const path = pageKey === 'gallery' ? '/gallery.html' : '/index.html';
     const canonical = page.canonicalUrl?.trim() || (siteUrl ? `${siteUrl}${path}` : '');
-    const image = page.ogImage || cfg.defaultImage || 'assets/logo/logo.png';
+    const image = page.ogImage || cfg.defaultImage || 'assets/logo/logo.webp';
 
     return {
       title: page.title || cfg.siteName || 'RC Innovation Club',

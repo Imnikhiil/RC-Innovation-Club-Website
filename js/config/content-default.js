@@ -38,14 +38,14 @@ window.RC_DEFAULT_CONTENT = {
     { tag: 'Workshop', title: 'Summer Tech Bootcamp 2026', date: 'July 15, 2026', eventDate: '2026-07-15', venue: 'DSEU Rajokri Campus', time: '10:00 AM', description: 'Hands-on sessions on web development, Python, and teamwork for all DSEU students.', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200', registerUrl: '#join', registerLabel: 'Register Now', forceStatus: 'upcoming' },
     { tag: 'Competition', title: 'RC Hackathon 2026', date: 'September 20, 2026', eventDate: '2026-09-20', venue: 'Computer Lab, Block A', time: '9:00 AM', description: '24-hour innovation challenge — build solutions, compete in teams, and win prizes.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200', registerUrl: '#join', registerLabel: 'Register Now', forceStatus: 'upcoming' },
     { tag: 'Intercampus Competition', title: 'Python Jam', date: 'September 09, 2024 · Sponsored by Bamigos', description: "DSEU Rajokri's largest intercampus online coding competition, organized by RC Innovation Club.", image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200' },
-    { tag: 'Workshop', title: '3D Modeling Workshop', date: 'September 18, 2024', description: 'Hands-on introduction to 3D design and creative modeling.', image: 'assets/events/3D Modeling Workshop.jpg' },
+    { tag: 'Workshop', title: '3D Modeling Workshop', date: 'September 18, 2024', description: 'Hands-on introduction to 3D design and creative modeling.', image: 'assets/events/3D Modeling Workshop.webp' },
     { tag: 'Workshop', title: 'TECH-KRITI Workshop on Animation', date: 'October 12, 2024', description: 'Animation basics + digital creativity + motion design.', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200' },
-    { tag: 'Achievement', title: 'RC Robotic Competition Winner', date: 'October 24, 2024', description: 'Zeeshan Khan won by making obstacle avoiding robot.', image: 'assets/events/Robotic Competetion Winner.jpg' },
-    { tag: 'Seminar', title: 'Seminar on Robotics', date: 'October 27, 2024', description: 'Robotics fundamentals + future scope discussion.', image: 'assets/events/Robotics Workshop.jpg' },
-    { tag: 'Recognition', title: 'Club Recognized by Shri Manish Sisodia', date: 'Special Moment', description: 'Our Ambassador Nikhil Kumar met Delhi Ex-Education Minister Shri Manish Sisodia.', image: 'assets/events/Pic with manish sir.jpeg' },
-    { tag: 'Seminar', title: 'Seminar on Cyber Security', date: 'April 08, 2025', description: 'Cyber safety, threats, and security best practices.', image: 'assets/events/Cyber Security Woekshop.jpg' },
+    { tag: 'Achievement', title: 'RC Robotic Competition Winner', date: 'October 24, 2024', description: 'Zeeshan Khan won by making obstacle avoiding robot.', image: 'assets/events/Robotic Competetion Winner.webp' },
+    { tag: 'Seminar', title: 'Seminar on Robotics', date: 'October 27, 2024', description: 'Robotics fundamentals + future scope discussion.', image: 'assets/events/Robotics Workshop.webp' },
+    { tag: 'Recognition', title: 'Club Recognized by Shri Manish Sisodia', date: 'Special Moment', description: 'Our Ambassador Nikhil Kumar met Delhi Ex-Education Minister Shri Manish Sisodia.', image: 'assets/events/Pic with manish sir.webp' },
+    { tag: 'Seminar', title: 'Seminar on Cyber Security', date: 'April 08, 2025', description: 'Cyber safety, threats, and security best practices.', image: 'assets/events/Cyber Security Woekshop.webp' },
     { tag: 'Training', title: 'Online Web Development & Python Classes', date: 'June 03, 2025', description: 'Summer vacation online classes conducted by club.', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200' },
-    { tag: 'Seminar', title: 'Seminar: Fresher to Future-Ready', date: 'August 28, 2025', description: 'Roadmap + mindset + skill building guidance for freshers.', image: 'assets/events/Fresher to Future-Ready pic.jpeg' },
+    { tag: 'Seminar', title: 'Seminar: Fresher to Future-Ready', date: 'August 28, 2025', description: 'Roadmap + mindset + skill building guidance for freshers.', image: 'assets/events/Fresher to Future-Ready pic.webp' },
     { tag: 'Competition', title: 'RC Innovation Club Logo Competition', date: 'August 28, 2025', description: 'Creative logo design contest to boost branding identity.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200' },
     { tag: 'Intercampus Event', title: 'TECH-KRITI 2.0', date: 'November 14, 2025', description: 'With RC E-CELL & RC SPORT CLUB collaboration.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200' },
     { tag: 'Campus Event', title: 'AI Workshop 2026', date: 'February 12, 2026', description: 'Hands-on AI fundamentals workshop by RC Innovation Club.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200' }
@@ -172,7 +172,7 @@ window.RC_DEFAULT_CONTENT = {
     {
       name: 'Ankit Singh Dhami',
       role: 'Technical Head',
-      img: 'assets/team/core/Ankit Singh Dhami.png',
+      img: 'assets/team/core/Ankit Singh Dhami.jpg',
       accent: 'sky',
       department: 'technical',
       profile: {
@@ -200,7 +200,7 @@ window.RC_DEFAULT_CONTENT = {
     {
       name: 'Rishab Kumar Jha',
       role: 'Tech Support Executive',
-      img: 'assets/team/core/Rishab.png',
+      img: 'assets/team/core/Rishab.jpg',
       accent: 'violet',
       department: 'technical',
       profile: {
@@ -582,7 +582,7 @@ window.RC_DEFAULT_CONTENT = {
     {
       name: 'DSEU Rajokri Campus',
       type: 'partner',
-      logo: 'assets/logo/logo.png',
+      logo: 'assets/logo/logo.webp',
       url: '',
       description: 'Our home campus — supporting student-led innovation and skill development.'
     }
@@ -607,7 +607,7 @@ window.RC_DEFAULT_CONTENT = {
     {
       title: 'Obstacle Avoiding Robot',
       description: 'Autonomous robot built for the RC Robotic Competition — uses ultrasonic sensors and Arduino-based navigation logic.',
-      image: 'assets/events/Robotic Competetion Winner.jpg',
+      image: 'assets/events/Robotic Competetion Winner.webp',
       tech: 'Arduino, C++, Robotics',
       status: 'completed',
       category: 'Robotics',
@@ -618,7 +618,7 @@ window.RC_DEFAULT_CONTENT = {
     {
       title: 'RC Innovation Club Website',
       description: 'Official club website with CMS admin panel, event management, gallery, membership registration, and contact system.',
-      image: 'assets/logo/logo.png',
+      image: 'assets/logo/logo.webp',
       tech: 'HTML, CSS, JavaScript',
       status: 'completed',
       category: 'Web',
@@ -705,12 +705,12 @@ window.RC_DEFAULT_CONTENT = {
     subtitle: 'Highlights from workshops, competitions, and campus events.'
   },
   gallery: [
-    { id: 'gal_robotics_seminar', type: 'image', title: 'Robotics Seminar', eventDate: '2024-10-27', description: 'Robotics fundamentals and future scope discussion.', category: 'Robotics', src: 'assets/events/Robotics Workshop.jpg', uploadedAt: '2024-10-27T00:00:00.000Z', order: 0 },
-    { id: 'gal_3d_workshop', type: 'image', title: '3D Modeling Workshop', eventDate: '2024-09-18', description: 'Hands-on introduction to 3D design and creative modeling.', category: 'Workshop', src: 'assets/events/3D Modeling Workshop.jpg', uploadedAt: '2024-09-18T00:00:00.000Z', order: 1 },
-    { id: 'gal_cyber_security', type: 'image', title: 'Cyber Security Seminar', eventDate: '2025-04-08', description: 'Cyber safety, threats, and security best practices.', category: 'Seminar', src: 'assets/events/Cyber Security Woekshop.jpg', uploadedAt: '2025-04-08T00:00:00.000Z', order: 2 },
-    { id: 'gal_robotics_winner', type: 'image', title: 'Robotics Competition Winner', eventDate: '2024-10-24', description: 'Zeeshan Khan won with an obstacle-avoiding robot.', category: 'Competition', src: 'assets/events/Robotic Competetion Winner.jpg', uploadedAt: '2024-10-24T00:00:00.000Z', order: 3 },
-    { id: 'gal_manish_sisodia', type: 'image', title: 'Recognition by Shri Manish Sisodia', eventDate: '2024-11-01', description: 'Club recognized by Delhi Ex-Education Minister Shri Manish Sisodia.', category: 'Club Activity', src: 'assets/events/Pic with manish sir.jpeg', uploadedAt: '2024-11-01T00:00:00.000Z', order: 4 },
-    { id: 'gal_fresher_seminar', type: 'image', title: 'Fresher to Future-Ready Seminar', eventDate: '2025-08-28', description: 'Roadmap and skill-building guidance for freshers.', category: 'Seminar', src: 'assets/events/Fresher to Future-Ready pic.jpeg', uploadedAt: '2025-08-28T00:00:00.000Z', order: 5 }
+    { id: 'gal_robotics_seminar', type: 'image', title: 'Robotics Seminar', eventDate: '2024-10-27', description: 'Robotics fundamentals and future scope discussion.', category: 'Robotics', src: 'assets/events/Robotics Workshop.webp', uploadedAt: '2024-10-27T00:00:00.000Z', order: 0 },
+    { id: 'gal_3d_workshop', type: 'image', title: '3D Modeling Workshop', eventDate: '2024-09-18', description: 'Hands-on introduction to 3D design and creative modeling.', category: 'Workshop', src: 'assets/events/3D Modeling Workshop.webp', uploadedAt: '2024-09-18T00:00:00.000Z', order: 1 },
+    { id: 'gal_cyber_security', type: 'image', title: 'Cyber Security Seminar', eventDate: '2025-04-08', description: 'Cyber safety, threats, and security best practices.', category: 'Seminar', src: 'assets/events/Cyber Security Woekshop.webp', uploadedAt: '2025-04-08T00:00:00.000Z', order: 2 },
+    { id: 'gal_robotics_winner', type: 'image', title: 'Robotics Competition Winner', eventDate: '2024-10-24', description: 'Zeeshan Khan won with an obstacle-avoiding robot.', category: 'Competition', src: 'assets/events/Robotic Competetion Winner.webp', uploadedAt: '2024-10-24T00:00:00.000Z', order: 3 },
+    { id: 'gal_manish_sisodia', type: 'image', title: 'Recognition by Shri Manish Sisodia', eventDate: '2024-11-01', description: 'Club recognized by Delhi Ex-Education Minister Shri Manish Sisodia.', category: 'Club Activity', src: 'assets/events/Pic with manish sir.webp', uploadedAt: '2024-11-01T00:00:00.000Z', order: 4 },
+    { id: 'gal_fresher_seminar', type: 'image', title: 'Fresher to Future-Ready Seminar', eventDate: '2025-08-28', description: 'Roadmap and skill-building guidance for freshers.', category: 'Seminar', src: 'assets/events/Fresher to Future-Ready pic.webp', uploadedAt: '2025-08-28T00:00:00.000Z', order: 5 }
   ],
   announcementBar: {
     enabled: true,
@@ -733,7 +733,7 @@ window.RC_DEFAULT_CONTENT = {
   seo: {
     siteName: 'RC Innovation Club',
     siteUrl: '',
-    defaultImage: 'assets/logo/logo.png',
+    defaultImage: 'assets/logo/logo.webp',
     organizationName: 'RC Innovation Club',
     organizationType: 'Organization',
     twitterHandle: '',
@@ -744,7 +744,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'RC Innovation Club | DSEU Rajokri',
         description: 'RC Innovation Club at DSEU Rajokri Campus — workshops, competitions, hackathons, and hands-on learning for future-ready students.',
         keywords: 'RC Innovation Club, DSEU Rajokri, student club, workshops, hackathon, Python, robotics, innovation',
-        ogImage: 'assets/logo/logo.png',
+        ogImage: 'assets/logo/logo.webp',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'
@@ -753,7 +753,7 @@ window.RC_DEFAULT_CONTENT = {
         title: 'Gallery | RC Innovation Club',
         description: 'Photos and videos from RC Innovation Club workshops, competitions, seminars, and campus events at DSEU Rajokri.',
         keywords: 'RC Innovation Club gallery, DSEU events, workshop photos, club activities',
-        ogImage: 'assets/events/Robotics Workshop.jpg',
+        ogImage: 'assets/events/Robotics Workshop.webp',
         canonicalUrl: '',
         robots: 'index, follow',
         ogType: 'website'

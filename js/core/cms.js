@@ -11,14 +11,29 @@ const ASSET_PATH_MIGRATIONS = [
   [/^PAST EVENTS PICTURES\//, 'assets/events/'],
   [/^CURRENT CORE MEMBERS PIC\//, 'assets/team/core/'],
   [/^Core Images\//, 'assets/team/other/'],
-  [/^Ambassdor\//, 'assets/team/ambassadors/']
+  [/^Ambassdor\//, 'assets/team/ambassadors/'],
+  ['assets/logo/logo.png', 'assets/logo/logo.webp'],
+  ['assets/events/3D Modeling Workshop.jpg', 'assets/events/3D Modeling Workshop.webp'],
+  ['assets/events/Cyber Security Woekshop.jpg', 'assets/events/Cyber Security Woekshop.webp'],
+  ['assets/events/Robotic Competetion Winner.jpg', 'assets/events/Robotic Competetion Winner.webp'],
+  ['assets/events/Robotics Workshop.jpg', 'assets/events/Robotics Workshop.webp'],
+  ['assets/events/Fresher to Future-Ready pic.jpeg', 'assets/events/Fresher to Future-Ready pic.webp'],
+  ['assets/events/Pic with manish sir.jpeg', 'assets/events/Pic with manish sir.webp'],
+  ['assets/team/core/Ankit Singh Dhami.png', 'assets/team/core/Ankit Singh Dhami.jpg'],
+  ['assets/team/core/Rishab.png', 'assets/team/core/Rishab.jpg'],
+  ['assets/team/core/Rishabh.png', 'assets/team/core/Rishabh.jpg'],
+  ['assets/team/core/Aunirudh.jpeg', 'assets/team/core/Aunirudh.webp']
 ];
 
 function migrateAssetPath(path) {
   if (!path || typeof path !== 'string' || path.startsWith('http')) return path;
   let migrated = path;
-  ASSET_PATH_MIGRATIONS.forEach(([pattern, replacement]) => {
-    migrated = migrated.replace(pattern, replacement);
+  ASSET_PATH_MIGRATIONS.forEach((rule) => {
+    if (Array.isArray(rule) && rule[0] instanceof RegExp) {
+      migrated = migrated.replace(rule[0], rule[1]);
+    } else if (Array.isArray(rule) && typeof rule[0] === 'string' && migrated === rule[0]) {
+      migrated = rule[1];
+    }
   });
   return migrated;
 }
@@ -50,12 +65,34 @@ function migrateContentAssets(content) {
   if (Array.isArray(content.faculty)) {
     content.faculty = content.faculty.map((f) => ({ ...f, image: migrateAssetPath(f.image) }));
   }
+  if (Array.isArray(content.partners)) {
+    content.partners = content.partners.map((p) => ({ ...p, logo: migrateAssetPath(p.logo) }));
+  }
+  if (Array.isArray(content.projects)) {
+    content.projects = content.projects.map((p) => ({ ...p, image: migrateAssetPath(p.image) }));
+  }
   if (Array.isArray(content.gallery)) {
     content.gallery = content.gallery.map((g) => ({
       ...g,
       src: migrateAssetPath(g.src || g.image),
       image: migrateAssetPath(g.image)
     }));
+  }
+  if (content.seo && typeof content.seo === 'object') {
+    content.seo = {
+      ...content.seo,
+      defaultImage: migrateAssetPath(content.seo.defaultImage),
+      pages: content.seo.pages
+        ? Object.fromEntries(
+            Object.entries(content.seo.pages).map(([key, page]) => [
+              key,
+              page && typeof page === 'object'
+                ? { ...page, ogImage: migrateAssetPath(page.ogImage) }
+                : page
+            ])
+          )
+        : content.seo.pages
+    };
   }
   return content;
 }
@@ -74,6 +111,11 @@ function loadLocalContent() {
 
 window.RC_CMS = {
   getDefaultContent() {
+    if (typeof structuredClone === 'function') {
+      try {
+        return structuredClone(window.RC_DEFAULT_CONTENT);
+      } catch (_) { /* fall through */ }
+    }
     return JSON.parse(JSON.stringify(window.RC_DEFAULT_CONTENT));
   },
 

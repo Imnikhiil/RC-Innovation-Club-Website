@@ -8,12 +8,29 @@ window.RC_REVEAL = {
     return Number.isFinite(ms) ? ms : 0;
   },
 
-  reveal(el) {
-    const delay = this.getDelay(el);
+  reveal(el, { instant = false } = {}) {
+    if (instant) {
+      el.classList.add('is-revealed');
+      return;
+    }
+    const delay = Math.min(this.getDelay(el), 120);
     if (delay > 0) {
       setTimeout(() => el.classList.add('is-revealed'), delay);
     } else {
       el.classList.add('is-revealed');
+    }
+  },
+
+  revealIn(root, { instant = true } = {}) {
+    if (!root) return;
+    root.classList?.add?.('is-nav-target');
+    root.querySelectorAll?.('[data-reveal], [data-aos]')?.forEach((el) => {
+      this.reveal(el, { instant });
+      this.observer?.unobserve(el);
+    });
+    if (root.matches?.('[data-reveal], [data-aos]')) {
+      this.reveal(root, { instant });
+      this.observer?.unobserve(root);
     }
   },
 
@@ -36,8 +53,8 @@ window.RC_REVEAL = {
     }
 
     hero.querySelectorAll('[data-reveal], [data-aos]').forEach((el, i) => {
-      const delay = this.getDelay(el) || i * 100;
-      setTimeout(() => el.classList.add('is-revealed'), 160 + delay);
+      const delay = Math.min(this.getDelay(el) || i * 40, 160);
+      setTimeout(() => el.classList.add('is-revealed'), 40 + delay);
     });
   },
 
@@ -62,12 +79,18 @@ window.RC_REVEAL = {
             this.observer.unobserve(entry.target);
           });
         },
-        { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
+        { threshold: 0.08, rootMargin: '80px 0px -4% 0px' }
       );
     }
 
     this.revealHero();
     this.observeAll();
+
+    if (location.hash) {
+      const target = document.querySelector(location.hash);
+      if (target) this.revealIn(target, { instant: true });
+    }
+
     this.bound = true;
   },
 
