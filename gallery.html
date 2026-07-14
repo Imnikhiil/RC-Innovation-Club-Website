@@ -32,9 +32,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Gallery | RC Innovation Club" />
   <meta name="twitter:description" content="RC Innovation Club Gallery — photos and videos from workshops, competitions, and campus events." />
-  <meta name="twitter:image" content="assets/events/Robotics Workshop.jpg" />
+  <meta name="twitter:image" content="assets/events/Robotics Workshop.webp" />
   <title>Gallery | RC Innovation Club</title>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -50,54 +49,13 @@
   <link rel="stylesheet" href="css/home.css?v=20250614" />
   <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
   <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <style>.page-main,.gallery-page-main{padding-top:calc(var(--nav-height) + var(--announce-bar-height, 0px) + 1rem)}</style>
 </head>
 <body class="bg-gradient-pro gallery-page-body">
 
-  <div id="announce-bar" class="announce-bar announce-bar--hidden" role="region" aria-label="Site announcement" hidden>
-    <div class="announce-bar__inner">
-      <p class="announce-bar__text" id="cms-announce-text"></p>
-      <a href="#" id="cms-announce-link" class="announce-bar__link"></a>
-      <button type="button" class="announce-bar__dismiss" id="announce-dismiss" aria-label="Dismiss announcement">
-        <i class="fas fa-times" aria-hidden="true"></i>
-      </button>
-    </div>
-  </div>
+  <div id="site-nav-mount"></div>
 
-  <nav class="navbar fixed w-full z-[100] glass flex justify-between items-center">
-    <a href="index.html" class="navbar-brand flex items-center gap-3">
-      <img src="assets/logo/logo.webp" alt="RC Innovation Club Logo"
-        class="navbar-brand__logo w-10 h-10 rounded-xl object-cover border border-white/10" />
-      <span class="navbar-brand__text text-lg hidden sm:block">
-        RC Innovation <span class="navbar-brand__accent">Club</span>
-      </span>
-    </a>
-    <div class="flex items-center gap-2">
-      <div class="theme-picker theme-picker--compact" data-theme-picker>
-        <button type="button" class="theme-picker__trigger" data-theme-picker-trigger aria-label="Choose color theme" aria-haspopup="listbox" aria-expanded="false">
-          <i class="fas fa-palette" aria-hidden="true"></i>
-        </button>
-        <div class="theme-picker__panel" data-theme-picker-panel hidden role="listbox" aria-label="Color themes">
-          <p class="theme-picker__heading">Color theme</p>
-          <div class="theme-picker__swatches">
-            <button type="button" class="theme-picker__swatch theme-picker__swatch--ocean" data-color-pick="ocean" aria-label="Ocean" title="Ocean"></button>
-            <button type="button" class="theme-picker__swatch theme-picker__swatch--sunset" data-color-pick="sunset" aria-label="Sunset" title="Sunset"></button>
-            <button type="button" class="theme-picker__swatch theme-picker__swatch--emerald" data-color-pick="emerald" aria-label="Emerald" title="Emerald"></button>
-            <button type="button" class="theme-picker__swatch theme-picker__swatch--royal" data-color-pick="royal" aria-label="Royal" title="Royal"></button>
-            <button type="button" class="theme-picker__swatch theme-picker__swatch--coral" data-color-pick="coral" aria-label="Coral" title="Coral"></button>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
-        <i class="fas fa-sun theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></i>
-        <i class="fas fa-moon theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></i>
-      </button>
-      <a href="index.html" class="btn-secondary px-5 py-2 rounded-full text-sm font-bold text-white">
-        <i class="fas fa-arrow-left"></i> Back to Home
-      </a>
-    </div>
-  </nav>
-
-  <main class="gallery-page-main site-container">
+  <main class="gallery-page-main site-container page-main">
     <header class="gallery-page-header ui-section-head">
       <span class="section-eyebrow" id="gallery-page-eyebrow">Moments</span>
       <h1 class="section-title" id="gallery-page-title">Gallery</h1>
@@ -116,17 +74,8 @@
     <p id="gallery-page-empty" class="gallery-page-empty" style="display:none">No gallery items match your search.</p>
   </main>
 
-  <footer class="site-footer border-t border-white/10 mt-16">
-    <div class="site-container text-center py-8">
-      <div class="share-section share-section--center" id="share-section" hidden>
-        <p class="share-section__label" id="share-section-label">Share this site</p>
-        <div class="share-buttons share-buttons--center" id="share-buttons"></div>
-      </div>
-      <p class="text-slate-500 text-sm mt-6">© RC Innovation Club · DSEU Rajokri Campus</p>
-    </div>
-  </footer>
+  <div id="site-footer-mount"></div>
 
-  <!-- Lightbox -->
   <div id="gallery-lightbox" class="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
     <button type="button" class="gallery-lightbox__close" data-lightbox-close aria-label="Close preview">
       <i class="fas fa-times"></i>
@@ -155,6 +104,7 @@
   <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
   <script defer src="js/core/backend.js?v=20250614"></script>
   <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/core/site-chrome.js?v=20250614"></script>
   <script defer src="js/analytics/analytics.js?v=20250614"></script>
   <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
   <script defer src="js/seo/seo.js?v=20250614"></script>
@@ -164,5 +114,6 @@
   <script defer src="js/gallery/gallery.js?v=20250614"></script>
   <script defer src="js/gallery/gallery-lightbox.js?v=20250614"></script>
   <script defer src="js/gallery/gallery-page.js?v=20250614"></script>
+  <script defer src="js/core/script.js?v=20250614"></script>
 </body>
 </html>

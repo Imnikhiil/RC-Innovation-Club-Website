@@ -63,6 +63,14 @@ function renderHero(hero) {
   setText('cms-hero-desc', hero.description);
   setBtnLabel('cms-hero-btn1', hero.btnPrimary);
   setText('cms-hero-btn2', hero.btnSecondary);
+  const btn1 = document.getElementById('cms-hero-btn1');
+  const btn2 = document.getElementById('cms-hero-btn2');
+  if (btn1 && (!btn1.getAttribute('href') || btn1.getAttribute('href').startsWith('#'))) {
+    btn1.setAttribute('href', hero.btnPrimaryHref || 'events.html');
+  }
+  if (btn2 && (!btn2.getAttribute('href') || btn2.getAttribute('href').startsWith('#'))) {
+    btn2.setAttribute('href', hero.btnSecondaryHref || 'about.html');
+  }
 }
 
 function renderStats(section, stats) {

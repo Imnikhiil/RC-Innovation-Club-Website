@@ -2,21 +2,26 @@ window.RC_SEO = {
   getConfig() {
     const defaults = window.RC_DEFAULT_CONTENT?.seo || {};
     const saved = window.RC_CMS?.getContent()?.seo || {};
+    const pageKeys = [
+      'home', 'about', 'events', 'team', 'projects', 'gallery',
+      'resources', 'join', 'contact'
+    ];
+    const pages = {};
+    pageKeys.forEach((key) => {
+      pages[key] = { ...(defaults.pages?.[key] || {}), ...(saved.pages?.[key] || {}) };
+    });
     return {
       ...defaults,
       ...saved,
-      pages: {
-        home: { ...(defaults.pages?.home || {}), ...(saved.pages?.home || {}) },
-        gallery: { ...(defaults.pages?.gallery || {}), ...(saved.pages?.gallery || {}) }
-      },
+      pages,
       share: { ...(defaults.share || {}), ...(saved.share || {}) }
     };
   },
 
   getPageKey() {
-    const path = (window.location.pathname || '').toLowerCase();
-    if (path.includes('gallery')) return 'gallery';
-    return 'home';
+    const file = ((window.location.pathname || '').split('/').pop() || 'index.html').toLowerCase();
+    if (!file || file === 'index.html') return 'home';
+    return file.replace(/\.html$/, '') || 'home';
   },
 
   getSiteUrl() {
@@ -48,7 +53,8 @@ window.RC_SEO = {
     const cfg = this.getConfig();
     const page = cfg.pages?.[pageKey] || cfg.pages?.home || {};
     const siteUrl = this.getSiteUrl();
-    const path = pageKey === 'gallery' ? '/gallery.html' : '/index.html';
+    const file = pageKey === 'home' ? 'index.html' : `${pageKey}.html`;
+    const path = `/${file}`;
     const canonical = page.canonicalUrl?.trim() || (siteUrl ? `${siteUrl}${path}` : '');
     const image = page.ogImage || cfg.defaultImage || 'assets/logo/logo.webp';
 

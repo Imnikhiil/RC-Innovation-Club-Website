@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (colors.indexOf(c) === -1) c = 'ocean';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Core team, ambassadors, and members of RC Innovation Club at DSEU Rajokri." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="Team | RC Innovation Club" />
+  <meta property="og:description" content="Core team, ambassadors, and members of RC Innovation Club at DSEU Rajokri." />
+  <meta property="og:image" content="assets/logo/logo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Team | RC Innovation Club" />
+  <meta name="twitter:description" content="Core team, ambassadors, and members of RC Innovation Club at DSEU Rajokri." />
+  <meta name="twitter:image" content="assets/logo/logo.webp" />
+  <title>Team | RC Innovation Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="css/tw-utilities.css?v=20250614" />
+  <link rel="stylesheet" href="css/style.css?v=20250614" />
+  <link rel="stylesheet" href="css/home.css?v=20250614" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250614" />
+  <link rel="stylesheet" href="css/theme.css?v=20250614" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
+  <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <style>.page-main{padding-top:calc(var(--nav-height) + var(--announce-bar-height, 0px) + 0.5rem)}</style>
+</head>
+<body class="bg-gradient-pro">
+<div id="site-nav-mount"></div>
+<main class="site-main page-main">
+<!-- TEAM HIERARCHY FILTER -->
+  <div class="team-hierarchy-wrap site-container" id="team-hierarchy-wrap">
+    <div class="team-hierarchy-bar glass" data-reveal>
+      <p class="team-hierarchy-hint" id="cms-team-hierarchy-hint">Filter by leadership level, department, ambassadors, members, or alumni.</p>
+      <div class="team-hierarchy-filters" id="team-hierarchy-filters" role="tablist" aria-label="Team hierarchy"></div>
+      <div class="team-dept-filters" id="team-dept-filters" role="tablist" aria-label="Core team departments"></div>
+    </div>
+  </div>
+<!-- CORE TEAM -->
+  <section id="core" class="section-block core-section">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-core-eyebrow" data-reveal>Leadership</span>
+      <h2 class="section-title mb-3" id="cms-core-title" data-reveal>Core Team</h2>
+      <p class="section-subtitle" id="cms-core-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+
+    <div class="site-container team-grid" id="team-grid" aria-label="Core team members"></div>
+  </section>
+<!-- AMBASSADORS -->
+  <section id="ambassadors" class="section-block section-alt">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-ambassadors-eyebrow" data-reveal>Representation</span>
+      <h2 class="section-title mb-3" id="cms-ambassadors-title" data-reveal>Ambassadors</h2>
+      <p class="section-subtitle" id="cms-ambassadors-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+
+    <div class="site-container ambassador-grid" id="cms-ambassadors-grid"></div>
+  </section>
+<!-- MEMBERS -->
+  <section id="members" class="section-block members-section">
+    <div class="members-section__glow" aria-hidden="true"></div>
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-members-eyebrow" data-reveal>Community</span>
+      <h2 class="section-title mb-3" id="cms-members-title" data-reveal>Members</h2>
+      <p class="section-subtitle" id="cms-members-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+
+    <div class="site-container members-grid">
+      <article class="members-panel members-panel--current" data-reveal>
+        <header class="members-panel__header">
+          <div class="members-panel__icon members-panel__icon--sky" aria-hidden="true">
+            <i class="fas fa-user-group"></i>
+          </div>
+          <div class="members-panel__titles">
+            <h3 class="members-panel__title" id="cms-members-current-title"></h3>
+            <p class="members-panel__meta" id="cms-members-current-meta"></p>
+          </div>
+        </header>
+        <div class="members-mosaic" id="cms-members-current" aria-label="Current members"></div>
+      </article>
+
+      <article class="members-panel members-panel--alumni" data-reveal data-reveal-delay="120">
+        <header class="members-panel__header">
+          <div class="members-panel__icon members-panel__icon--violet" aria-hidden="true">
+            <i class="fas fa-award"></i>
+          </div>
+          <div class="members-panel__titles">
+            <h3 class="members-panel__title" id="cms-members-previous-title"></h3>
+            <p class="members-panel__meta" id="cms-members-previous-meta"></p>
+          </div>
+        </header>
+        <div class="members-alumni" id="cms-members-previous" aria-label="Previous members"></div>
+      </article>
+    </div>
+  </section>
+<!-- NEWSLETTER -->
+  <section id="newsletter" class="newsletter-section section-block" hidden>
+    <div class="site-container">
+      <div class="newsletter-panel glass" data-reveal>
+        <div class="newsletter-panel__copy">
+          <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
+          <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
+          <p class="newsletter-panel__privacy" id="cms-newsletter-privacy"></p>
+        </div>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="newsletter-form__row">
+            <input type="email" id="newsletter-email" name="email" autocomplete="email"
+              placeholder="Enter your email" aria-label="Email for newsletter" required />
+            <button type="submit" class="btn-primary newsletter-form__submit" id="newsletter-submit-btn">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span id="cms-newsletter-btn-label">Subscribe</span>
+            </button>
+          </div>
+          <div class="newsletter-form__error" id="newsletter-form-error" role="alert"></div>
+          <div class="newsletter-form__success" id="newsletter-form-success" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer-mount"></div>
+<!-- Team Profile Modal -->
+  <div id="team-profile-modal" class="team-profile-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Team member profile">
+    <div class="team-profile-modal__backdrop" data-profile-close>
+      <div class="team-profile-modal__mesh" aria-hidden="true"></div>
+      <div class="team-profile-modal__grain" aria-hidden="true"></div>
+    </div>
+    <div class="team-profile-modal__wrap">
+      <button type="button" class="team-profile-modal__close" data-profile-close aria-label="Close profile">
+        <span class="team-profile-modal__close-ring" aria-hidden="true"></span>
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+      <div id="team-profile-mount" class="team-profile-modal__mount"></div>
+    </div>
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config/content-default.js?v=20250614"></script>
+  <script defer src="js/config/supabase-config.js?v=20250614"></script>
+  <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
+  <script defer src="js/core/backend.js?v=20250614"></script>
+  <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/core/site-chrome.js?v=20250614"></script>
+  <script defer src="js/seo/seo.js?v=20250614"></script>
+  <script defer src="js/theme/theme.js?v=20250614"></script>
+  <script defer src="js/analytics/analytics.js?v=20250614"></script>
+  <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
+  <script defer src="js/core/reveal.js?v=20250614"></script>
+  <script defer src="js/core/site-renderer.js?v=20250614"></script>
+
+
+  <script defer src="js/team/team-profiles.js?v=20250614"></script>
+  <script defer src="js/team/members-section.js?v=20250614"></script>
+  <script defer src="js/team/team-hierarchy.js?v=20250614"></script>
+
+  <script defer src="js/core/script.js?v=20250614"></script>
+</body>
+</html>

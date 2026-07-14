@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (colors.indexOf(c) === -1) c = 'ocean';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Student projects and showcases from RC Innovation Club." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="Projects | RC Innovation Club" />
+  <meta property="og:description" content="Student projects and showcases from RC Innovation Club." />
+  <meta property="og:image" content="assets/logo/logo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Projects | RC Innovation Club" />
+  <meta name="twitter:description" content="Student projects and showcases from RC Innovation Club." />
+  <meta name="twitter:image" content="assets/logo/logo.webp" />
+  <title>Projects | RC Innovation Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="css/tw-utilities.css?v=20250614" />
+  <link rel="stylesheet" href="css/style.css?v=20250614" />
+  <link rel="stylesheet" href="css/home.css?v=20250614" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250614" />
+  <link rel="stylesheet" href="css/theme.css?v=20250614" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
+  <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <style>.page-main{padding-top:calc(var(--nav-height) + var(--announce-bar-height, 0px) + 0.5rem)}</style>
+</head>
+<body class="bg-gradient-pro">
+<div id="site-nav-mount"></div>
+<main class="site-main page-main">
+<!-- PROJECTS -->
+  <section id="projects" class="section-block section-alt">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-projects-eyebrow" data-reveal>Student Work</span>
+      <h2 class="section-title mb-3" id="cms-projects-title" data-reveal>Project Showcase</h2>
+      <p class="section-subtitle" id="cms-projects-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+    <div class="site-container">
+      <div class="projects-filters" id="projects-filters" data-reveal data-reveal-delay="80"></div>
+      <div class="projects-grid" id="cms-projects-grid" data-reveal data-reveal-delay="120"></div>
+    </div>
+  </section>
+<!-- NEWSLETTER -->
+  <section id="newsletter" class="newsletter-section section-block" hidden>
+    <div class="site-container">
+      <div class="newsletter-panel glass" data-reveal>
+        <div class="newsletter-panel__copy">
+          <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
+          <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
+          <p class="newsletter-panel__privacy" id="cms-newsletter-privacy"></p>
+        </div>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="newsletter-form__row">
+            <input type="email" id="newsletter-email" name="email" autocomplete="email"
+              placeholder="Enter your email" aria-label="Email for newsletter" required />
+            <button type="submit" class="btn-primary newsletter-form__submit" id="newsletter-submit-btn">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span id="cms-newsletter-btn-label">Subscribe</span>
+            </button>
+          </div>
+          <div class="newsletter-form__error" id="newsletter-form-error" role="alert"></div>
+          <div class="newsletter-form__success" id="newsletter-form-success" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer-mount"></div>
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config/content-default.js?v=20250614"></script>
+  <script defer src="js/config/supabase-config.js?v=20250614"></script>
+  <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
+  <script defer src="js/core/backend.js?v=20250614"></script>
+  <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/core/site-chrome.js?v=20250614"></script>
+  <script defer src="js/seo/seo.js?v=20250614"></script>
+  <script defer src="js/theme/theme.js?v=20250614"></script>
+  <script defer src="js/analytics/analytics.js?v=20250614"></script>
+  <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
+  <script defer src="js/core/reveal.js?v=20250614"></script>
+  <script defer src="js/core/site-renderer.js?v=20250614"></script>
+
+
+  <script defer src="js/projects/projects.js?v=20250614"></script>
+
+  <script defer src="js/core/script.js?v=20250614"></script>
+</body>
+</html>

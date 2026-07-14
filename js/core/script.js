@@ -155,12 +155,11 @@ function initMembershipRegistration() {
   document.addEventListener('click', (e) => {
     const joinLink = e.target.closest('a[href="#join"]');
     if (!joinLink || !window.RC_MEMBERSHIP.isRegistrationOpen()) return;
-    e.preventDefault();
     const joinSection = document.getElementById('join');
-    if (joinSection) {
-      if (window.RC_REVEAL) RC_REVEAL.revealIn(joinSection, { instant: true });
-      joinSection.scrollIntoView({ behavior: 'auto', block: 'start' });
-    }
+    if (!joinSection) return;
+    e.preventDefault();
+    if (window.RC_REVEAL) RC_REVEAL.revealIn(joinSection, { instant: true });
+    joinSection.scrollIntoView({ behavior: 'auto', block: 'start' });
     setTimeout(openMembershipForm, 120);
   });
 
@@ -184,8 +183,8 @@ function initMembershipRegistration() {
       email: document.getElementById('mem-email')?.value || '',
       phone: document.getElementById('mem-phone')?.value || '',
       skills: document.getElementById('mem-skills')?.value || '',
-      interests: document.getElementById('mem-interests')?.value || '',
-      reason: document.getElementById('mem-reason')?.value || ''
+      reason: document.getElementById('mem-reason')?.value || '',
+      interests: document.getElementById('mem-interests')?.value || ''
     };
 
     if (submitBtn) {
@@ -217,8 +216,9 @@ function initMembershipRegistration() {
     setTimeout(closeMembershipForm, 3000);
   });
 
-  if (window.RC_MEMBERSHIP.isRegistrationOpen() && window.location.hash === '#join') {
-    setTimeout(openMembershipForm, 600);
+  const onJoinPage = /(^|\/)join\.html$/i.test((location.pathname || '').replace(/\\/g, '/'));
+  if (window.RC_MEMBERSHIP.isRegistrationOpen() && (window.location.hash === '#join' || (onJoinPage && window.location.hash === '#form'))) {
+    setTimeout(openMembershipForm, 400);
   }
 }
 
@@ -435,8 +435,38 @@ function initSmoothNav() {
     if (!link) return;
     const href = link.getAttribute('href');
     if (!href || href === '#' || href.length < 2) return;
+    // Only handle in-page anchors; leave cross-page links alone
+    if (href === '#join' && !document.getElementById('join')) {
+      e.preventDefault();
+      window.location.href = 'join.html';
+      return;
+    }
     const target = document.querySelector(href);
-    if (!target) return;
+    if (!target) {
+      // Known legacy hashes → multi-page routes
+      const map = {
+        '#about': 'about.html',
+        '#events': 'events.html',
+        '#faculty': 'about.html#faculty',
+        '#core': 'team.html#core',
+        '#ambassadors': 'team.html#ambassadors',
+        '#members': 'team.html#members',
+        '#legacy': 'about.html#legacy',
+        '#testimonials': 'about.html#testimonials',
+        '#partners': 'about.html#partners',
+        '#projects': 'projects.html',
+        '#gallery': 'gallery.html',
+        '#resources': 'resources.html',
+        '#certificates': 'resources.html#certificates',
+        '#contact': 'contact.html',
+        '#join': 'join.html'
+      };
+      if (map[href]) {
+        e.preventDefault();
+        window.location.href = map[href];
+      }
+      return;
+    }
 
     e.preventDefault();
     if (window.RC_REVEAL) RC_REVEAL.revealIn(target, { instant: true });
@@ -862,6 +892,10 @@ function initScrollProgress() {
 }
 
 function initActiveNav() {
+  // Multi-page: active state set by site-chrome via data-page
+  const pageLinks = document.querySelectorAll('.nav-link[data-page]');
+  if (pageLinks.length) return;
+
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link[data-section]');
   if (!sections.length || !navLinks.length) return;
@@ -877,7 +911,7 @@ function initActiveNav() {
         }
       });
     },
-    { rootMargin: '-35% 0px -50% 0px', threshold: 0 }
+    { rootMargin: '-40% 0px -50% 0px', threshold: 0 }
   );
 
   sections.forEach((section) => observer.observe(section));

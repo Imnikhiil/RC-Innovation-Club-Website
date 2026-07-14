@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (colors.indexOf(c) === -1) c = 'ocean';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Mission, vision, faculty, legacy, testimonials, and partners of RC Innovation Club at DSEU Rajokri." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="About | RC Innovation Club" />
+  <meta property="og:description" content="Mission, vision, faculty, legacy, testimonials, and partners of RC Innovation Club at DSEU Rajokri." />
+  <meta property="og:image" content="assets/logo/logo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="About | RC Innovation Club" />
+  <meta name="twitter:description" content="Mission, vision, faculty, legacy, testimonials, and partners of RC Innovation Club at DSEU Rajokri." />
+  <meta name="twitter:image" content="assets/logo/logo.webp" />
+  <title>About | RC Innovation Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="css/tw-utilities.css?v=20250614" />
+  <link rel="stylesheet" href="css/style.css?v=20250614" />
+  <link rel="stylesheet" href="css/home.css?v=20250614" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250614" />
+  <link rel="stylesheet" href="css/theme.css?v=20250614" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
+  <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <style>.page-main{padding-top:calc(var(--nav-height) + var(--announce-bar-height, 0px) + 0.5rem)}</style>
+</head>
+<body class="bg-gradient-pro">
+<div id="site-nav-mount"></div>
+<main class="site-main page-main">
+<section id="about" class="dash-about section-block">
+      <div class="site-container">
+        <header class="dash-about__head" data-reveal>
+          <span class="dash-label" id="cms-about-eyebrow">Who We Are</span>
+          <h2 class="dash-about__title" id="cms-about-title">
+            About <span class="dash-hero__highlight text-gradient">RC Innovation Club</span>
+          </h2>
+          <p class="dash-about__lead" id="cms-about-subtitle" data-reveal data-reveal-delay="80"></p>
+        </header>
+
+        <div class="dash-about__bento" data-reveal data-reveal-delay="140">
+          <article class="dash-bento-card dash-bento-card--mission">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-bullseye"></i></div>
+            <h3 class="dash-bento-card__title">Mission</h3>
+            <p class="dash-bento-card__text" id="cms-about-mission"></p>
+          </article>
+          <article class="dash-bento-card dash-bento-card--vision">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-eye"></i></div>
+            <h3 class="dash-bento-card__title">Vision</h3>
+            <p class="dash-bento-card__text" id="cms-about-vision"></p>
+          </article>
+          <article class="dash-bento-card dash-bento-card--culture">
+            <div class="dash-bento-card__glow" aria-hidden="true"></div>
+            <div class="dash-bento-card__icon" aria-hidden="true"><i class="fas fa-users"></i></div>
+            <h3 class="dash-bento-card__title">Culture</h3>
+            <p class="dash-bento-card__text" id="cms-about-culture"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+<!-- FACULTY IN-CHARGE -->
+  <section id="faculty" class="section-block">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-faculty-eyebrow" data-reveal>Club Leadership & Faculty In-Charge</span>
+      <h2 class="section-title mb-3" id="cms-faculty-title" data-reveal>Guiding Our Innovation Journey</h2>
+      <p class="section-subtitle" id="cms-faculty-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+
+    <div class="site-container">
+      <div class="faculty-timeline" id="cms-faculty-timeline" aria-label="Faculty in-charge timeline"></div>
+    </div>
+  </section>
+<!-- LEGACY -->
+  <section id="legacy" class="section-block section-alt">
+    <div class="site-container max-w-3xl mx-auto">
+      <header class="ui-section-head">
+        <span class="section-eyebrow" id="cms-legacy-eyebrow" data-reveal>Our Story</span>
+        <h2 class="section-title mb-3" id="cms-legacy-title" data-reveal>Club Legacy</h2>
+        <p class="section-subtitle" id="cms-legacy-subtitle" data-reveal data-reveal-delay="100"></p>
+      </header>
+
+      <div class="timeline" id="cms-legacy-timeline"></div>
+    </div>
+  </section>
+<!-- TESTIMONIALS -->
+  <section id="testimonials" class="section-block section-alt">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-testimonials-eyebrow" data-reveal>Voices</span>
+      <h2 class="section-title mb-3" id="cms-testimonials-title" data-reveal>What Members Say</h2>
+      <p class="section-subtitle" id="cms-testimonials-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+
+    <div class="site-container">
+      <div class="testimonials-carousel" id="testimonials-carousel">
+        <button type="button" class="testimonials-nav testimonials-nav--prev" id="testimonials-prev" aria-label="Previous testimonial">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <div class="testimonials-viewport">
+          <div class="testimonials-track" id="testimonials-track"></div>
+        </div>
+        <button type="button" class="testimonials-nav testimonials-nav--next" id="testimonials-next" aria-label="Next testimonial">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="testimonials-dots" id="testimonials-dots" role="tablist" aria-label="Testimonial slides"></div>
+    </div>
+  </section>
+<!-- PARTNERS -->
+  <section id="partners" class="section-block">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-partners-eyebrow" data-reveal>Together We Grow</span>
+      <h2 class="section-title mb-3" id="cms-partners-title" data-reveal>Partners & Sponsors</h2>
+      <p class="section-subtitle" id="cms-partners-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+    <div class="site-container" id="cms-partners-groups"></div>
+  </section>
+<!-- NEWSLETTER -->
+  <section id="newsletter" class="newsletter-section section-block" hidden>
+    <div class="site-container">
+      <div class="newsletter-panel glass" data-reveal>
+        <div class="newsletter-panel__copy">
+          <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
+          <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
+          <p class="newsletter-panel__privacy" id="cms-newsletter-privacy"></p>
+        </div>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="newsletter-form__row">
+            <input type="email" id="newsletter-email" name="email" autocomplete="email"
+              placeholder="Enter your email" aria-label="Email for newsletter" required />
+            <button type="submit" class="btn-primary newsletter-form__submit" id="newsletter-submit-btn">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span id="cms-newsletter-btn-label">Subscribe</span>
+            </button>
+          </div>
+          <div class="newsletter-form__error" id="newsletter-form-error" role="alert"></div>
+          <div class="newsletter-form__success" id="newsletter-form-success" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer-mount"></div>
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config/content-default.js?v=20250614"></script>
+  <script defer src="js/config/supabase-config.js?v=20250614"></script>
+  <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
+  <script defer src="js/core/backend.js?v=20250614"></script>
+  <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/core/site-chrome.js?v=20250614"></script>
+  <script defer src="js/seo/seo.js?v=20250614"></script>
+  <script defer src="js/theme/theme.js?v=20250614"></script>
+  <script defer src="js/analytics/analytics.js?v=20250614"></script>
+  <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
+  <script defer src="js/core/reveal.js?v=20250614"></script>
+  <script defer src="js/core/site-renderer.js?v=20250614"></script>
+
+
+  <script defer src="js/testimonials/testimonials.js?v=20250614"></script>
+  <script defer src="js/partners/partners.js?v=20250614"></script>
+
+  <script defer src="js/core/script.js?v=20250614"></script>
+</body>
+</html>

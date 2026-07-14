@@ -22,11 +22,14 @@ const ASSET_PATH_MIGRATIONS = [
   ['assets/team/core/Ankit Singh Dhami.png', 'assets/team/core/Ankit Singh Dhami.jpg'],
   ['assets/team/core/Rishab.png', 'assets/team/core/Rishab.jpg'],
   ['assets/team/core/Rishabh.png', 'assets/team/core/Rishabh.jpg'],
-  ['assets/team/core/Aunirudh.jpeg', 'assets/team/core/Aunirudh.webp']
+  ['assets/team/core/Aunirudh.jpeg', 'assets/team/core/Aunirudh.webp'],
+  ['#join', 'join.html']
 ];
 
 function migrateAssetPath(path) {
-  if (!path || typeof path !== 'string' || path.startsWith('http')) return path;
+  if (!path || typeof path !== 'string') return path;
+  if (path === '#join') return 'join.html';
+  if (path.startsWith('http')) return path;
   let migrated = path;
   ASSET_PATH_MIGRATIONS.forEach((rule) => {
     if (Array.isArray(rule) && rule[0] instanceof RegExp) {
@@ -54,7 +57,11 @@ function migrateContentAssets(content) {
   if (!content || typeof content !== 'object') return content;
 
   if (Array.isArray(content.events)) {
-    content.events = content.events.map((e) => ({ ...e, image: migrateAssetPath(e.image) }));
+    content.events = content.events.map((e) => ({
+      ...e,
+      image: migrateAssetPath(e.image),
+      registerUrl: migrateAssetPath(e.registerUrl)
+    }));
   }
   if (Array.isArray(content.coreTeam)) {
     content.coreTeam = content.coreTeam.map((m) => ({ ...m, img: migrateAssetPath(m.img) }));

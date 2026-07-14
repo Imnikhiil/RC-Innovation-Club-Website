@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var tk = 'rc_theme_preference';
+      var ck = 'rc_color_preference';
+      var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
+      var t = null, c = null;
+      try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (colors.indexOf(c) === -1) c = 'ocean';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-color', c);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Learning resources and certificate verification for RC Innovation Club." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#030712" />
+  <link rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RC Innovation Club" />
+  <meta property="og:title" content="Resources | RC Innovation Club" />
+  <meta property="og:description" content="Learning resources and certificate verification for RC Innovation Club." />
+  <meta property="og:image" content="assets/logo/logo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Resources | RC Innovation Club" />
+  <meta name="twitter:description" content="Learning resources and certificate verification for RC Innovation Club." />
+  <meta name="twitter:image" content="assets/logo/logo.webp" />
+  <title>Resources | RC Innovation Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="css/tw-utilities.css?v=20250614" />
+  <link rel="stylesheet" href="css/style.css?v=20250614" />
+  <link rel="stylesheet" href="css/home.css?v=20250614" />
+  <link rel="stylesheet" href="css/gallery.css?v=20250614" />
+  <link rel="stylesheet" href="css/theme.css?v=20250614" />
+  <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
+  <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
+  <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <style>.page-main{padding-top:calc(var(--nav-height) + var(--announce-bar-height, 0px) + 0.5rem)}</style>
+</head>
+<body class="bg-gradient-pro">
+<div id="site-nav-mount"></div>
+<main class="site-main page-main">
+<!-- RESOURCES -->
+  <section id="resources" class="section-block">
+    <div class="site-container ui-section-head">
+      <span class="section-eyebrow" id="cms-resources-eyebrow" data-reveal>Learn & Grow</span>
+      <h2 class="section-title mb-3" id="cms-resources-title" data-reveal>Resource Hub</h2>
+      <p class="section-subtitle" id="cms-resources-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+    <div class="site-container">
+      <div class="resources-controls" data-reveal data-reveal-delay="80">
+        <div class="resources-search-wrap">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input type="search" id="resources-search" placeholder="Search resources…" aria-label="Search resources" />
+        </div>
+        <div class="resources-filters" id="resources-filters"></div>
+      </div>
+      <div class="resources-grid" id="cms-resources-grid" data-reveal data-reveal-delay="120"></div>
+      <p class="resources-empty" id="resources-empty" hidden>No resources match your search.</p>
+    </div>
+  </section>
+<!-- CERTIFICATES -->
+  <section id="certificates" class="section-block section-alt">
+    <div class="site-container ui-section-head max-w-2xl mx-auto">
+      <span class="section-eyebrow" id="cms-cert-eyebrow" data-reveal>Recognition</span>
+      <h2 class="section-title mb-3" id="cms-cert-title" data-reveal>Certificate Verification</h2>
+      <p class="section-subtitle" id="cms-cert-subtitle" data-reveal data-reveal-delay="100"></p>
+    </div>
+    <div class="site-container max-w-2xl mx-auto">
+      <div class="cert-verify-panel glass" data-reveal data-reveal-delay="120">
+        <form id="cert-verify-form" class="cert-verify-form" novalidate>
+          <label for="cert-verify-input" class="cert-verify-form__label" id="cms-cert-verify-label">Enter Certificate ID</label>
+          <div class="cert-verify-form__row">
+            <input type="text" id="cert-verify-input" name="certId" autocomplete="off"
+              placeholder="e.g. RCIC-2026-DEMO01" aria-describedby="cms-cert-verify-hint" />
+            <button type="submit" class="btn-primary cert-verify-form__submit" id="cms-cert-verify-btn">
+              <i class="fas fa-shield-halved" aria-hidden="true"></i> Verify Certificate
+            </button>
+          </div>
+          <p class="cert-verify-form__hint" id="cms-cert-verify-hint">Enter the ID printed on your certificate or membership card.</p>
+        </form>
+        <div id="cert-verify-result" class="cert-verify-result-wrap" hidden></div>
+      </div>
+    </div>
+  </section>
+<!-- NEWSLETTER -->
+  <section id="newsletter" class="newsletter-section section-block" hidden>
+    <div class="site-container">
+      <div class="newsletter-panel glass" data-reveal>
+        <div class="newsletter-panel__copy">
+          <h2 class="newsletter-panel__title" id="cms-newsletter-title">Stay in the Loop</h2>
+          <p class="newsletter-panel__subtitle" id="cms-newsletter-subtitle"></p>
+          <p class="newsletter-panel__privacy" id="cms-newsletter-privacy"></p>
+        </div>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <div class="newsletter-form__row">
+            <input type="email" id="newsletter-email" name="email" autocomplete="email"
+              placeholder="Enter your email" aria-label="Email for newsletter" required />
+            <button type="submit" class="btn-primary newsletter-form__submit" id="newsletter-submit-btn">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span id="cms-newsletter-btn-label">Subscribe</span>
+            </button>
+          </div>
+          <div class="newsletter-form__error" id="newsletter-form-error" role="alert"></div>
+          <div class="newsletter-form__success" id="newsletter-form-success" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer-mount"></div>
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config/content-default.js?v=20250614"></script>
+  <script defer src="js/config/supabase-config.js?v=20250614"></script>
+  <script defer src="js/supabase/supabase-core.js?v=20250614"></script>
+  <script defer src="js/core/backend.js?v=20250614"></script>
+  <script defer src="js/core/cms.js?v=20250614"></script>
+  <script defer src="js/core/site-chrome.js?v=20250614"></script>
+  <script defer src="js/seo/seo.js?v=20250614"></script>
+  <script defer src="js/theme/theme.js?v=20250614"></script>
+  <script defer src="js/analytics/analytics.js?v=20250614"></script>
+  <script defer src="js/newsletter/newsletter.js?v=20250614"></script>
+  <script defer src="js/core/reveal.js?v=20250614"></script>
+  <script defer src="js/core/site-renderer.js?v=20250614"></script>
+
+
+  <script defer src="js/resources/resources.js?v=20250614"></script>
+  <script defer src="js/certificates/certificates.js?v=20250614"></script>
+
+  <script defer src="js/core/script.js?v=20250614"></script>
+</body>
+</html>
