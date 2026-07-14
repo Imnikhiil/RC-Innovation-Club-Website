@@ -600,7 +600,12 @@ function listEditor(key, fields, itemLabel, options = {}) {
   if (editIdx !== undefined) {
     const item = editIdx === 'new' ? {} : { ...items[editIdx] };
     formHtml = `<div class="admin-card"><h3>${editIdx === 'new' ? 'Add' : 'Edit'} ${itemLabel}</h3>
-      ${fields.map((f) => field(f.label, `le-${f.id}`, item[f.id], f.type || 'text', f.rows)).join('')}
+      ${fields.map((f) => {
+        if (f.upload && window.RC_ADMIN_MEDIA) {
+          return RC_ADMIN_MEDIA.listFieldHtml(f, item);
+        }
+        return field(f.label, `le-${f.id}`, item[f.id], f.type || 'text', f.rows);
+      }).join('')}
       ${fields.find((f) => f.id === 'lead') ? `<label class="admin-checkbox"><input type="checkbox" id="le-lead" ${item.lead ? 'checked' : ''} /> Mark as Lead / Ambassador</label>` : ''}
       ${fields.find((f) => f.id === 'accent') ? `<div class="admin-field"><label>Accent Color</label><select id="le-accent"><option value="sky" ${item.accent !== 'violet' ? 'selected' : ''}>Sky Blue</option><option value="violet" ${item.accent === 'violet' ? 'selected' : ''}>Violet</option></select></div>` : ''}
       <div class="admin-actions" style="margin-top:1rem;">
@@ -610,11 +615,17 @@ function listEditor(key, fields, itemLabel, options = {}) {
     </div>`;
   }
 
-  const listHtml = items.map((item, i) => `
+  const listHtml = items.map((item, i) => {
+    const thumbSrc = item.image || item.img || item.logo || '';
+    const thumb = thumbSrc
+      ? `<img class="admin-list-thumb" src="${esc(thumbSrc)}" alt="" loading="lazy" onerror="this.style.display='none'" />`
+      : '';
+    return `
     <div class="admin-list-item">
+      ${thumb}
       <div class="admin-list-item__info">
         <strong>${esc(item.title || item.name || item.label || `Item ${i + 1}`)}</strong>
-        <small>${esc(item.period || item.role || item.designation || item.date || item.year || item.description || item.image || '').slice(0, 120)}</small>
+        <small>${esc(item.period || item.role || item.designation || item.date || item.year || item.description || item.image || item.img || item.logo || '').slice(0, 120)}</small>
       </div>
       <div class="admin-list-item__actions">
         ${reorderable ? `
@@ -624,8 +635,8 @@ function listEditor(key, fields, itemLabel, options = {}) {
         <button type="button" class="admin-btn" data-edit="${key}" data-idx="${i}"><i class="fas fa-edit"></i></button>
         <button type="button" class="admin-btn admin-btn--danger" data-del="${key}" data-idx="${i}"><i class="fas fa-trash"></i></button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   return `${formHtml}
     <div class="admin-card">
@@ -650,6 +661,7 @@ function moveListItem(key, index, direction, panelId) {
 
 function bindListEvents(panelId, key, fields, options = {}) {
   const panel = document.getElementById(panelId);
+  if (window.RC_ADMIN_MEDIA) RC_ADMIN_MEDIA.bindPanel(panel);
 
   panel.querySelector(`[data-add="${key}"]`)?.addEventListener('click', () => {
     editingList[key] = 'new';
@@ -666,9 +678,14 @@ function bindListEvents(panelId, key, fields, options = {}) {
   });
 
   panel.querySelectorAll(`[data-del="${key}"]`).forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if (!confirm('Delete this item?')) return;
-      content[key].splice(parseInt(btn.dataset.idx, 10), 1);
+      const idx = parseInt(btn.dataset.idx, 10);
+      const removed = content[key]?.[idx];
+      if (removed?.mediaPath && window.RC_GALLERY_MEDIA) {
+        try { await RC_GALLERY_MEDIA.deleteBlob(removed.mediaId || '', removed.mediaPath); } catch (_) { /* ignore */ }
+      }
+      content[key].splice(idx, 1);
       delete editingList[key];
       RC_CMS.saveContent(content);
       renderAllPanels();
@@ -678,13 +695,24 @@ function bindListEvents(panelId, key, fields, options = {}) {
   });
 
   document.getElementById('le-save')?.addEventListener('click', () => {
-    const item = {};
+    const prev = editingList[key] === 'new' ? {} : { ...(content[key]?.[editingList[key]] || {}) };
+    const item = { ...prev };
     fields.forEach((f) => {
       item[f.id] = f.type === 'number' ? numVal(`le-${f.id}`) : val(`le-${f.id}`);
     });
     if (document.getElementById('le-accent')) item.accent = val('le-accent');
     if (document.getElementById('le-lead')) item.lead = document.getElementById('le-lead').checked;
     if (fields.find((f) => f.id === 'value')) item.value = numVal('le-value');
+
+    const uploadField = fields.find((f) => f.upload);
+    if (uploadField) {
+      const pathVal = val(`le-${uploadField.id}-mediaPath`);
+      if (pathVal) item.mediaPath = pathVal;
+    }
+
+    if (!item.id && window.RC_GALLERY_MEDIA) {
+      item.id = RC_GALLERY_MEDIA.generateId(key.replace(/[^a-z]/gi, '').slice(0, 8) || 'item');
+    }
 
     if (!content[key]) content[key] = [];
     if (editingList[key] === 'new') {
@@ -723,8 +751,8 @@ const EVENT_FIELDS = [
   { id: 'time', label: 'Time (e.g. 10:00 AM)' },
   { id: 'venue', label: 'Venue' },
   { id: 'description', label: 'Description', type: 'textarea', rows: 3 },
-  { id: 'image', label: 'Image Path or URL' },
-  { id: 'registerUrl', label: 'Registration Link (#join or URL)' },
+  { id: 'image', label: 'Event Photo', upload: { folder: 'events', aspect: 1.777 } },
+  { id: 'registerUrl', label: 'Registration Link (join.html or URL)' },
   { id: 'registerLabel', label: 'Register Button Text' },
   { id: 'forceStatus', label: 'Status: auto, upcoming, or past' }
 ];
@@ -732,7 +760,7 @@ const EVENT_FIELDS = [
 const CORE_FIELDS = [
   { id: 'name', label: 'Name' },
   { id: 'role', label: 'Role' },
-  { id: 'img', label: 'Photo Path' },
+  { id: 'img', label: 'Photo', upload: { folder: 'team/core', aspect: 1 } },
   { id: 'accent', label: 'Accent' },
   { id: 'lead', label: 'Lead' },
   { id: 'department', label: 'Department: leadership, events, media, technical, finance, operations' }
@@ -744,7 +772,7 @@ const FACULTY_FIELDS = [
   { id: 'role', label: 'Role (e.g. Faculty In-Charge, RC Innovation Club)' },
   { id: 'period', label: 'Tenure Period (e.g. 2021 – 2025 or 2026 – Present)' },
   { id: 'description', label: 'Contribution Description', type: 'textarea', rows: 4 },
-  { id: 'image', label: 'Photo Path (e.g. assets/team/faculty/name.jpg)' }
+  { id: 'image', label: 'Photo', upload: { folder: 'team/faculty', aspect: 1 } }
 ];
 
 const AMB_FIELDS = [
@@ -752,7 +780,7 @@ const AMB_FIELDS = [
   { id: 'name', label: 'Name' },
   { id: 'period', label: 'Period' },
   { id: 'description', label: 'Description', type: 'textarea', rows: 3 },
-  { id: 'image', label: 'Photo Path' }
+  { id: 'image', label: 'Photo', upload: { folder: 'team/ambassadors', aspect: 1 } }
 ];
 
 const MEMBER_FIELDS = [{ id: 'name', label: 'Name' }];
@@ -771,7 +799,7 @@ const TESTIMONIAL_FIELDS = [
   { id: 'name', label: 'Name' },
   { id: 'role', label: 'Role / Year (e.g. 2nd Year CSE)' },
   { id: 'quote', label: 'Quote', type: 'textarea', rows: 4 },
-  { id: 'image', label: 'Photo Path or URL (optional)' },
+  { id: 'image', label: 'Photo (optional)', upload: { folder: 'testimonials', aspect: 1 } },
   { id: 'rating', label: 'Star Rating (1–5, 0 to hide)', type: 'number' }
 ];
 
@@ -788,7 +816,7 @@ const STATS_FIELDS = [
 const PARTNER_FIELDS = [
   { id: 'name', label: 'Organization Name' },
   { id: 'type', label: 'Type: sponsor, partner, or collaborator' },
-  { id: 'logo', label: 'Logo Path or URL' },
+  { id: 'logo', label: 'Logo', upload: { folder: 'partners', aspect: 1 } },
   { id: 'url', label: 'Website URL (optional)' },
   { id: 'description', label: 'Short Description', type: 'textarea', rows: 2 }
 ];
@@ -796,7 +824,7 @@ const PARTNER_FIELDS = [
 const PROJECT_FIELDS = [
   { id: 'title', label: 'Project Title' },
   { id: 'description', label: 'Description', type: 'textarea', rows: 3 },
-  { id: 'image', label: 'Image Path or URL' },
+  { id: 'image', label: 'Project Image', upload: { folder: 'projects', aspect: 1.777 } },
   { id: 'tech', label: 'Tech Stack (comma-separated)' },
   { id: 'status', label: 'Status: completed, in-progress, or planned' },
   { id: 'category', label: 'Category: Web, Robotics, AI, Mobile, IoT, Other' },
@@ -2052,7 +2080,9 @@ function renderSeoPanel() {
       <div class="admin-grid-2">
         ${field('Site Name', 'seo-site-name', seo.siteName)}
         ${field('Site URL (production)', 'seo-site-url', seo.siteUrl, 'url')}
-        ${field('Default Share Image', 'seo-default-image', seo.defaultImage)}
+        ${window.RC_ADMIN_MEDIA
+          ? RC_ADMIN_MEDIA.fieldHtml('Default Share Image', 'seo-default-image', seo.defaultImage, { folder: 'seo', aspect: 1.777 })
+          : field('Default Share Image', 'seo-default-image', seo.defaultImage)}
         ${field('Twitter Handle', 'seo-twitter-handle', seo.twitterHandle, 'text')}
         ${field('Organization Name', 'seo-org-name', seo.organizationName)}
         ${field('Organization Type', 'seo-org-type', seo.organizationType)}
@@ -2067,7 +2097,9 @@ function renderSeoPanel() {
       ${field('Meta Description', 'seo-home-desc', home.description, 'textarea', 3)}
       ${field('Keywords', 'seo-home-keywords', home.keywords)}
       <div class="admin-grid-2">
-        ${field('OG Image Path', 'seo-home-image', home.ogImage)}
+        ${window.RC_ADMIN_MEDIA
+          ? RC_ADMIN_MEDIA.fieldHtml('OG Image', 'seo-home-image', home.ogImage, { folder: 'seo', aspect: 1.777 })
+          : field('OG Image Path', 'seo-home-image', home.ogImage)}
         ${field('Canonical URL (optional)', 'seo-home-canonical', home.canonicalUrl, 'url')}
         ${field('Robots', 'seo-home-robots', home.robots || 'index, follow')}
         ${field('OG Type', 'seo-home-og-type', home.ogType || 'website')}
@@ -2080,7 +2112,9 @@ function renderSeoPanel() {
       ${field('Meta Description', 'seo-gallery-desc', gallery.description, 'textarea', 3)}
       ${field('Keywords', 'seo-gallery-keywords', gallery.keywords)}
       <div class="admin-grid-2">
-        ${field('OG Image Path', 'seo-gallery-image', gallery.ogImage)}
+        ${window.RC_ADMIN_MEDIA
+          ? RC_ADMIN_MEDIA.fieldHtml('OG Image', 'seo-gallery-image', gallery.ogImage, { folder: 'seo', aspect: 1.777 })
+          : field('OG Image Path', 'seo-gallery-image', gallery.ogImage)}
         ${field('Canonical URL (optional)', 'seo-gallery-canonical', gallery.canonicalUrl, 'url')}
         ${field('Robots', 'seo-gallery-robots', gallery.robots || 'index, follow')}
         ${field('OG Type', 'seo-gallery-og-type', gallery.ogType || 'website')}
@@ -2118,4 +2152,8 @@ function renderSeoPanel() {
     RC_CMS.saveContent(content);
     toast('SEO settings saved. Refresh the website to apply.');
   });
+
+  if (window.RC_ADMIN_MEDIA) {
+    RC_ADMIN_MEDIA.bindPanel(document.getElementById('panel-seo'));
+  }
 }

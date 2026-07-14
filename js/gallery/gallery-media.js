@@ -33,19 +33,30 @@ function blobExtension(blob, fallback = 'bin') {
 
 window.RC_GALLERY_MEDIA = {
   async saveBlob(id, blob, options = {}) {
+    const itemId = options.itemId || id.split('_')[0] || id;
+    const folder = String(options.folder || 'gallery').replace(/^\/+|\/+$/g, '') || 'gallery';
+    const ext = blobExtension(blob, options.type === 'video' ? 'mp4' : 'jpg');
+    const kind = options.kind || 'media';
+
     if (window.RC_BACKEND?.isEnabled()) {
-      const itemId = options.itemId || id.split('_')[0] || id;
-      const ext = blobExtension(blob, options.type === 'video' ? 'mp4' : 'jpg');
-      const storagePath = `gallery/${itemId}/${options.kind || 'media'}.${ext}`;
+      const storagePath = `${folder}/${itemId}/${kind}.${ext}`;
       const url = await RC_BACKEND.uploadFile(storagePath, blob, blob.type || undefined);
       return { id, url, path: storagePath };
     }
 
+    // Local/offline: persist in IndexedDB + data URL so CMS can still display
     const db = await openGalleryDb();
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error('Could not read image.'));
+      reader.readAsDataURL(blob);
+    });
+
     return new Promise((resolve, reject) => {
       const tx = db.transaction(GALLERY_STORE, 'readwrite');
       tx.objectStore(GALLERY_STORE).put(blob, id);
-      tx.oncomplete = () => resolve({ id, url: null, path: null });
+      tx.oncomplete = () => resolve({ id, url: dataUrl, path: null });
       tx.onerror = () => reject(tx.error);
     });
   },
