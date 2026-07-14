@@ -752,7 +752,7 @@ const EVENT_FIELDS = [
   { id: 'venue', label: 'Venue' },
   { id: 'description', label: 'Description', type: 'textarea', rows: 3 },
   { id: 'image', label: 'Event Photo', upload: { folder: 'events', aspect: 1.777 } },
-  { id: 'registerUrl', label: 'Registration Link (join.html or URL)' },
+  { id: 'registerUrl', label: 'Registration Link (/join or URL)' },
   { id: 'registerLabel', label: 'Register Button Text' },
   { id: 'forceStatus', label: 'Status: auto, upcoming, or past' }
 ];
@@ -1597,7 +1597,7 @@ function renderCertificatesPanel() {
 
   document.querySelectorAll('[data-cert-copy]').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      const url = `${window.location.origin}${window.location.pathname.replace('admin.html', 'index.html')}?cert=${encodeURIComponent(btn.dataset.certCopy)}#certificates`;
+      const url = `${window.location.origin}/resources?cert=${encodeURIComponent(btn.dataset.certCopy)}#certificates`;
       try {
         await navigator.clipboard.writeText(url);
         toast('Verify link copied.');

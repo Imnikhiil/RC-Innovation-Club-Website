@@ -438,28 +438,28 @@ function initSmoothNav() {
     // Only handle in-page anchors; leave cross-page links alone
     if (href === '#join' && !document.getElementById('join')) {
       e.preventDefault();
-      window.location.href = 'join.html';
+      window.location.href = '/join';
       return;
     }
     const target = document.querySelector(href);
     if (!target) {
       // Known legacy hashes → multi-page routes
       const map = {
-        '#about': 'about.html',
-        '#events': 'events.html',
-        '#faculty': 'about.html#faculty',
-        '#core': 'team.html#core',
-        '#ambassadors': 'team.html#ambassadors',
-        '#members': 'team.html#members',
-        '#legacy': 'about.html#legacy',
-        '#testimonials': 'about.html#testimonials',
-        '#partners': 'about.html#partners',
-        '#projects': 'projects.html',
-        '#gallery': 'gallery.html',
-        '#resources': 'resources.html',
-        '#certificates': 'resources.html#certificates',
-        '#contact': 'contact.html',
-        '#join': 'join.html'
+        '#about': '/about',
+        '#events': '/events',
+        '#faculty': '/about#faculty',
+        '#core': '/team#core',
+        '#ambassadors': '/team#ambassadors',
+        '#members': '/team#members',
+        '#legacy': '/about#legacy',
+        '#testimonials': '/about#testimonials',
+        '#partners': '/about#partners',
+        '#projects': '/projects',
+        '#gallery': '/gallery',
+        '#resources': '/resources',
+        '#certificates': '/resources#certificates',
+        '#contact': '/contact',
+        '#join': '/join'
       };
       if (map[href]) {
         e.preventDefault();

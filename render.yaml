@@ -18,9 +18,63 @@ services:
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
     routes:
+      # Clean home URL
+      - type: redirect
+        source: /index.html
+        destination: /
+      # Pretty page URLs (no .html in address bar)
       - type: rewrite
-        source: /admin
-        destination: /admin.html
+        source: /about
+        destination: /about.html
+      - type: rewrite
+        source: /events
+        destination: /events.html
+      - type: rewrite
+        source: /team
+        destination: /team.html
+      - type: rewrite
+        source: /projects
+        destination: /projects.html
       - type: rewrite
         source: /gallery
         destination: /gallery.html
+      - type: rewrite
+        source: /resources
+        destination: /resources.html
+      - type: rewrite
+        source: /join
+        destination: /join.html
+      - type: rewrite
+        source: /contact
+        destination: /contact.html
+      - type: rewrite
+        source: /admin
+        destination: /admin.html
+      # Old .html URLs → clean paths
+      - type: redirect
+        source: /about.html
+        destination: /about
+      - type: redirect
+        source: /events.html
+        destination: /events
+      - type: redirect
+        source: /team.html
+        destination: /team
+      - type: redirect
+        source: /projects.html
+        destination: /projects
+      - type: redirect
+        source: /gallery.html
+        destination: /gallery
+      - type: redirect
+        source: /resources.html
+        destination: /resources
+      - type: redirect
+        source: /join.html
+        destination: /join
+      - type: redirect
+        source: /contact.html
+        destination: /contact
+      - type: redirect
+        source: /admin.html
+        destination: /admin

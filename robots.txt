@@ -2,5 +2,5 @@ User-agent: *
 Allow: /
 
 # Keep admin panel out of search engines
-Disallow: /admin.html
 Disallow: /admin
+Disallow: /admin.html

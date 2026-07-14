@@ -35,8 +35,8 @@ window.RC_DEFAULT_CONTENT = {
     pastTitle: 'Past Events'
   },
   events: [
-    { tag: 'Workshop', title: 'Summer Tech Bootcamp 2026', date: 'July 15, 2026', eventDate: '2026-07-15', venue: 'DSEU Rajokri Campus', time: '10:00 AM', description: 'Hands-on sessions on web development, Python, and teamwork for all DSEU students.', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200', registerUrl: 'join.html', registerLabel: 'Register Now', forceStatus: 'upcoming' },
-    { tag: 'Competition', title: 'RC Hackathon 2026', date: 'September 20, 2026', eventDate: '2026-09-20', venue: 'Computer Lab, Block A', time: '9:00 AM', description: '24-hour innovation challenge — build solutions, compete in teams, and win prizes.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200', registerUrl: 'join.html', registerLabel: 'Register Now', forceStatus: 'upcoming' },
+    { tag: 'Workshop', title: 'Summer Tech Bootcamp 2026', date: 'July 15, 2026', eventDate: '2026-07-15', venue: 'DSEU Rajokri Campus', time: '10:00 AM', description: 'Hands-on sessions on web development, Python, and teamwork for all DSEU students.', image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200', registerUrl: '/join', registerLabel: 'Register Now', forceStatus: 'upcoming' },
+    { tag: 'Competition', title: 'RC Hackathon 2026', date: 'September 20, 2026', eventDate: '2026-09-20', venue: 'Computer Lab, Block A', time: '9:00 AM', description: '24-hour innovation challenge — build solutions, compete in teams, and win prizes.', image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200', registerUrl: '/join', registerLabel: 'Register Now', forceStatus: 'upcoming' },
     { tag: 'Intercampus Competition', title: 'Python Jam', date: 'September 09, 2024 · Sponsored by Bamigos', description: "DSEU Rajokri's largest intercampus online coding competition, organized by RC Innovation Club.", image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200' },
     { tag: 'Workshop', title: '3D Modeling Workshop', date: 'September 18, 2024', description: 'Hands-on introduction to 3D design and creative modeling.', image: 'assets/events/3D Modeling Workshop.webp' },
     { tag: 'Workshop', title: 'TECH-KRITI Workshop on Animation', date: 'October 12, 2024', description: 'Animation basics + digital creativity + motion design.', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200' },
@@ -732,7 +732,7 @@ window.RC_DEFAULT_CONTENT = {
   },
   seo: {
     siteName: 'RC Innovation Club',
-    siteUrl: '',
+    siteUrl: 'https://rc-innovation-club.onrender.com',
     defaultImage: 'assets/logo/logo.webp',
     organizationName: 'RC Innovation Club',
     organizationType: 'Organization',

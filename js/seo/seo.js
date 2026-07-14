@@ -19,9 +19,10 @@ window.RC_SEO = {
   },
 
   getPageKey() {
-    const file = ((window.location.pathname || '').split('/').pop() || 'index.html').toLowerCase();
-    if (!file || file === 'index.html') return 'home';
-    return file.replace(/\.html$/, '') || 'home';
+    const raw = (window.location.pathname || '/').toLowerCase().replace(/\/+$/, '') || '/';
+    const file = raw.split('/').pop() || '';
+    if (!file || file === 'index.html' || raw === '/') return 'home';
+    return file.replace(/\.html$/, '');
   },
 
   getSiteUrl() {
@@ -53,9 +54,8 @@ window.RC_SEO = {
     const cfg = this.getConfig();
     const page = cfg.pages?.[pageKey] || cfg.pages?.home || {};
     const siteUrl = this.getSiteUrl();
-    const file = pageKey === 'home' ? 'index.html' : `${pageKey}.html`;
-    const path = `/${file}`;
-    const canonical = page.canonicalUrl?.trim() || (siteUrl ? `${siteUrl}${path}` : '');
+    const path = pageKey === 'home' ? '/' : `/${pageKey}`;
+    const canonical = page.canonicalUrl?.trim() || (siteUrl ? `${siteUrl}${path === '/' ? '/' : path}` : '');
     const image = page.ogImage || cfg.defaultImage || 'assets/logo/logo.webp';
 
     return {

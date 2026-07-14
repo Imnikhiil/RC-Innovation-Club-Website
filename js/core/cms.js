@@ -23,12 +23,13 @@ const ASSET_PATH_MIGRATIONS = [
   ['assets/team/core/Rishab.png', 'assets/team/core/Rishab.jpg'],
   ['assets/team/core/Rishabh.png', 'assets/team/core/Rishabh.jpg'],
   ['assets/team/core/Aunirudh.jpeg', 'assets/team/core/Aunirudh.webp'],
-  ['#join', 'join.html']
+  ['#join', '/join'],
+  ['join.html', '/join']
 ];
 
 function migrateAssetPath(path) {
   if (!path || typeof path !== 'string') return path;
-  if (path === '#join') return 'join.html';
+  if (path === '#join' || path === 'join.html') return '/join';
   if (path.startsWith('http')) return path;
   let migrated = path;
   ASSET_PATH_MIGRATIONS.forEach((rule) => {

@@ -5,21 +5,21 @@
  */
 window.RC_SITE_CHROME = {
   NAV_ITEMS: [
-    { href: 'index.html', label: 'Home', key: 'home' },
-    { href: 'about.html', label: 'About', key: 'about' },
-    { href: 'events.html', label: 'Events', key: 'events' },
-    { href: 'team.html', label: 'Team', key: 'team' },
-    { href: 'projects.html', label: 'Projects', key: 'projects' },
-    { href: 'gallery.html', label: 'Gallery', key: 'gallery' },
-    { href: 'resources.html', label: 'Resources', key: 'resources' },
-    { href: 'contact.html', label: 'Contact', key: 'contact' }
+    { href: '/', label: 'Home', key: 'home' },
+    { href: '/about', label: 'About', key: 'about' },
+    { href: '/events', label: 'Events', key: 'events' },
+    { href: '/team', label: 'Team', key: 'team' },
+    { href: '/projects', label: 'Projects', key: 'projects' },
+    { href: '/gallery', label: 'Gallery', key: 'gallery' },
+    { href: '/resources', label: 'Resources', key: 'resources' },
+    { href: '/contact', label: 'Contact', key: 'contact' }
   ],
 
   getPageKey() {
-    const path = (window.location.pathname || '').split('/').pop() || 'index.html';
-    const file = path.toLowerCase() || 'index.html';
-    if (file === '' || file === '/' || file === 'index.html') return 'home';
-    return file.replace('.html', '');
+    const raw = (window.location.pathname || '/').toLowerCase().replace(/\/+$/, '') || '/';
+    const file = raw.split('/').pop() || '';
+    if (!file || file === 'index.html' || raw === '/') return 'home';
+    return file.replace(/\.html$/, '');
   },
 
   themeControls(compact) {
@@ -73,7 +73,7 @@ window.RC_SITE_CHROME = {
   </div>
 
   <nav class="navbar fixed w-full z-[100] glass flex justify-between items-center">
-    <a href="index.html" class="navbar-brand flex items-center gap-3">
+    <a href="/" class="navbar-brand flex items-center gap-3">
       <img src="assets/logo/logo.webp" alt="RC Innovation Club Logo"
         class="navbar-brand__logo w-10 h-10 rounded-xl object-cover border border-white/10" width="40" height="40" />
       <span class="navbar-brand__text text-lg hidden sm:block">
@@ -86,7 +86,7 @@ window.RC_SITE_CHROME = {
       <div class="theme-controls hidden xl:flex items-center gap-2">
         ${this.themeControls(false)}
       </div>
-      <a href="join.html" class="btn-primary px-5 py-2 rounded-full text-sm whitespace-nowrap${active === 'join' ? ' active' : ''}">Join Now</a>
+      <a href="/join" class="btn-primary px-5 py-2 rounded-full text-sm whitespace-nowrap${active === 'join' ? ' active' : ''}">Join Now</a>
     </div>
 
     <div class="theme-controls flex items-center gap-2 xl:hidden">
@@ -110,7 +110,7 @@ window.RC_SITE_CHROME = {
         <button type="button" class="theme-picker__swatch theme-picker__swatch--coral" data-color-pick="coral" aria-label="Coral" title="Coral"></button>
       </div>
     </div>
-    <a href="join.html" class="mobile-nav-cta">Join Now</a>
+    <a href="/join" class="mobile-nav-cta">Join Now</a>
   </div>`;
   },
 
@@ -145,10 +145,10 @@ window.RC_SITE_CHROME = {
         <div>
           <h4 class="footer-heading">Navigate</h4>
           <div class="footer-links">
-            <a href="about.html">About</a>
-            <a href="events.html">Events</a>
-            <a href="team.html">Team</a>
-            <a href="gallery.html">Gallery</a>
+            <a href="/about">About</a>
+            <a href="/events">Events</a>
+            <a href="/team">Team</a>
+            <a href="/gallery">Gallery</a>
           </div>
         </div>
 
@@ -156,9 +156,9 @@ window.RC_SITE_CHROME = {
           <h4 class="footer-heading">Contact</h4>
           <div class="footer-links">
             <a href="#" id="cms-footer-email-link">rcinnovationclub@gmail.com</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="resources.html#certificates">Verify Certificate</a>
-            <a href="join.html">Join the Club</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/resources#certificates">Verify Certificate</a>
+            <a href="/join">Join the Club</a>
             <a href="#" id="cms-contact-ig" target="_blank" rel="noopener">Instagram</a>
           </div>
         </div>
@@ -166,7 +166,7 @@ window.RC_SITE_CHROME = {
 
       <p class="text-center text-slate-600 text-sm" id="cms-footer-copyright"></p>
       <p class="text-center mt-4">
-        <a href="admin.html" class="text-slate-700 text-xs hover:text-sky-400 transition">Admin Panel</a>
+        <a href="/admin" class="text-slate-700 text-xs hover:text-sky-400 transition">Admin Panel</a>
       </p>
     </div>
   </footer>
