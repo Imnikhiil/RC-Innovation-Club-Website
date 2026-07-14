@@ -9,9 +9,16 @@
       var colors = ['ocean', 'sunset', 'emerald', 'royal', 'coral'];
       var t = null, c = null;
       try { t = localStorage.getItem(tk); c = localStorage.getItem(ck); } catch (e) {}
-      if (t !== 'dark' && t !== 'light') {
-        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-      }
+      try {
+        if (!localStorage.getItem('rc_theme_brand_v1')) {
+          localStorage.setItem('rc_theme_brand_v1', '1');
+          localStorage.setItem(tk, 'dark');
+          localStorage.setItem(ck, 'ocean');
+          t = 'dark';
+          c = 'ocean';
+        }
+      } catch (e) {}
+      if (t !== 'dark' && t !== 'light') t = 'dark';
       if (colors.indexOf(c) === -1) c = 'ocean';
       document.documentElement.setAttribute('data-theme', t);
       document.documentElement.setAttribute('data-color', c);
@@ -47,6 +54,7 @@
   <link rel="stylesheet" href="css/color-themes.css?v=20250614" />
   <link rel="stylesheet" href="css/site-ui.css?v=20250614" />
   <link rel="stylesheet" href="css/mobile-performance.css?v=20250614" />
+  <link rel="stylesheet" href="css/readability.css?v=20250615" />
   <style>
     .dash-hero { min-height: 100svh; display: flex; align-items: center; position: relative; overflow: hidden; }
     .dash-hero__layout { display: grid; gap: 2.5rem; align-items: center; width: 100%; }

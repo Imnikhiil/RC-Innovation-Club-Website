@@ -6,23 +6,23 @@
 :root,
 [data-color="ocean"] {
   --accent: #22d3ee;
-  --accent-deep: #0891b2;
+  --accent-deep: #06b6d4;
   --accent-secondary: #a78bfa;
-  --accent-muted: rgba(34, 211, 238, 0.12);
-  --accent-glow: rgba(34, 211, 238, 0.38);
+  --accent-muted: rgba(34, 211, 238, 0.16);
+  --accent-glow: rgba(34, 211, 238, 0.42);
   --indigo: #a78bfa;
   --gradient-brand: linear-gradient(135deg, #22d3ee 0%, #38bdf8 38%, #a78bfa 100%);
-  --gradient-surface: linear-gradient(165deg, rgba(34, 211, 238, 0.07) 0%, rgba(167, 139, 250, 0.05) 55%, transparent 100%);
-  --hero-glow-1: rgba(34, 211, 238, 0.14);
-  --hero-glow-2: rgba(167, 139, 250, 0.12);
-  --page-glow-1: rgba(34, 211, 238, 0.16);
+  --gradient-surface: linear-gradient(165deg, rgba(34, 211, 238, 0.08) 0%, rgba(167, 139, 250, 0.06) 55%, transparent 100%);
+  --hero-glow-1: rgba(34, 211, 238, 0.16);
+  --hero-glow-2: rgba(167, 139, 250, 0.14);
+  --page-glow-1: rgba(34, 211, 238, 0.18);
   --page-glow-2: rgba(167, 139, 250, 0.14);
-  --page-glow-3: rgba(8, 145, 178, 0.1);
-  --dash-glow-1: rgba(34, 211, 238, 0.22);
+  --page-glow-3: rgba(8, 145, 178, 0.12);
+  --dash-glow-1: rgba(34, 211, 238, 0.24);
   --dash-glow-2: rgba(167, 139, 250, 0.18);
-  --dash-glow-3: rgba(56, 189, 248, 0.12);
+  --dash-glow-3: rgba(56, 189, 248, 0.14);
   --dash-btn-gradient: linear-gradient(135deg, #22d3ee 0%, #38bdf8 50%, #67e8f9 100%);
-  --dash-btn-text: #020617;
+  --dash-btn-text: #031016;
   --swatch-a: #22d3ee;
   --swatch-b: #a78bfa;
 }
@@ -135,12 +135,12 @@
 
 /* ── Light mode per palette ── */
 [data-theme="light"][data-color="ocean"] {
-  --accent: #0891b2;
-  --accent-deep: #0e7490;
-  --accent-secondary: #7c3aed;
-  --accent-muted: rgba(8, 145, 178, 0.1);
-  --accent-glow: rgba(8, 145, 178, 0.28);
-  --dash-btn-gradient: linear-gradient(135deg, #0891b2 0%, #0284c7 50%, #22d3ee 100%);
+  --accent: #0e7490;
+  --accent-deep: #155e75;
+  --accent-secondary: #6d28d9;
+  --accent-muted: rgba(14, 116, 144, 0.12);
+  --accent-glow: rgba(14, 116, 144, 0.28);
+  --dash-btn-gradient: linear-gradient(135deg, #0e7490 0%, #0284c7 50%, #22d3ee 100%);
   --dash-btn-text: #fff;
 }
 

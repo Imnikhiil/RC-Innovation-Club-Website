@@ -541,7 +541,7 @@ body.bg-gradient-pro::before {
   gap: 0.5rem;
   text-decoration: none;
   color: var(--text-muted);
-  opacity: 0.65;
+  opacity: 0.92;
   transition: opacity 0.3s ease, color 0.3s ease;
 }
 

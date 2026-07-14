@@ -27,7 +27,7 @@
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: var(--text-muted);
   pointer-events: none;
 }
 
@@ -98,7 +98,7 @@
 
 .gallery-page-empty {
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 3rem 1rem;
 }
 
@@ -166,7 +166,7 @@
   gap: 0.5rem 0.75rem;
   margin-top: 0.4rem;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .gallery-card__meta i {
@@ -296,7 +296,7 @@
 
 .gallery-lightbox__counter {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -305,7 +305,7 @@
   flex-wrap: wrap;
   gap: 0.75rem 1rem;
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
 }
 
@@ -317,7 +317,7 @@
 .gallery-lightbox__info p {
   margin: 0;
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: var(--text-muted);
   line-height: 1.55;
 }
 

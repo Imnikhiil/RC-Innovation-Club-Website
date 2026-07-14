@@ -13,6 +13,12 @@ const COLOR_META = {
 window.RC_THEME = {
   getPreference() {
     try {
+      // One-time brand lock: Dark Ocean for readable permanent look
+      if (!localStorage.getItem('rc_theme_brand_v1')) {
+        localStorage.setItem('rc_theme_brand_v1', '1');
+        localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+        localStorage.setItem(COLOR_STORAGE_KEY, 'ocean');
+      }
       const saved = localStorage.getItem(THEME_STORAGE_KEY);
       if (saved === 'dark' || saved === 'light') return saved;
     } catch {
@@ -23,6 +29,11 @@ window.RC_THEME = {
 
   getColorPreference() {
     try {
+      if (!localStorage.getItem('rc_theme_brand_v1')) {
+        localStorage.setItem('rc_theme_brand_v1', '1');
+        localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+        localStorage.setItem(COLOR_STORAGE_KEY, 'ocean');
+      }
       const saved = localStorage.getItem(COLOR_STORAGE_KEY);
       if (VALID_COLORS.includes(saved)) return saved;
     } catch {
@@ -36,7 +47,7 @@ window.RC_THEME = {
   },
 
   getResolvedTheme() {
-    return this.getPreference() || this.getSystemTheme();
+    return this.getPreference() || 'dark';
   },
 
   getResolvedColor() {

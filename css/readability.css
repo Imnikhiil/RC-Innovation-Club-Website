@@ -1,0 +1,73 @@
+/* Permanent readability — Dark Ocean baseline */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+p, li, small, .section-subtitle, .section-eyebrow,
+.contact-info__text, .newsletter-panel__subtitle,
+.newsletter-panel__privacy, .share-section__label,
+.events-hint, .team-hierarchy-hint {
+  color: inherit;
+}
+
+.section-subtitle,
+.dash-about__lead,
+.dash-hero__lead,
+.dash-stats__subtitle,
+.contact-info__text,
+.newsletter-panel__subtitle,
+.newsletter-panel__privacy,
+.share-section__label,
+.events-hint,
+.team-hierarchy-hint,
+.membership-notice__body p,
+.members-panel__meta {
+  color: var(--text-muted) !important;
+}
+
+.section-title,
+.dash-about__title,
+.dash-hero__title,
+.dash-stats__title,
+h1, h2, h3, h4 {
+  color: var(--text-primary);
+}
+
+.btn-primary {
+  color: var(--dash-btn-text, #031016);
+}
+
+[data-theme="light"] .btn-primary {
+  color: #fff;
+}
+
+a.nav-link,
+.footer-links a,
+.mobile-nav a {
+  color: var(--text-muted);
+}
+
+a.nav-link:hover,
+a.nav-link.active,
+.footer-links a:hover,
+.mobile-nav a:hover,
+.mobile-nav a.active {
+  color: var(--text-primary);
+}
+
+input, textarea, select {
+  color: var(--input-text, var(--text-primary));
+  background: var(--input-bg);
+  border-color: var(--input-border);
+}
+
+::placeholder {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
