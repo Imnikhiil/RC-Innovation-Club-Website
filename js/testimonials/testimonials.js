@@ -124,6 +124,7 @@ window.RC_TESTIMONIALS = {
 
     const startAuto = () => {
       clearInterval(autoTimer);
+      if (document.hidden) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       if (cards.length <= perView()) return;
       autoTimer = setInterval(() => {
@@ -154,6 +155,19 @@ window.RC_TESTIMONIALS = {
 
     track.addEventListener('mouseenter', () => clearInterval(autoTimer));
     track.addEventListener('mouseleave', startAuto);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearInterval(autoTimer);
+      else startAuto();
+    });
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        const visible = entries.some((e) => e.isIntersecting);
+        if (visible) startAuto();
+        else clearInterval(autoTimer);
+      }, { threshold: 0.15 });
+      io.observe(wrap);
+    }
 
     buildDots();
     update();

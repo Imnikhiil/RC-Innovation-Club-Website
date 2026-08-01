@@ -132,8 +132,10 @@ body.bg-gradient-pro::before {
 .dash-hero__aurora {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.55;
+  filter: blur(60px);
+  opacity: 0.45;
+  contain: strict;
+  pointer-events: none;
 }
 
 .dash-hero__aurora--1 {

@@ -320,28 +320,38 @@ function initNewsletterForm() {
 window.initNewsletterForm = initNewsletterForm;
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.RC_REVEAL) RC_REVEAL.init();
   if (window.RC_THEME) RC_THEME.init();
 
   let lastPaintedFingerprint = '';
   const contentFingerprint = (content) => {
     try {
-      return JSON.stringify(content);
+      // Lightweight fingerprint — enough to detect CMS updates without full stringify
+      return [
+        content?.updatedAt || '',
+        content?.events?.length,
+        content?.coreTeam?.length,
+        content?.faculty?.length,
+        content?.gallery?.length,
+        content?.hero?.title || content?.hero?.heading || '',
+        content?.stats?.length,
+        content?.membersCurrent?.length,
+        content?.testimonials?.length
+      ].join('|');
     } catch (_) {
       return String(Date.now());
     }
   };
 
-  const paintSite = () => {
+  const paintSite = (force = false) => {
     const content = window.RC_CMS.getContent();
     const fp = contentFingerprint(content);
-    if (fp === lastPaintedFingerprint) return;
+    if (!force && fp === lastPaintedFingerprint) return;
     lastPaintedFingerprint = fp;
     initSite();
   };
 
   // Paint immediately from local cache — do not wait for cloud CMS
-  paintSite();
+  paintSite(true);
   initNavbar();
   initMobileMenu();
   initSmoothNav();
@@ -355,14 +365,15 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletterForm();
   if (window.RC_SEO) RC_SEO.init();
   if (window.RC_ANALYTICS) RC_ANALYTICS.init();
+  if (window.RC_REVEAL) RC_REVEAL.refresh();
 
-  window.addEventListener('rc-content-updated', () => paintSite());
+  window.addEventListener('rc-content-updated', () => paintSite(true));
 
   // Sync cloud content in background (won't block first paint)
   RC_CMS.init()
     .then(() => (window.RC_CERTIFICATES?.init ? RC_CERTIFICATES.init() : null))
     .then(() => {
-      paintSite();
+      paintSite(false);
       if (window.RC_REVEAL) RC_REVEAL.refresh();
     })
     .catch((err) => console.warn('CMS background sync:', err.message || err));
@@ -372,14 +383,21 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+const siteObservers = {
+  team: null,
+  stats: null,
+  pop: null
+};
+
 function initTeamCards() {
   const cards = document.querySelectorAll('.team-card');
   if (!cards.length) return;
 
   cards.forEach((card) => {
+    if (card.dataset.imgBound === 'true') return;
+    card.dataset.imgBound = 'true';
     const img = card.querySelector('.team-card__photo');
     const wrap = card.querySelector('.team-card__photo-wrap');
-
     img?.addEventListener('error', () => {
       wrap?.classList.add('is-fallback');
     });
@@ -390,19 +408,24 @@ function initTeamCards() {
     return;
   }
 
-  const observer = new IntersectionObserver(
+  siteObservers.team?.disconnect();
+  siteObservers.team = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
+          siteObservers.team.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.12, rootMargin: '0px 0px -20px 0px' }
   );
 
-  cards.forEach((card) => observer.observe(card));
+  cards.forEach((card) => {
+    if (!card.classList.contains('is-visible')) {
+      siteObservers.team.observe(card);
+    }
+  });
 }
 window.initTeamCards = initTeamCards;
 
@@ -419,10 +442,17 @@ function initFacultyCards() {
 
 function initNavbar() {
   const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
+  if (!navbar || navbar.dataset.scrollBound === 'true') return;
+  navbar.dataset.scrollBound = 'true';
 
+  let ticking = false;
   const onScroll = () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
   };
 
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -519,16 +549,18 @@ function initMobileMenu() {
 }
 
 const eventsCarousel = {
-  raf: null,
+  timer: null,
+  scrollRaf: null,
   bound: false,
   isHovered: false,
   isTouching: false,
   isVisible: false,
   pauseUntil: 0,
+  focusedIdx: -1,
   container: null,
   wrapper: null,
-  spotlightSkip: 0,
-  SCROLL_SPEED: 0.4
+  visibilityObserver: null,
+  AUTO_MS: 4500
 };
 
 function eventsGetContainer() {
@@ -547,41 +579,7 @@ function eventsUpdateProgress() {
 
   const maxScroll = container.scrollWidth - container.clientWidth;
   const progress = maxScroll > 0 ? (container.scrollLeft / maxScroll) * 100 : 0;
-  progressFill.style.width = `${progress}%`;
-}
-
-function eventsUpdateSpotlight() {
-  const container = eventsGetContainer();
-  const cards = eventsGetCards();
-  if (!container || !cards.length) return;
-
-  const containerRect = container.getBoundingClientRect();
-  const centerX = containerRect.left + containerRect.width / 2;
-  let closest = cards[0];
-  let closestDist = Infinity;
-
-  cards.forEach((card) => {
-    const rect = card.getBoundingClientRect();
-    const cardCenter = rect.left + rect.width / 2;
-    const dist = Math.abs(centerX - cardCenter);
-    if (dist < closestDist) {
-      closestDist = dist;
-      closest = card;
-    }
-  });
-
-  cards.forEach((card) => {
-    card.classList.toggle('is-focused', card === closest);
-  });
-}
-
-function eventsOnScroll() {
-  eventsUpdateProgress();
-  eventsUpdateSpotlight();
-}
-
-function eventsPauseAuto(ms = 2500) {
-  eventsCarousel.pauseUntil = Date.now() + ms;
+  progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
 }
 
 function eventsGetCurrentCardIndex() {
@@ -593,33 +591,72 @@ function eventsGetCurrentCardIndex() {
   let currentIdx = 0;
   let best = Infinity;
 
-  cards.forEach((card, i) => {
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
     const cardCenter = card.offsetLeft + card.offsetWidth / 2;
     const dist = Math.abs(cardCenter - scrollCenter);
     if (dist < best) {
       best = dist;
       currentIdx = i;
     }
-  });
+  }
 
   return currentIdx;
 }
 
-function eventsScrollToCardIndex(index, { smooth = true, pause = true } = {}) {
+function eventsUpdateSpotlight() {
   const cards = eventsGetCards();
   if (!cards.length) return;
 
+  const closestIdx = eventsGetCurrentCardIndex();
+  if (closestIdx === eventsCarousel.focusedIdx) return;
+
+  if (eventsCarousel.focusedIdx >= 0 && cards[eventsCarousel.focusedIdx]) {
+    cards[eventsCarousel.focusedIdx].classList.remove('is-focused');
+  }
+  cards[closestIdx]?.classList.add('is-focused');
+  eventsCarousel.focusedIdx = closestIdx;
+}
+
+function eventsOnScroll() {
+  if (eventsCarousel.scrollRaf) return;
+  eventsCarousel.scrollRaf = requestAnimationFrame(() => {
+    eventsCarousel.scrollRaf = null;
+    eventsUpdateProgress();
+    eventsUpdateSpotlight();
+  });
+}
+
+function eventsPauseAuto(ms = 5000) {
+  eventsCarousel.pauseUntil = Date.now() + ms;
+}
+
+function eventsScrollToCardIndex(index, { smooth = true, pause = true } = {}) {
+  const container = eventsGetContainer();
+  const cards = eventsGetCards();
+  if (!container || !cards.length) return;
+
   const total = cards.length;
   const targetIdx = ((index % total) + total) % total;
+  const card = cards[targetIdx];
+  const left = card.offsetLeft - (container.clientWidth - card.offsetWidth) / 2;
 
-  cards[targetIdx].scrollIntoView({
-    behavior: smooth ? 'smooth' : 'auto',
-    inline: 'center',
-    block: 'nearest'
+  container.classList.toggle('is-auto-scrolling', !smooth);
+  container.scrollTo({
+    left: Math.max(0, left),
+    behavior: smooth ? 'smooth' : 'auto'
   });
 
+  if (!smooth) {
+    // Re-enable snap after instant jump settles
+    requestAnimationFrame(() => {
+      container.classList.remove('is-auto-scrolling');
+    });
+  }
+
   if (pause) eventsPauseAuto();
-  requestAnimationFrame(eventsOnScroll);
+  eventsCarousel.focusedIdx = -1;
+  eventsOnScroll();
 }
 
 function eventsScrollByDirection(direction) {
@@ -630,14 +667,14 @@ function eventsScrollByDirection(direction) {
 }
 
 function eventsStopAutoScroll() {
-  if (eventsCarousel.raf) {
-    cancelAnimationFrame(eventsCarousel.raf);
-    eventsCarousel.raf = null;
+  if (eventsCarousel.timer) {
+    clearInterval(eventsCarousel.timer);
+    eventsCarousel.timer = null;
   }
-  eventsGetContainer()?.classList.remove('is-auto-scrolling');
 }
 
 function eventsCanAutoScroll() {
+  if (document.hidden) return false;
   if (prefersReducedMotion()) return false;
   if (!eventsCarousel.isVisible) return false;
   if (eventsCarousel.isHovered || eventsCarousel.isTouching) return false;
@@ -650,35 +687,24 @@ function eventsCanAutoScroll() {
   return container.scrollWidth > container.clientWidth + 2;
 }
 
-function eventsAutoScrollTick() {
-  eventsCarousel.raf = requestAnimationFrame(eventsAutoScrollTick);
+function eventsAutoAdvance() {
+  if (!eventsCanAutoScroll()) return;
 
-  const container = eventsGetContainer();
-  if (!container) return;
+  const cards = eventsGetCards();
+  if (!cards.length) return;
 
-  if (!eventsCanAutoScroll()) {
-    container.classList.remove('is-auto-scrolling');
-    return;
-  }
-
-  container.classList.add('is-auto-scrolling');
-  container.scrollLeft += eventsCarousel.SCROLL_SPEED;
-
-  const maxScroll = container.scrollWidth - container.clientWidth;
-  if (maxScroll > 0 && container.scrollLeft >= maxScroll - 1) {
-    container.scrollLeft = 0;
-  }
-
-  eventsCarousel.spotlightSkip = (eventsCarousel.spotlightSkip + 1) % 4;
-  if (eventsCarousel.spotlightSkip === 0) {
-    eventsUpdateProgress();
-    eventsUpdateSpotlight();
-  }
+  const current = eventsGetCurrentCardIndex();
+  const next = current + 1 >= cards.length ? 0 : current + 1;
+  eventsScrollToCardIndex(next, { smooth: true, pause: false });
 }
 
 function eventsStartAutoScroll() {
-  if (eventsCarousel.raf || prefersReducedMotion()) return;
-  eventsCarousel.raf = requestAnimationFrame(eventsAutoScrollTick);
+  if (prefersReducedMotion() || document.hidden) return;
+  if (eventsCarousel.timer) return;
+
+  eventsCarousel.timer = setInterval(() => {
+    eventsAutoAdvance();
+  }, eventsCarousel.AUTO_MS);
 }
 
 function initEventsScroll() {
@@ -688,6 +714,7 @@ function initEventsScroll() {
 
   eventsCarousel.wrapper = wrapper;
   eventsCarousel.container = container;
+  eventsCarousel.focusedIdx = -1;
 
   if (!eventsCarousel.bound) {
     eventsCarousel.bound = true;
@@ -705,77 +732,88 @@ function initEventsScroll() {
       }
     });
 
-    container.addEventListener('pointerenter', () => {
+    wrapper.addEventListener('pointerenter', () => {
       eventsCarousel.isHovered = true;
     });
 
-    container.addEventListener('pointerleave', () => {
+    wrapper.addEventListener('pointerleave', () => {
       eventsCarousel.isHovered = false;
     });
 
     container.addEventListener('touchstart', () => {
       eventsCarousel.isTouching = true;
-      eventsPauseAuto(2000);
+      eventsPauseAuto(4000);
     }, { passive: true });
 
     container.addEventListener('touchend', () => {
-      setTimeout(() => { eventsCarousel.isTouching = false; }, 800);
+      setTimeout(() => { eventsCarousel.isTouching = false; }, 600);
     }, { passive: true });
 
     container.addEventListener('scroll', eventsOnScroll, { passive: true });
+    container.addEventListener('wheel', () => eventsPauseAuto(4000), { passive: true });
 
+    // Cheap spotlight highlight only — no 3D tilt (that caused lag)
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      container.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.event-card');
-        if (!card || !card.classList.contains('is-focused')) return;
-
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        card.style.setProperty('--mouse-x', `${x}%`);
-        card.style.setProperty('--mouse-y', `${y}%`);
-
-        const tiltX = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
-        const tiltY = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
-        card.style.transform = `perspective(900px) rotateY(${tiltX}deg) rotateX(${tiltY}deg) scale(1.04) translateY(-6px)`;
-      });
-
-      container.addEventListener('mouseleave', () => {
-        eventsGetCards().forEach((card) => { card.style.transform = ''; });
+      let highlightRaf = null;
+      container.addEventListener('pointermove', (e) => {
+        const card = e.target.closest('.event-card.is-focused');
+        if (!card) return;
+        if (highlightRaf) return;
+        highlightRaf = requestAnimationFrame(() => {
+          highlightRaf = null;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+          card.style.setProperty('--mouse-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+        });
       });
     }
 
-    const visibilityObserver = new IntersectionObserver(
+    eventsCarousel.visibilityObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           eventsCarousel.isVisible = entry.isIntersecting;
           if (!entry.isIntersecting) {
             eventsCarousel.isHovered = false;
             eventsCarousel.isTouching = false;
-          }
-          if (eventsCarousel.isVisible) {
-            eventsStartAutoScroll();
-          } else {
             eventsStopAutoScroll();
+          } else if (!document.hidden) {
+            eventsStartAutoScroll();
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
-    visibilityObserver.observe(wrapper);
-    window.addEventListener('resize', eventsOnScroll);
+    eventsCarousel.visibilityObserver.observe(wrapper);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        eventsStopAutoScroll();
+      } else if (eventsCarousel.isVisible) {
+        eventsStartAutoScroll();
+      }
+    });
+
+    let resizeRaf = null;
+    window.addEventListener('resize', () => {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null;
+        eventsCarousel.focusedIdx = -1;
+        eventsOnScroll();
+      });
+    });
   }
 
   eventsOnScroll();
 
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      eventsOnScroll();
-      if (eventsCarousel.isVisible) {
-        eventsStartAutoScroll();
-      }
-    });
+    const rect = wrapper.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView || eventsCarousel.isVisible) {
+      eventsCarousel.isVisible = true;
+      eventsStartAutoScroll();
+    }
   });
 }
 
@@ -791,7 +829,7 @@ function initStatCounters() {
 
   const animateCounter = (el) => {
     const target = parseInt(el.dataset.count, 10);
-    const duration = 1800;
+    const duration = 1400;
     const start = performance.now();
 
     el.classList.add('counting');
@@ -818,19 +856,23 @@ function initStatCounters() {
     requestAnimationFrame(tick);
   };
 
-  const observer = new IntersectionObserver(
+  siteObservers.stats?.disconnect();
+  siteObservers.stats = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && !entry.target.dataset.counted) {
           entry.target.dataset.counted = 'true';
           animateCounter(entry.target);
+          siteObservers.stats.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.5 }
+    { threshold: 0.4 }
   );
 
-  counters.forEach((counter) => observer.observe(counter));
+  counters.forEach((counter) => {
+    if (!counter.dataset.counted) siteObservers.stats.observe(counter);
+  });
 }
 
 function initPopAnimations() {
@@ -842,19 +884,22 @@ function initPopAnimations() {
     return;
   }
 
-  const observer = new IntersectionObserver(
+  siteObservers.pop?.disconnect();
+  siteObservers.pop = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
+          siteObservers.pop.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.3 }
+    { threshold: 0.25 }
   );
 
-  items.forEach((item) => observer.observe(item));
+  items.forEach((item) => {
+    if (!item.classList.contains('in-view')) siteObservers.pop.observe(item);
+  });
 }
 
 function initBackToTop() {
