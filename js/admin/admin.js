@@ -694,7 +694,7 @@ function bindListEvents(panelId, key, fields, options = {}) {
     });
   });
 
-  document.getElementById('le-save')?.addEventListener('click', () => {
+  document.getElementById('le-save')?.addEventListener('click', async () => {
     const prev = editingList[key] === 'new' ? {} : { ...(content[key]?.[editingList[key]] || {}) };
     const item = { ...prev };
     fields.forEach((f) => {
@@ -707,7 +707,17 @@ function bindListEvents(panelId, key, fields, options = {}) {
     const uploadField = fields.find((f) => f.upload);
     if (uploadField) {
       const pathVal = val(`le-${uploadField.id}-mediaPath`);
-      if (pathVal) item.mediaPath = pathVal;
+      const oldPath = prev.mediaPath || '';
+      if (pathVal) {
+        item.mediaPath = pathVal;
+      } else {
+        delete item.mediaPath;
+      }
+      if (oldPath && oldPath !== pathVal && window.RC_GALLERY_MEDIA) {
+        try {
+          await RC_GALLERY_MEDIA.deleteBlob(prev.mediaId || '', oldPath);
+        } catch (_) { /* ignore */ }
+      }
     }
 
     if (!item.id && window.RC_GALLERY_MEDIA) {

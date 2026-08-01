@@ -64,6 +64,74 @@ window.RC_ADMIN_MEDIA = {
         });
       });
     });
+
+    root.querySelectorAll('[data-clear-photo]').forEach((btn) => {
+      if (btn.dataset.boundClear === 'true') return;
+      btn.dataset.boundClear = 'true';
+      btn.addEventListener('click', () => {
+        const inputId = btn.getAttribute('data-clear-photo');
+        const pathInputId = btn.getAttribute('data-path-for') || '';
+        this.clearPhoto(inputId, pathInputId);
+      });
+
+      const inputId = btn.getAttribute('data-clear-photo');
+      const urlInput = inputId ? document.getElementById(inputId) : null;
+      if (urlInput && urlInput.dataset.boundClearSync !== 'true') {
+        urlInput.dataset.boundClearSync = 'true';
+        urlInput.addEventListener('input', () => {
+          const preview = document.getElementById(`${inputId}-preview`);
+          const value = urlInput.value.trim();
+          if (preview) {
+            if (value) {
+              preview.src = value;
+              preview.hidden = false;
+            } else {
+              preview.removeAttribute('src');
+              preview.hidden = true;
+            }
+          }
+          this.syncClearButton(inputId);
+        });
+      }
+    });
+  },
+
+  clearPhoto(inputId, pathInputId = '') {
+    const input = document.getElementById(inputId);
+    const hasPhoto = Boolean(input?.value?.trim());
+    const pathInput = pathInputId ? document.getElementById(pathInputId) : null;
+    const hasPath = Boolean(pathInput?.value?.trim());
+
+    if (!hasPhoto && !hasPath) {
+      if (typeof toast === 'function') toast('No photo to remove.');
+      return;
+    }
+
+    if (!confirm('Remove this photo?')) return;
+
+    if (input) {
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (pathInput) pathInput.value = '';
+
+    const preview = document.getElementById(`${inputId}-preview`);
+    if (preview) {
+      preview.removeAttribute('src');
+      preview.hidden = true;
+    }
+
+    const clearBtn = document.querySelector(`[data-clear-photo="${inputId}"]`);
+    if (clearBtn) clearBtn.hidden = true;
+
+    if (typeof toast === 'function') toast('Photo removed. Click Save Item to keep changes.');
+  },
+
+  syncClearButton(inputId) {
+    const input = document.getElementById(inputId);
+    const clearBtn = document.querySelector(`[data-clear-photo="${inputId}"]`);
+    if (!clearBtn) return;
+    clearBtn.hidden = !input?.value?.trim();
   },
 
   startUpload({ file, inputId, pathInputId, folder, aspect }) {
@@ -179,6 +247,7 @@ window.RC_ADMIN_MEDIA = {
       preview.hidden = false;
     }
 
+    this.syncClearButton(pending.inputId);
     this.closeCrop();
     if (typeof toast === 'function') toast('Photo uploaded. Click Save Item to keep it.');
   },
@@ -191,6 +260,7 @@ window.RC_ADMIN_MEDIA = {
     const upload = f.upload || {};
     const folder = upload.folder || 'uploads';
     const aspect = upload.aspect == null ? 1 : upload.aspect;
+    const hasPhoto = Boolean(value);
     const preview = value
       ? `<img id="${id}-preview" class="admin-media-preview" src="${escAttr(value)}" alt="Preview" />`
       : `<img id="${id}-preview" class="admin-media-preview" alt="Preview" hidden />`;
@@ -205,13 +275,17 @@ window.RC_ADMIN_MEDIA = {
           <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Upload Photo
           <input type="file" accept="image/*" data-upload-for="${id}" data-path-for="${pathId}" data-folder="${escAttr(folder)}" data-aspect="${aspect}" />
         </label>
+        <button type="button" class="admin-btn admin-btn--danger admin-btn--sm" data-clear-photo="${id}" data-path-for="${pathId}" ${hasPhoto ? '' : 'hidden'}>
+          <i class="fas fa-trash" aria-hidden="true"></i> Delete Photo
+        </button>
       </div>
-      <small class="admin-muted">Crop & upload a new photo, or keep using a path/URL.</small>
+      <small class="admin-muted">Crop & upload a new photo, or keep using a path/URL. Use Delete Photo to remove it.</small>
     </div>`;
   },
 
   /** Standalone upload control for SEO / non-list fields */
   fieldHtml(label, id, value, { folder = 'seo', aspect = 1.777 } = {}) {
+    const hasPhoto = Boolean(value);
     const preview = value
       ? `<img id="${id}-preview" class="admin-media-preview" src="${escAttr(value)}" alt="Preview" />`
       : `<img id="${id}-preview" class="admin-media-preview" alt="Preview" hidden />`;
@@ -224,6 +298,9 @@ window.RC_ADMIN_MEDIA = {
           <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Upload Photo
           <input type="file" accept="image/*" data-upload-for="${id}" data-folder="${escAttr(folder)}" data-aspect="${aspect}" />
         </label>
+        <button type="button" class="admin-btn admin-btn--danger admin-btn--sm" data-clear-photo="${id}" ${hasPhoto ? '' : 'hidden'}>
+          <i class="fas fa-trash" aria-hidden="true"></i> Delete Photo
+        </button>
       </div>
     </div>`;
   }

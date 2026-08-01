@@ -100,7 +100,7 @@ window.RC_EVENTS = {
     return `
       <div class="event-card glass rounded-2xl overflow-hidden">
         <img src="${this.escapeHtml(e.image)}" class="w-full object-cover" alt="${this.escapeHtml(e.title)}" loading="lazy">
-        <div class="p-6">
+        <div class="event-body">
           <span class="event-tag">${this.escapeHtml(e.tag)}</span>
           <h3 class="text-lg font-bold mt-3">${this.escapeHtml(e.title)}</h3>
           <p class="text-slate-500 text-sm mt-2">${this.escapeHtml(e.date || this.formatEventDate(e.eventDate))}</p>
