@@ -1999,22 +1999,24 @@ body.has-announce-bar .mobile-nav {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
-  padding-top: 0.35rem;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  min-height: 14px;
+  padding-top: 1.35rem;
 }
 
 .faculty-timeline-period {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent);
-  text-align: center;
-  line-height: 1.3;
-  max-width: 5rem;
+  text-align: right;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .faculty-timeline-dot {
@@ -2042,7 +2044,8 @@ body.has-announce-bar .mobile-nav {
 
 @media (min-width: 640px) {
   .faculty-timeline::before {
-    left: 8.15rem;
+    /* Center of the 14px dot at the end of the 9rem marker column */
+    left: calc(9rem - 7px);
   }
 
   .faculty-timeline-item {
@@ -2051,17 +2054,12 @@ body.has-announce-bar .mobile-nav {
   }
 
   .faculty-timeline-marker {
-    align-items: flex-end;
-    padding-right: 0.85rem;
+    gap: 0.55rem;
+    padding-top: 1.65rem;
   }
 
   .faculty-timeline-period {
     font-size: 0.7rem;
-    max-width: none;
-    width: 100%;
-    text-align: right;
-    padding-right: 0.85rem;
-    box-sizing: border-box;
   }
 
   .faculty-card {
@@ -2075,6 +2073,10 @@ body.has-announce-bar .mobile-nav {
 @media (min-width: 768px) {
   .faculty-timeline {
     gap: 2.5rem;
+  }
+
+  .faculty-timeline-marker {
+    padding-top: 1.9rem;
   }
 
   .faculty-card {
