@@ -147,7 +147,12 @@
         display_name: getDisplayNameForEmail(data.user.email)
       };
       const { error: insertErr } = await client.from(PATHS.ADMIN_PROFILES).upsert(profile);
-      if (insertErr) console.warn('Supabase: could not save admin profile', insertErr);
+      if (insertErr) {
+        console.warn('Supabase: could not save admin profile', insertErr);
+        throw new Error(
+          'Admin profile missing in Supabase. Run schema.sql, then add your user in admin_profiles (see storage-policies.sql notes).'
+        );
+      }
       profile = await getAdminProfile(uid) || profile;
     }
 
@@ -276,11 +281,27 @@
 
   async function uploadFile(storagePath, blob, contentType) {
     await init();
+    if (!authUser) {
+      const { data: { session } } = await client.auth.getSession();
+      authUser = session?.user || null;
+    }
+    if (!authUser) {
+      throw new Error('Not signed in to Supabase. Log out of admin and log in again with your Supabase email/password.');
+    }
+
     const { error } = await client.storage.from(STORAGE_BUCKET).upload(storagePath, blob, {
       contentType: contentType || blob.type || 'application/octet-stream',
       upsert: true
     });
-    if (error) throw error;
+    if (error) {
+      const msg = error.message || String(error);
+      if (/row-level security|RLS|policy/i.test(msg)) {
+        throw new Error(
+          'Storage blocked by RLS. In Supabase SQL Editor run supabase/storage-policies.sql, ensure bucket "gallery" is public, and your user exists in admin_profiles with role super or content.'
+        );
+      }
+      throw error;
+    }
     const { data } = client.storage.from(STORAGE_BUCKET).getPublicUrl(storagePath);
     return data.publicUrl;
   }

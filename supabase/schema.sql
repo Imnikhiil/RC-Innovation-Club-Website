@@ -168,28 +168,10 @@ CREATE POLICY "certificates_managers_delete" ON certificates
   FOR DELETE USING (rc_admin_role() IN ('super', 'membership'));
 
 -- =============================================================================
--- STORAGE (run after creating bucket in Dashboard)
+-- STORAGE (run AFTER creating bucket in Dashboard)
 -- Dashboard → Storage → New bucket → name: gallery → Public bucket: ON
--- Then run the policies below in SQL Editor:
+-- Then open and run: supabase/storage-policies.sql  (required for photo uploads)
 -- =============================================================================
-
--- CREATE POLICY "gallery_public_read" ON storage.objects
---   FOR SELECT USING (bucket_id = 'gallery');
---
--- CREATE POLICY "gallery_editors_upload" ON storage.objects
---   FOR INSERT WITH CHECK (
---     bucket_id = 'gallery' AND rc_admin_role() IN ('super', 'content')
---   );
---
--- CREATE POLICY "gallery_editors_update" ON storage.objects
---   FOR UPDATE USING (
---     bucket_id = 'gallery' AND rc_admin_role() IN ('super', 'content')
---   );
---
--- CREATE POLICY "gallery_editors_delete" ON storage.objects
---   FOR DELETE USING (
---     bucket_id = 'gallery' AND rc_admin_role() IN ('super', 'content')
---   );
 
 -- =============================================================================
 -- REALTIME (enable for live CMS sync)

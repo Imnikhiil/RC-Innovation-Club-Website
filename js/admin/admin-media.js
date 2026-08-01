@@ -209,8 +209,9 @@ window.RC_ADMIN_MEDIA = {
         await this.uploadBlob(blob);
       } catch (err) {
         console.warn('Admin media upload failed', err);
-        this.setStatus(err.message || 'Upload failed. Check connection / Supabase.');
-        if (typeof toast === 'function') toast('Photo upload failed.');
+        const msg = err?.message || 'Upload failed. Check connection / Supabase.';
+        this.setStatus(msg);
+        if (typeof toast === 'function') toast(msg.includes('RLS') || msg.includes('Storage blocked') ? 'Photo upload blocked — fix Supabase storage policies.' : 'Photo upload failed.');
       }
     }, 'image/jpeg', 0.88);
   },
