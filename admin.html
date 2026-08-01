@@ -53,29 +53,56 @@
       <div class="admin-sidebar-sub">Content Management</div>
       <div class="admin-role-badge" id="admin-role-badge" hidden></div>
       <nav class="admin-nav" id="admin-nav">
-        <button type="button" data-panel="dashboard" class="active"><i class="fas fa-gauge"></i> Dashboard</button>
-        <button type="button" data-panel="hero"><i class="fas fa-home"></i> Hero</button>
-        <button type="button" data-panel="stats"><i class="fas fa-chart-line"></i> Stats</button>
-        <button type="button" data-panel="about"><i class="fas fa-info-circle"></i> About</button>
-        <button type="button" data-panel="events"><i class="fas fa-calendar"></i> Events</button>
-        <button type="button" data-panel="faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</button>
-        <button type="button" data-panel="core"><i class="fas fa-users"></i> Core Team</button>
-        <button type="button" data-panel="ambassadors"><i class="fas fa-star"></i> Ambassadors</button>
-        <button type="button" data-panel="members"><i class="fas fa-user-group"></i> Members</button>
-        <button type="button" data-panel="legacy"><i class="fas fa-clock"></i> Legacy</button>
-        <button type="button" data-panel="testimonials"><i class="fas fa-quote-left"></i> Testimonials</button>
-        <button type="button" data-panel="partners"><i class="fas fa-handshake"></i> Partners</button>
-        <button type="button" data-panel="projects"><i class="fas fa-code"></i> Projects</button>
-        <button type="button" data-panel="resources"><i class="fas fa-book"></i> Resources</button>
-        <button type="button" data-panel="gallery"><i class="fas fa-images"></i> Gallery</button>
-        <button type="button" data-panel="join"><i class="fas fa-link"></i> Join & Footer</button>
-        <button type="button" data-panel="membership"><i class="fas fa-id-card"></i> Membership</button>
-        <button type="button" data-panel="contact"><i class="fas fa-envelope"></i> Contact</button>
-        <button type="button" data-panel="certificates"><i class="fas fa-certificate"></i> Certificates</button>
-        <button type="button" data-panel="newsletter"><i class="fas fa-bullhorn"></i> Newsletter</button>
-        <button type="button" data-panel="notifications"><i class="fas fa-bell"></i> Email Alerts</button>
-        <button type="button" data-panel="seo"><i class="fas fa-share-nodes"></i> SEO</button>
-        <button type="button" data-panel="analytics"><i class="fas fa-chart-pie"></i> Analytics</button>
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Overview</p>
+          <button type="button" data-panel="dashboard" class="active"><i class="fas fa-gauge"></i> Dashboard</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Page Content</p>
+          <button type="button" data-panel="hero"><i class="fas fa-home"></i> Hero</button>
+          <button type="button" data-panel="stats"><i class="fas fa-chart-line"></i> Stats</button>
+          <button type="button" data-panel="about"><i class="fas fa-info-circle"></i> About</button>
+          <button type="button" data-panel="events"><i class="fas fa-calendar"></i> Events</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Team & People</p>
+          <button type="button" data-panel="faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</button>
+          <button type="button" data-panel="core"><i class="fas fa-users"></i> Core Team</button>
+          <button type="button" data-panel="ambassadors"><i class="fas fa-star"></i> Ambassadors</button>
+          <button type="button" data-panel="members"><i class="fas fa-user-group"></i> Members</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Showcase</p>
+          <button type="button" data-panel="legacy"><i class="fas fa-clock"></i> Legacy</button>
+          <button type="button" data-panel="testimonials"><i class="fas fa-quote-left"></i> Testimonials</button>
+          <button type="button" data-panel="partners"><i class="fas fa-handshake"></i> Partners</button>
+          <button type="button" data-panel="projects"><i class="fas fa-code"></i> Projects</button>
+          <button type="button" data-panel="resources"><i class="fas fa-book"></i> Resources</button>
+          <button type="button" data-panel="gallery"><i class="fas fa-images"></i> Gallery</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Site</p>
+          <button type="button" data-panel="join"><i class="fas fa-link"></i> Join & Footer</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">Operations</p>
+          <button type="button" data-panel="membership"><i class="fas fa-id-card"></i> Membership</button>
+          <button type="button" data-panel="contact"><i class="fas fa-envelope"></i> Contact</button>
+          <button type="button" data-panel="certificates"><i class="fas fa-certificate"></i> Certificates</button>
+          <button type="button" data-panel="newsletter"><i class="fas fa-bullhorn"></i> Newsletter</button>
+          <button type="button" data-panel="notifications"><i class="fas fa-bell"></i> Email Alerts</button>
+        </div>
+
+        <div class="admin-nav-group" data-nav-group>
+          <p class="admin-nav-label">System</p>
+          <button type="button" data-panel="seo"><i class="fas fa-share-nodes"></i> SEO</button>
+          <button type="button" data-panel="analytics"><i class="fas fa-chart-pie"></i> Analytics</button>
+        </div>
       </nav>
       <button type="button" id="logout-btn" class="admin-btn admin-btn--danger" style="margin-top:1rem;">
         <i class="fas fa-sign-out-alt"></i> Logout

@@ -116,6 +116,11 @@ function applyRoleUI() {
     btn.hidden = !canPanel(btn.dataset.panel);
   });
 
+  document.querySelectorAll('[data-nav-group]').forEach((group) => {
+    const visible = [...group.querySelectorAll('button[data-panel]')].some((btn) => !btn.hidden);
+    group.hidden = !visible;
+  });
+
   const badge = document.getElementById('admin-role-badge');
   if (badge) {
     badge.hidden = false;
