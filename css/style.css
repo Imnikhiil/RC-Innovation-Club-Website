@@ -1095,15 +1095,16 @@ body.has-announce-bar .mobile-nav {
   gap: 1.5rem;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   padding-bottom: 1.5rem;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
 }
 
 .events-scroll.is-auto-scrolling {
-  scroll-behavior: auto;
-  scroll-snap-type: none;
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+  pointer-events: auto;
 }
 
 .events-scroll::-webkit-scrollbar {

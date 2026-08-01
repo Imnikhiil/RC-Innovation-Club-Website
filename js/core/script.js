@@ -552,16 +552,16 @@ const eventsCarousel = {
   raf: null,
   scrollRaf: null,
   bound: false,
-  isHovered: false,
   isTouching: false,
   isVisible: false,
   pauseUntil: 0,
   focusedIdx: -1,
   spotlightSkip: 0,
+  scrollPos: 0,
   container: null,
   wrapper: null,
   visibilityObserver: null,
-  SCROLL_SPEED: 0.85
+  SCROLL_SPEED: 1.15
 };
 
 function eventsGetContainer() {
@@ -623,13 +623,15 @@ function eventsOnScroll() {
   if (eventsCarousel.scrollRaf) return;
   eventsCarousel.scrollRaf = requestAnimationFrame(() => {
     eventsCarousel.scrollRaf = null;
+    eventsCarousel.scrollPos = eventsGetContainer()?.scrollLeft || 0;
     eventsUpdateProgress();
     eventsUpdateSpotlight();
   });
 }
 
-function eventsPauseAuto(ms = 5000) {
+function eventsPauseAuto(ms = 2800) {
   eventsCarousel.pauseUntil = Date.now() + ms;
+  eventsGetContainer()?.classList.remove('is-auto-scrolling');
 }
 
 function eventsScrollToCardIndex(index, { smooth = true, pause = true } = {}) {
@@ -640,13 +642,14 @@ function eventsScrollToCardIndex(index, { smooth = true, pause = true } = {}) {
   const total = cards.length;
   const targetIdx = ((index % total) + total) % total;
   const card = cards[targetIdx];
-  const left = card.offsetLeft - (container.clientWidth - card.offsetWidth) / 2;
+  const left = Math.max(0, card.offsetLeft - (container.clientWidth - card.offsetWidth) / 2);
 
   container.classList.remove('is-auto-scrolling');
   container.scrollTo({
-    left: Math.max(0, left),
+    left,
     behavior: smooth ? 'smooth' : 'auto'
   });
+  eventsCarousel.scrollPos = left;
 
   if (pause) eventsPauseAuto();
   eventsCarousel.focusedIdx = -1;
@@ -672,14 +675,14 @@ function eventsCanAutoScroll() {
   if (document.hidden) return false;
   if (prefersReducedMotion()) return false;
   if (!eventsCarousel.isVisible) return false;
-  if (eventsCarousel.isHovered || eventsCarousel.isTouching) return false;
+  if (eventsCarousel.isTouching) return false;
   if (Date.now() < eventsCarousel.pauseUntil) return false;
 
   const container = eventsGetContainer();
   if (!container) return false;
   if (eventsGetCards().length < 2) return false;
 
-  return container.scrollWidth > container.clientWidth + 2;
+  return container.scrollWidth > container.clientWidth + 8;
 }
 
 function eventsAutoScrollTick() {
@@ -694,15 +697,18 @@ function eventsAutoScrollTick() {
   }
 
   container.classList.add('is-auto-scrolling');
-  container.scrollLeft += eventsCarousel.SCROLL_SPEED;
 
   const maxScroll = container.scrollWidth - container.clientWidth;
-  if (maxScroll > 0 && container.scrollLeft >= maxScroll - 0.5) {
-    container.scrollLeft = 0;
+  if (maxScroll <= 0) return;
+
+  eventsCarousel.scrollPos += eventsCarousel.SCROLL_SPEED;
+  if (eventsCarousel.scrollPos >= maxScroll) {
+    eventsCarousel.scrollPos = 0;
   }
 
-  // Update UI every 5 frames so continuous scroll stays smooth
-  eventsCarousel.spotlightSkip = (eventsCarousel.spotlightSkip + 1) % 5;
+  container.scrollLeft = eventsCarousel.scrollPos;
+
+  eventsCarousel.spotlightSkip = (eventsCarousel.spotlightSkip + 1) % 6;
   if (eventsCarousel.spotlightSkip === 0) {
     eventsUpdateProgress();
     eventsUpdateSpotlight();
@@ -712,6 +718,13 @@ function eventsAutoScrollTick() {
 function eventsStartAutoScroll() {
   if (prefersReducedMotion() || document.hidden) return;
   if (eventsCarousel.raf) return;
+
+  const container = eventsGetContainer();
+  if (container) {
+    eventsCarousel.scrollPos = container.scrollLeft || 0;
+    container.classList.add('is-auto-scrolling');
+  }
+
   eventsCarousel.raf = requestAnimationFrame(eventsAutoScrollTick);
 }
 
@@ -723,6 +736,7 @@ function initEventsScroll() {
   eventsCarousel.wrapper = wrapper;
   eventsCarousel.container = container;
   eventsCarousel.focusedIdx = -1;
+  eventsCarousel.scrollPos = container.scrollLeft || 0;
 
   if (!eventsCarousel.bound) {
     eventsCarousel.bound = true;
@@ -740,27 +754,30 @@ function initEventsScroll() {
       }
     });
 
-    wrapper.addEventListener('pointerenter', () => {
-      eventsCarousel.isHovered = true;
-    });
-
-    wrapper.addEventListener('pointerleave', () => {
-      eventsCarousel.isHovered = false;
-    });
+    // Pause only while actively interacting — hover alone must NOT stop continuous scroll
+    container.addEventListener('pointerdown', () => {
+      eventsPauseAuto(2500);
+    }, { passive: true });
 
     container.addEventListener('touchstart', () => {
       eventsCarousel.isTouching = true;
-      eventsPauseAuto(4000);
+      eventsPauseAuto(2500);
     }, { passive: true });
 
     container.addEventListener('touchend', () => {
-      setTimeout(() => { eventsCarousel.isTouching = false; }, 600);
+      setTimeout(() => { eventsCarousel.isTouching = false; }, 400);
     }, { passive: true });
 
-    container.addEventListener('scroll', eventsOnScroll, { passive: true });
-    container.addEventListener('wheel', () => eventsPauseAuto(4000), { passive: true });
+    container.addEventListener('scroll', () => {
+      // Keep scrollPos in sync when user drags scrollbar / trackpad
+      if (!container.classList.contains('is-auto-scrolling')) {
+        eventsCarousel.scrollPos = container.scrollLeft;
+      }
+      eventsOnScroll();
+    }, { passive: true });
 
-    // Cheap spotlight highlight only — no 3D tilt (that caused lag)
+    container.addEventListener('wheel', () => eventsPauseAuto(2500), { passive: true });
+
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
       let highlightRaf = null;
       container.addEventListener('pointermove', (e) => {
@@ -781,7 +798,6 @@ function initEventsScroll() {
         entries.forEach((entry) => {
           eventsCarousel.isVisible = entry.isIntersecting;
           if (!entry.isIntersecting) {
-            eventsCarousel.isHovered = false;
             eventsCarousel.isTouching = false;
             eventsStopAutoScroll();
           } else if (!document.hidden) {
@@ -789,7 +805,7 @@ function initEventsScroll() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: '40px 0px' }
     );
 
     eventsCarousel.visibilityObserver.observe(wrapper);
@@ -808,20 +824,25 @@ function initEventsScroll() {
       resizeRaf = requestAnimationFrame(() => {
         resizeRaf = null;
         eventsCarousel.focusedIdx = -1;
+        eventsCarousel.scrollPos = container.scrollLeft || 0;
         eventsOnScroll();
+        if (eventsCarousel.isVisible) eventsStartAutoScroll();
       });
     });
   }
 
   eventsOnScroll();
 
+  // Start as soon as layout is ready (cards rendered)
   requestAnimationFrame(() => {
-    const rect = wrapper.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (inView || eventsCarousel.isVisible) {
-      eventsCarousel.isVisible = true;
-      eventsStartAutoScroll();
-    }
+    requestAnimationFrame(() => {
+      const rect = wrapper.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight + 80;
+      if (inView || eventsCarousel.isVisible) {
+        eventsCarousel.isVisible = true;
+        eventsStartAutoScroll();
+      }
+    });
   });
 }
 
