@@ -549,7 +549,7 @@ function initMobileMenu() {
 }
 
 const eventsCarousel = {
-  timer: null,
+  raf: null,
   scrollRaf: null,
   bound: false,
   isHovered: false,
@@ -557,10 +557,11 @@ const eventsCarousel = {
   isVisible: false,
   pauseUntil: 0,
   focusedIdx: -1,
+  spotlightSkip: 0,
   container: null,
   wrapper: null,
   visibilityObserver: null,
-  AUTO_MS: 4500
+  SCROLL_SPEED: 0.85
 };
 
 function eventsGetContainer() {
@@ -641,18 +642,11 @@ function eventsScrollToCardIndex(index, { smooth = true, pause = true } = {}) {
   const card = cards[targetIdx];
   const left = card.offsetLeft - (container.clientWidth - card.offsetWidth) / 2;
 
-  container.classList.toggle('is-auto-scrolling', !smooth);
+  container.classList.remove('is-auto-scrolling');
   container.scrollTo({
     left: Math.max(0, left),
     behavior: smooth ? 'smooth' : 'auto'
   });
-
-  if (!smooth) {
-    // Re-enable snap after instant jump settles
-    requestAnimationFrame(() => {
-      container.classList.remove('is-auto-scrolling');
-    });
-  }
 
   if (pause) eventsPauseAuto();
   eventsCarousel.focusedIdx = -1;
@@ -667,10 +661,11 @@ function eventsScrollByDirection(direction) {
 }
 
 function eventsStopAutoScroll() {
-  if (eventsCarousel.timer) {
-    clearInterval(eventsCarousel.timer);
-    eventsCarousel.timer = null;
+  if (eventsCarousel.raf) {
+    cancelAnimationFrame(eventsCarousel.raf);
+    eventsCarousel.raf = null;
   }
+  eventsGetContainer()?.classList.remove('is-auto-scrolling');
 }
 
 function eventsCanAutoScroll() {
@@ -687,24 +682,37 @@ function eventsCanAutoScroll() {
   return container.scrollWidth > container.clientWidth + 2;
 }
 
-function eventsAutoAdvance() {
-  if (!eventsCanAutoScroll()) return;
+function eventsAutoScrollTick() {
+  eventsCarousel.raf = requestAnimationFrame(eventsAutoScrollTick);
 
-  const cards = eventsGetCards();
-  if (!cards.length) return;
+  const container = eventsGetContainer();
+  if (!container) return;
 
-  const current = eventsGetCurrentCardIndex();
-  const next = current + 1 >= cards.length ? 0 : current + 1;
-  eventsScrollToCardIndex(next, { smooth: true, pause: false });
+  if (!eventsCanAutoScroll()) {
+    container.classList.remove('is-auto-scrolling');
+    return;
+  }
+
+  container.classList.add('is-auto-scrolling');
+  container.scrollLeft += eventsCarousel.SCROLL_SPEED;
+
+  const maxScroll = container.scrollWidth - container.clientWidth;
+  if (maxScroll > 0 && container.scrollLeft >= maxScroll - 0.5) {
+    container.scrollLeft = 0;
+  }
+
+  // Update UI every 5 frames so continuous scroll stays smooth
+  eventsCarousel.spotlightSkip = (eventsCarousel.spotlightSkip + 1) % 5;
+  if (eventsCarousel.spotlightSkip === 0) {
+    eventsUpdateProgress();
+    eventsUpdateSpotlight();
+  }
 }
 
 function eventsStartAutoScroll() {
   if (prefersReducedMotion() || document.hidden) return;
-  if (eventsCarousel.timer) return;
-
-  eventsCarousel.timer = setInterval(() => {
-    eventsAutoAdvance();
-  }, eventsCarousel.AUTO_MS);
+  if (eventsCarousel.raf) return;
+  eventsCarousel.raf = requestAnimationFrame(eventsAutoScrollTick);
 }
 
 function initEventsScroll() {
